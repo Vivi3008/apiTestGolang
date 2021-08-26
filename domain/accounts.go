@@ -3,6 +3,8 @@ package domain
 import (
 	"errors"
 	"github.com/google/uuid"
+	"crypto/sha1"
+	"encoding/hex"
 	"time"
 )
 
@@ -24,11 +26,17 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrInvalidValue
 	}
 
+	passwordHasher := sha1.New()
+	passwordHasher.Write([]byte(person.Secret))
+	sha := passwordHasher.Sum(nil)
+
+	shaStr := hex.EncodeToString(sha)
+
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    person.Secret,
+		Secret:    shaStr,
 		Balance:   person.Balance,
 		createdAt: time.Now(),
 	}, nil
