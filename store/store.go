@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrEmptyID = errors.New("id não pode ser vazio")
+	ErrEmptyID = errors.New("id not be empty")
 )
 
 type AccountStore struct {
@@ -20,13 +20,4 @@ func NewAccountStore() AccountStore {
 	return AccountStore{
 		accStore: as,
 	}
-}
-
-func (a AccountStore) StoreAccount(account domain.Account) error {
-	if account.id == "" {
-		return ErrEmptyID
-	}
-
-	a.accStore[account.id] = account
-	return nil
 }

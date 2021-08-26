@@ -11,25 +11,25 @@ var (
 )
 
 type Account struct {
-	id         string
-	name       string
-	cpf        int64
-	secret     string
-	balance   float64
+	Id   string
+	Name   string
+	Cpf     int64
+	Secret    string
+	Balance   float64
 	createdAt time.Time
 }
 
 func NewAccount(person Account) (Account, error) {
-	if person.name == "" || person.cpf==0 || person.secret =="" {
+	if person.Name == "" || person.Cpf ==0 || person.Secret =="" {
 		return Account{}, ErrInvalidValue
 	}
 
 	return Account{
-		id:        uuid.New().String(),
-		name:      person.name,
-		cpf:       person.cpf,
-		secret:    person.secret,
-		balance:   person.balance,
+		Id:        uuid.New().String(),
+		Name:      person.Name,
+		Cpf:       person.Cpf,
+		Secret:    person.Secret,
+		Balance:   person.Balance,
 		createdAt: time.Now(),
 	}, nil
 }
