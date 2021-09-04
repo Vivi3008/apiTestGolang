@@ -32,7 +32,6 @@ func TestStoreAccount(t *testing.T){
 				Name: "Viviane",
 				Cpf: 00314522352,
 				Secret: "dadfdasf",
-				Balance: 0,
 			}
 			err := store.StoreAccount(acc)
 			if err != ErrEmptyID {

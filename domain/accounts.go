@@ -26,13 +26,13 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrInvalidValue
 	}
 
-	secretHash := HashPassword(person.Secret)
+	secretHash, _ := HashPassword(person.Secret)
 
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    secretHash,
+		Secret:    string(secretHash),
 		Balance:   person.Balance,
 		createdAt: time.Now(),
 	}, nil
@@ -45,5 +45,5 @@ func HashPassword(password string) ([]byte, error) {
 		return []byte(""), err
 	}
 
-	return hex.EncodeToString(secretHash), nil
+	return []byte(hex.EncodeToString(secretHash)), nil
 }

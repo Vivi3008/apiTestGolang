@@ -54,7 +54,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Errorf("expected nil; got '%s'", err.Error())
 		}
 
-		size := 1
+		size := 2
 
 		// verifica se o tamanho do map é diferente 2 se sim retorna erro, esse test vai falhar
 		if len(accounts) != size {
