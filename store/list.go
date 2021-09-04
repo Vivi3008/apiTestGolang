@@ -10,6 +10,7 @@ func (a AccountStore) ListAll()([]domain.Account, error){
 	return list, nil
 }
 
+// fazer o teste de listar um id
 func (a AccountStore) ListOne(accId string) (domain.Account, error){
 	var listOne domain.Account
 	listOne = a.accStore[accId]

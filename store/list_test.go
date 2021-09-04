@@ -42,7 +42,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been created successfully")
 		}
 
-		err2 = store.StoreAccount(acc2);
+		err2 = store.StoreAccount(acc2)
 
 		if err != nil {
 			t.Fatal("Account should have been stored successfully")
