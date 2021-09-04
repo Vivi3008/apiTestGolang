@@ -1,10 +1,10 @@
 package domain
 
 import (
+	"encoding/hex"
 	"errors"
 	"github.com/google/uuid"
-	"crypto/sha1"
-	"encoding/hex"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -13,31 +13,37 @@ var (
 )
 
 type Account struct {
-	Id   string
-	Name   string
-	Cpf     int64
+	Id        string
+	Name      string
+	Cpf       int64
 	Secret    string
 	Balance   float64
 	createdAt time.Time
 }
 
 func NewAccount(person Account) (Account, error) {
-	if person.Name == "" || person.Cpf ==0 || person.Secret =="" {
+	if person.Name == "" || person.Cpf == 0 || person.Secret == "" {
 		return Account{}, ErrInvalidValue
 	}
 
-	passwordHasher := sha1.New()
-	passwordHasher.Write([]byte(person.Secret))
-	sha := passwordHasher.Sum(nil)
-
-	shaStr := hex.EncodeToString(sha)
+	secretHash := HashPassword(person.Secret)
 
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    shaStr,
+		Secret:    secretHash,
 		Balance:   person.Balance,
 		createdAt: time.Now(),
 	}, nil
+}
+
+func HashPassword(password string) ([]byte, error) {
+	cost := bcrypt.DefaultCost
+	secretHash, err := bcrypt.GenerateFromPassword([]byte(password), cost)
+	if err != nil {
+		return []byte(""), err
+	}
+
+	return hex.EncodeToString(secretHash), nil
 }
