@@ -1,10 +1,8 @@
 package domain
 
 import (
-	"encoding/hex"
 	"errors"
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -26,24 +24,12 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrInvalidValue
 	}
 
-	secretHash, _ := HashPassword(person.Secret)
-
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    string(secretHash),
+		Secret:    person.Secret,
 		Balance:   person.Balance,
 		createdAt: time.Now(),
 	}, nil
-}
-
-func HashPassword(password string) ([]byte, error) {
-	cost := bcrypt.DefaultCost
-	secretHash, err := bcrypt.GenerateFromPassword([]byte(password), cost)
-	if err != nil {
-		return []byte(""), err
-	}
-
-	return []byte(hex.EncodeToString(secretHash)), nil
 }
