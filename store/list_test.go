@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-
 func TestAccountStore_ListAll(t *testing.T) {
 	store := NewAccountStore()
 
@@ -72,6 +71,21 @@ func TestAccountStore_ListAll(t *testing.T) {
 					t.Errorf("expected %+v; got %+v", acc2, account)
 				}
 			}
+		}
+
+	})
+
+	t.Run("Should return one account by name", func(t *testing.T) {
+		expected := "Viviane"
+
+		result, err := store.ListOne("Viviane")
+
+		if err != nil {
+			t.Errorf("expected nil; got '%s'", err.Error())
+		}
+
+		if result.Name != expected {
+			t.Errorf("expected %v, got %v", expected, result.Name)
 		}
 
 	})

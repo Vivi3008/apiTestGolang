@@ -1,8 +1,15 @@
 package store
 
-import "github.com/Vivi3008/apiTestGolang/domain"
+import (
+	"errors"
+	"github.com/Vivi3008/apiTestGolang/domain"
+)
 
-func (a AccountStore) ListAll()([]domain.Account, error){
+var (
+	ErrIdNotExists = errors.New("nome inexistente")
+)
+
+func (a AccountStore) ListAll() ([]domain.Account, error) {
 	var list []domain.Account
 	for _, account := range a.accStore {
 		list = append(list, account)
@@ -10,10 +17,20 @@ func (a AccountStore) ListAll()([]domain.Account, error){
 	return list, nil
 }
 
-// fazer o teste de listar um id
-func (a AccountStore) ListOne(accId string) (domain.Account, error){
-	var listOne domain.Account
-	listOne = a.accStore[accId]
+func (a AccountStore) ListOne(name string) (domain.Account, error) {
+	listAll, _ := a.ListAll()
 
-	return listOne, nil
+	var listOne domain.Account
+
+	for _, account := range listAll {
+		if account.Name == name {
+			listOne = account
+		}
+	}
+
+	if listOne.Name == "" {
+		return domain.Account{}, ErrIdNotExists
+	} else {
+		return listOne, nil
+	}
 }
