@@ -1,13 +1,12 @@
-package usecases
+package store
 
 import (
 	"github.com/Vivi3008/apiTestGolang/domain"
-	store2 "github.com/Vivi3008/apiTestGolang/store"
 	"testing"
 )
 
 func TestLogin(t *testing.T) {
-	store := store2.NewAccountStore()
+	store := NewAccountStore()
 
 	t.Run("Should verify credentials and return true or false", func(t *testing.T) {
 		credentials := Login{
@@ -34,14 +33,15 @@ func TestLogin(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		result, err := NewLogin(credentials)
+		result, err := store.NewLogin(credentials)
 
 		if err != nil {
 			t.Errorf("expected nil, got %s", err.Error())
 		}
 
 		if result != true {
-			t.Errorf("Resultado %v, esperado %v", result, true)
+			t.Errorf("Resultado %v", result)
+
 		}
 	})
 }
