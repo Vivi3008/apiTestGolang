@@ -31,7 +31,7 @@ func NewLogin(u Login) (bool, error) {
 	err1 := storeAcc.StoreAccount(person)
 
 	if err1 != nil {
-		return false, error.Error()
+		return false, ErrSaveLogin
 	}
 
 	accounts, err := storeAcc.ListAll()
@@ -48,7 +48,7 @@ func NewLogin(u Login) (bool, error) {
 			result = true
 		} else {
 			fmt.Println("credenciais inexistentes")
-			result = false
+			return false, ErrInvalidCredentials
 		}
 	}
 	return result, nil
