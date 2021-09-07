@@ -13,16 +13,16 @@ type Login struct {
 	Secret string
 }
 
-func(a AccountStore) NewLogin(u Login) (bool, error) {
+func(a AccountStore) NewLogin(u Login) (string, error) {
 	listAll, _ := a.ListAll()
 
-	var result bool
+	var result string
 
  for _, account := range listAll {
 		if account.Cpf == u.Cpf && account.Secret == u.Secret {
-			result = true
+			result = account.Id
 		} else {
-			return false, ErrInvalidCredentials
+			return "", ErrInvalidCredentials
 		}
 	}
 	return result, nil

@@ -8,7 +8,7 @@ import (
 func TestLogin(t *testing.T) {
 	store := NewAccountStore()
 
-	t.Run("Should verify credentials and return true or false", func(t *testing.T) {
+	t.Run("Should verify credentials and return an ID", func(t *testing.T) {
 		credentials := Login{
 			Cpf:      13323332555,
 			Secret: "dafd33255",
@@ -39,9 +39,8 @@ func TestLogin(t *testing.T) {
 			t.Errorf("expected nil, got %s", err.Error())
 		}
 
-		if result != true {
-			t.Errorf("Resultado %v", result)
-
+		if result == ""{
+			t.Error("Id vazio, credenciais não autorizadas")
 		}
 	})
 }
