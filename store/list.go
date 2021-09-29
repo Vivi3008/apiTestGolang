@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
@@ -17,20 +18,28 @@ func (a AccountStore) ListAll() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListOne(name string) (domain.Account, error) {
+func (a AccountStore) ListOne(id string) (domain.Account, error) {
 	listAll, _ := a.ListAll()
 
 	var listOne domain.Account
 
 	for _, account := range listAll {
-		if account.Name == name {
+		if account.Id == id {
 			listOne = account
 		}
 	}
 
-	if listOne.Name == "" {
+	if listOne.Id == "" {
 		return domain.Account{}, ErrIdNotExists
 	} else {
 		return listOne, nil
 	}
+}
+
+func (tr TransferStore) ListTransfers() ([]domain.Transfer, error) {
+	var list []domain.Transfer
+	for _, transfer := range tr.tranStore {
+		list = append(list, transfer)
+	}
+	return list, nil
 }
