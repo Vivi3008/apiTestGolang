@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestStoreAccount(t *testing.T) {
+func TestCreateAccount(t *testing.T) {
 
 	t.Run("Should create an account successfully", func(t *testing.T) {
 		person := Account{
@@ -25,11 +25,11 @@ func TestStoreAccount(t *testing.T) {
 			t.Errorf("Resultado %v, esperado %v", result.Name, expected)
 		}
 
-		if result.createdAt.IsZero(){
+		if result.createdAt.IsZero() {
 			t.Errorf("Expected createdAt at not to be zero")
 		}
 
-		if result.Id == ""{
+		if result.Id == "" {
 			t.Errorf("Expected ID not to be empty")
 		}
 	})

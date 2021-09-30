@@ -2,8 +2,11 @@ package domain
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/google/uuid"
 )
 
 var (
@@ -24,12 +27,14 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrInvalidValue
 	}
 
+	hashSecret, err := bcrypt.GenerateFromPassword([]byte(person.Secret), 14)
+
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    person.Secret,
+		Secret:    string(hashSecret),
 		Balance:   person.Balance,
 		createdAt: time.Now(),
-	}, nil
+	}, err
 }

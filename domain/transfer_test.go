@@ -2,7 +2,7 @@ package domain
 
 import "testing"
 
-func TestStoreTransaction(t *testing.T) {
+func TestCreateTransfer(t *testing.T) {
 
 	t.Run("Should create a new transaction successfully", func(t *testing.T) {
 		transaction := Transfer{
