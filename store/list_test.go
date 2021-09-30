@@ -57,7 +57,6 @@ func TestAccountStore_ListAll(t *testing.T) {
 
 		size := 2
 
-		// verifica se o tamanho do map é diferente 2 se sim retorna erro, esse test vai falhar
 		if len(accounts) != size {
 			t.Errorf("expected %d; got %d", size, len(accounts))
 		}
@@ -75,20 +74,6 @@ func TestAccountStore_ListAll(t *testing.T) {
 			}
 		}
 
-	})
-
-	t.Run("Should return one account by name", func(t *testing.T) {
-		expected := "Viviane"
-
-		result, err := store.ListOne("Viviane")
-
-		if err != nil {
-			t.Errorf("expected nil; got '%s'", err.Error())
-		}
-
-		if result.Name != expected {
-			t.Errorf("expected %v, got %v", expected, result.Name)
-		}
 	})
 
 	t.Run("Should return all transfers", func(t *testing.T) {

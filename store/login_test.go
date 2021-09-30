@@ -1,8 +1,9 @@
 package store
 
 import (
-	"github.com/Vivi3008/apiTestGolang/domain"
 	"testing"
+
+	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 func TestLogin(t *testing.T) {
@@ -10,7 +11,7 @@ func TestLogin(t *testing.T) {
 
 	t.Run("Should verify credentials and return an ID", func(t *testing.T) {
 		credentials := Login{
-			Cpf:      13323332555,
+			Cpf:    13323332555,
 			Secret: "dafd33255",
 		}
 
@@ -39,8 +40,27 @@ func TestLogin(t *testing.T) {
 			t.Errorf("expected nil, got %s", err.Error())
 		}
 
-		if result == ""{
+		if result == "" {
 			t.Error("Id vazio, credenciais não autorizadas")
+		}
+	})
+
+	t.Run("Should return one account by Id", func(t *testing.T) {
+		credentials := Login{
+			Cpf:    13323332555,
+			Secret: "dafd33255",
+		}
+
+		expectedId, _ := store.NewLogin(credentials)
+
+		result, err := store.ListOne(expectedId)
+
+		if err != nil {
+			t.Errorf("expected nil; got '%s'", err.Error())
+		}
+
+		if result.Id != expectedId {
+			t.Errorf("expected %v, got %v", expectedId, result.Id)
 		}
 	})
 }

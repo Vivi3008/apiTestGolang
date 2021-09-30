@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrIdNotExists = errors.New("nome inexistente")
+	ErrIdNotExists = errors.New("Id inexistente")
 )
 
 func (a AccountStore) ListAll() ([]domain.Account, error) {
