@@ -6,7 +6,7 @@ type Accounts struct {
 	store store.AccountStore
 }
 
-func NewAccount(store store.AccountStore) Accounts {
+func CreateNewAccount(store store.AccountStore) Accounts {
 	return Accounts{
 		store: store,
 	}

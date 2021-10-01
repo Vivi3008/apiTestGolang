@@ -1,0 +1,66 @@
+package http
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+	"time"
+
+	"github.com/Vivi3008/apiTestGolang/domain"
+)
+
+type AccountRequest struct {
+	Name    string  `json:"name"`
+	Cpf     int64   `json:"cpf"`
+	Secret  string  `json:"secret"`
+	Balance float64 `json:"balance"`
+}
+
+type AccountResponse struct {
+	Id        string    `json:"id"`
+	Name      string    `json:"name"`
+	Cpf       int64     `json:"cpf"`
+	Balance   float64   `json:"balance"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
+	var body AccountRequest
+
+	err := json.NewDecoder(r.Body).Decode(&body)
+
+	if err != nil {
+		response := Error{Reason: "invalid request body"}
+		log.Printf("error decoding body: %s\n", err.Error())
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	person := domain.Account{
+		Name:    body.Name,
+		Cpf:     body.Cpf,
+		Secret:  body.Secret,
+		Balance: body.Balance,
+	}
+
+	account, err := s.accounts.CreateAccount(person)
+
+	if err != nil {
+		log.Printf("Failed to save account: %s\n", err.Error())
+		return
+	}
+
+	response := AccountResponse{
+		Id:        account.Id,
+		Name:      account.Name,
+		Cpf:       account.Cpf,
+		Balance:   account.Balance,
+		CreatedAt: account.CreatedAt,
+	}
+
+	w.Header().Set(ContentType, JSONContentType)
+	json.NewEncoder(w).Encode(response)
+	log.Printf("sent successful response for account %s\n", account.Id)
+}

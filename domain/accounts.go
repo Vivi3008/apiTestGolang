@@ -19,7 +19,11 @@ type Account struct {
 	Cpf       int64
 	Secret    string
 	Balance   float64
-	createdAt time.Time
+	CreatedAt time.Time
+}
+
+type AccountId struct {
+	Id string
 }
 
 func NewAccount(person Account) (Account, error) {
@@ -35,6 +39,6 @@ func NewAccount(person Account) (Account, error) {
 		Cpf:       person.Cpf,
 		Secret:    string(hashSecret),
 		Balance:   person.Balance,
-		createdAt: time.Now(),
+		CreatedAt: time.Now(),
 	}, err
 }
