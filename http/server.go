@@ -29,7 +29,7 @@ func NewServer(usecase domain.Usecase) Server {
 
 	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
-	router.HandleFunc("/accountsId", server.ListOne).Methods(http.MethodPost)
+	router.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
 
 	server.Handler = router
 	return server

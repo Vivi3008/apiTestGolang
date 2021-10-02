@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/gorilla/mux"
 )
 
 type ListAccountResponse struct {
@@ -15,6 +16,10 @@ type ListAccountResponse struct {
 	Cpf       int64     `json:"cpf"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"createdAt"`
+}
+
+type BalanceAccountResponse struct {
+	Balance float64 `json:"balance"`
 }
 
 type AccountIdRequest struct {
@@ -49,34 +54,28 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
-	var body AccountIdRequest
 
-	err := json.NewDecoder(r.Body).Decode(&body)
-
-	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+	vars := mux.Vars(r)
 
 	personId := domain.AccountId{
-		Id: body.Id,
+		Id: vars["account_id"],
 	}
 
 	account, err := s.accounts.ListAccountById(personId)
 
-	response := ListAccountResponse{
-		Id:        account.Id,
-		Name:      account.Name,
-		Cpf:       account.Cpf,
-		Balance:   account.Balance,
-		CreatedAt: account.CreatedAt,
+	if err != nil {
+		log.Printf("Failed to list account: %s\n", err.Error())
+		response := Error{Reason: "internal server error"}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	response := BalanceAccountResponse{
+		Balance: account.Balance,
 	}
 
 	w.Header().Set(ContentType, JSONContentType)
 	json.NewEncoder(w).Encode(response)
-	log.Printf("Sent accounts with Id: %s", response.Id)
 }

@@ -18,13 +18,13 @@ func (a AccountStore) ListAll() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListOne(idAccount domain.AccountId) (domain.Account, error) {
+func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error) {
 	listAll, _ := a.ListAll()
 
 	var listOne domain.Account
 
 	for _, account := range listAll {
-		if idAccount.Id == account.Id {
+		if accountId.Id == account.Id {
 			listOne = account
 		}
 	}
