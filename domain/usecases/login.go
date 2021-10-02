@@ -1,4 +1,4 @@
-package store
+package usecases
 
 import (
 	"errors"
@@ -11,8 +11,8 @@ var (
 	ErrInvalidCredentials = errors.New("cpf, secret are invalid")
 )
 
-func (a AccountStore) NewLogin(u domain.Login) (string, error) {
-	listAll, _ := a.ListAll()
+func (a Accounts) NewLogin(u domain.Login) (string, error) {
+	listAll, _ := a.store.ListAll()
 
 	var result string
 	var err error

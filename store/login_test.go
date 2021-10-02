@@ -10,7 +10,7 @@ func TestLogin(t *testing.T) {
 	store := NewAccountStore()
 
 	t.Run("Should verify credentials and return an ID", func(t *testing.T) {
-		credentials := Login{
+		credentials := domain.Login{
 			Cpf:    13323332555,
 			Secret: "dafd33255",
 		}
@@ -53,7 +53,7 @@ func TestLogin(t *testing.T) {
 
 		expectedId, _ := store.NewLogin(credentials)
 
-		result, err := store.ListOne(expectedId)
+		result, err := store.ListOne(domain.AccountId(expectedId))
 
 		if err != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())

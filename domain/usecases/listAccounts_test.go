@@ -57,7 +57,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			t.Errorf("expected nil; got '%s'", err.Error())
 		}
 
-		if len(list) != 2 {
+		if len(list) != 3 {
 			t.Errorf("expected %d; got %d", 3, len(list))
 		}
 
