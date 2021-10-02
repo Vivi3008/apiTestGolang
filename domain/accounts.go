@@ -22,9 +22,7 @@ type Account struct {
 	CreatedAt time.Time
 }
 
-type AccountId struct {
-	Id string
-}
+type AccountId string
 
 func NewAccount(person Account) (Account, error) {
 	if person.Name == "" || person.Cpf == 0 || person.Secret == "" {

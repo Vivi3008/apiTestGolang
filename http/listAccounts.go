@@ -54,12 +54,9 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 
-	personId := domain.AccountId{
-		Id: vars["account_id"],
-	}
+	personId := domain.AccountId(vars["account_id"])
 
 	account, err := s.accounts.ListAccountById(personId)
 

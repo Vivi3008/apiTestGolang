@@ -24,7 +24,7 @@ func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error
 	var listOne domain.Account
 
 	for _, account := range listAll {
-		if accountId.Id == account.Id {
+		if string(accountId) == account.Id {
 			listOne = account
 		}
 	}
