@@ -27,7 +27,7 @@ type AccountIdRequest struct {
 }
 
 func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
-	list, err := s.accounts.ListAllAccounts()
+	list, err := s.app.ListAllAccounts()
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
@@ -58,11 +58,11 @@ func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
 
 	personId := domain.AccountId(vars["account_id"])
 
-	account, err := s.accounts.ListAccountById(personId)
+	account, err := s.app.ListAccountById(personId)
 
 	if err != nil {
-		log.Printf("Failed to list account: %s\n", err.Error())
-		response := Error{Reason: "internal server error"}
+		log.Printf("Failed to list account: %s", err.Error())
+		response := Error{Reason: err.Error()}
 		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)

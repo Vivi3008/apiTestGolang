@@ -12,7 +12,7 @@ type Error struct {
 }
 
 type Server struct {
-	accounts domain.Usecase
+	app domain.Usecase
 	http.Handler
 }
 
@@ -23,7 +23,7 @@ const (
 )
 
 func NewServer(usecase domain.Usecase) Server {
-	server := Server{accounts: usecase}
+	server := Server{app: usecase}
 
 	router := mux.NewRouter()
 

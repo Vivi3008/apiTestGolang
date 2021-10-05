@@ -12,7 +12,3 @@ type Login struct {
 }
 
 type JwtLogin string
-
-func SignUp(jwt string) (JwtLogin, error) {
-	return JwtLogin(jwt), nil
-}

@@ -45,7 +45,7 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Balance: body.Balance,
 	}
 
-	account, err := s.accounts.CreateAccount(person)
+	account, err := s.app.CreateAccount(person)
 
 	if err != nil {
 		log.Printf("Failed to save account: %s\n", err.Error())

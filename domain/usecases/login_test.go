@@ -39,6 +39,5 @@ func TestLogin(t *testing.T) {
 		if id != account.Id {
 			t.Fatal("invalid Credentials")
 		}
-
 	})
 }

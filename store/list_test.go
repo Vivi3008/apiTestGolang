@@ -76,15 +76,24 @@ func TestAccountStore_ListAll(t *testing.T) {
 
 	})
 
-	t.Run("Should return all transfers", func(t *testing.T) {
+	t.Run("Should return all transfers from autenticated user", func(t *testing.T) {
+		person := domain.Account{
+			Name:    "Vanny",
+			Cpf:     13323332555,
+			Secret:  "dafd33255",
+			Balance: 2.500,
+		}
+
+		acc1, _ := domain.NewAccount(person)
+
 		transaction := domain.Transfer{
-			AccountOriginId:      "332f3af2",
+			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daf3ds",
 			Amount:               665.41,
 		}
 
 		transaction2 := domain.Transfer{
-			AccountOriginId:      "33fdas2f3af2",
+			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daffsda3ds",
 			Amount:               675.41,
 		}
@@ -93,6 +102,12 @@ func TestAccountStore_ListAll(t *testing.T) {
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
+		}
+
+		err = store.StoreAccount(acc1)
+
+		if err != nil {
+			t.Fatal("Account should have been stored successfully")
 		}
 
 		err = storeTr.StoreTransfer(tr1)
@@ -113,7 +128,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		transfers, err3 := storeTr.ListTransfers()
+		transfers, err3 := storeTr.ListTransfers(domain.AccountOriginId(acc1.Id))
 
 		if err3 != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())

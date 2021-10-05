@@ -4,8 +4,6 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
-// nao esta sendo usado
-
 func (a Accounts) CreateAccount(person domain.Account) (domain.Account, error) {
 	account, err := domain.NewAccount(person)
 
