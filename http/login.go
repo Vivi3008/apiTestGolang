@@ -43,6 +43,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	if accountId == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode("Invalid Credentials")
+		log.Printf("account id: %s", accountId)
 		return
 	}
 

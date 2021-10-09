@@ -38,6 +38,7 @@ func NewServer(usecaseAcc usecases.Accounts, usecaseTr usecases.Tranfers) Server
 	router.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
 	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
 	router.HandleFunc("/transfers", server.ListTransfer).Methods((http.MethodGet))
+	router.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
 
 	server.Handler = router
 	return server
