@@ -13,9 +13,11 @@ const addr = ":3000"
 
 func main() {
 	accountStore := store.NewAccountStore()
+	transStore := store.NewTransferStore()
+	transferStore := usecases.SaveNewTransfer(transStore)
 	accountsUsecase := usecases.CreateNewAccount(accountStore)
 
-	server := api.NewServer(accountsUsecase)
+	server := api.NewServer(accountsUsecase, transferStore)
 
 	log.Printf("Starting server on %s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, server))

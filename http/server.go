@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases"
 	"github.com/gorilla/mux"
 )
 
@@ -12,7 +12,8 @@ type Error struct {
 }
 
 type Server struct {
-	app domain.Usecase
+	app usecases.Accounts
+	tr  usecases.Tranfers
 	http.Handler
 }
 
@@ -22,14 +23,21 @@ const (
 	DateLayout      = "2006-01-02T15:04:05Z"
 )
 
-func NewServer(usecase domain.Usecase) Server {
-	server := Server{app: usecase}
+func NewServer(usecaseAcc usecases.Accounts, usecaseTr usecases.Tranfers) Server {
+	server := Server{
+		app: usecaseAcc,
+		tr:  usecaseTr,
+	}
 
 	router := mux.NewRouter()
+
+	/* protected := mux.NewRouter().StrictSlash(true) */
 
 	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
 	router.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
+	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
+	router.HandleFunc("/transfers", server.ListTransfer).Methods((http.MethodGet))
 
 	server.Handler = router
 	return server

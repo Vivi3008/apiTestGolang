@@ -36,7 +36,7 @@ func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId domain.AccountOriginId) ([]domain.Transfer, error) {
+func (tr TransferStore) ListTransfers(accountOriginId domain.AccountId) ([]domain.Transfer, error) {
 	var list []domain.Transfer
 
 	for _, transfer := range tr.tranStore {

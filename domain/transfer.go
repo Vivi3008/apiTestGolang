@@ -14,10 +14,6 @@ type Transfer struct {
 	CreatedAt            time.Time
 }
 
-type AccountOriginId string
-
-type AccountDestinationId string
-
 func NewTransfer(tr Transfer) (Transfer, error) {
 
 	return Transfer{
