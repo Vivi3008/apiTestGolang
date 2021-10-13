@@ -25,7 +25,7 @@ func TestCreateAccount(t *testing.T) {
 			t.Errorf("Resultado %v, esperado %v", result.Name, expected)
 		}
 
-		if result.CreatedAt.isZero() {
+		if result.CreatedAt.IsZero() {
 			t.Errorf("Expected createdAt at not to be zero")
 		}
 

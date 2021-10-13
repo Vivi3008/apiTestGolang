@@ -31,7 +31,7 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
-		response := Error{Reason: "internal server error"}
+		response := Error{Reason: err.Error()}
 		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(response)

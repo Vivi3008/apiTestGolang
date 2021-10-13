@@ -30,13 +30,13 @@ func TestLogin(t *testing.T) {
 			t.Fatal("Account should have been created successfully")
 		}
 
-		id, err := accounts.NewLogin(credentials)
+		acc, err := accounts.NewLogin(credentials)
 
 		if err != nil {
 			t.Fatal("Login error")
 		}
 
-		if id != account.Id {
+		if acc != domain.AccountId(account.Id) {
 			t.Fatal("invalid Credentials")
 		}
 	})
