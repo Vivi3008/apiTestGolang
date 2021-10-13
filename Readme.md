@@ -156,16 +156,20 @@ Para rodar os testes entre em cada módulo e rode o comando `go test -v`
 
 ### Dependecias utilizadas
 
-- JWT-GO: github.com/dgrijalva/jwt-go v3.2.0+incompatible
-  Para criaçao e manipulação de tokens.
+- JWT-GO: github.com/dgrijalva/jwt-go v3.2.0
+ 
+ Para criaçao e manipulação de tokens.
 
 - UUID: github.com/google/uuid v1.3.0
-  Para criação e geração de ids automatico.
+ 
+ Para criação e geração de ids automatico.
 
 - Gorilla Mux: github.com/gorilla/mux v1.8.0
+  
   Para manipulação de rotas HTTP
 
 - GO Cryptography: golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+  
   Para criptografar senhas como hash e outros formatos.
 
 #### Melhorias definidas
