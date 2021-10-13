@@ -48,7 +48,10 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	account, err := s.app.CreateAccount(person)
 
 	if err != nil {
-		log.Printf("Failed to save account: %s\n", err.Error())
+		response := Error{Reason: err.Error()}
+		log.Printf("Failed to create account: %s\n", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
