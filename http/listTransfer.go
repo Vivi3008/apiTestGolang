@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
@@ -36,7 +35,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method")
 		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
+		return []byte(ACCESS_SECRET), nil
 	})
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

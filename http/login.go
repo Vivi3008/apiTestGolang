@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/dgrijalva/jwt-go"
@@ -18,6 +17,8 @@ type LoginRequest struct {
 type TokenString struct {
 	Token string `json:"token"`
 }
+
+const ACCESS_SECRET = "fadsfasf6s5f65sa6"
 
 func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	var body LoginRequest
@@ -79,7 +80,7 @@ func createToken(accountId domain.AccountId) (string, error) {
 
 	tokenStr := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), idClaims)
 
-	tokenString, err := tokenStr.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	tokenString, err := tokenStr.SignedString([]byte(ACCESS_SECRET))
 
 	if err != nil {
 		return "", err
