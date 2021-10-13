@@ -1,20 +1,27 @@
 package usecases
 
 import (
+	"errors"
+
 	"github.com/Vivi3008/apiTestGolang/domain"
+)
+
+var (
+	ErrIdOriginNotExists  = errors.New("Id da conta de origem é inexistente")
+	ErrIdDestinyNotExists = errors.New("Id da conta de destino é inexistente")
 )
 
 func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error) {
 	accountOrigin, err := a.ListAccountById(domain.AccountId(trans.AccountOriginId))
 
 	if err != nil {
-		return domain.Transfer{}, err
+		return domain.Transfer{}, ErrIdOriginNotExists
 	}
 
 	accountDestination, err := a.ListAccountById(domain.AccountId(trans.AccountDestinationId))
 
 	if err != nil {
-		return domain.Transfer{}, err
+		return domain.Transfer{}, ErrIdDestinyNotExists
 	}
 
 	if accountOrigin.Balance < trans.Amount {
