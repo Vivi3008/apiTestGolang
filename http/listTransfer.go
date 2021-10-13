@@ -20,13 +20,13 @@ type TransferResponse struct {
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
-	if r.Header["Auth"] == nil {
+	if r.Header["Authorization"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode("Authentication required")
 		return
 	}
 
-	authHeader := r.Header.Get("Auth")
+	authHeader := r.Header.Get("Authorization")
 
 	var accountId string
 
