@@ -14,12 +14,12 @@ type ListAccountResponse struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
 	Cpf       int64     `json:"cpf"`
-	Balance   int64     `json:"balance"`
+	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
 type BalanceAccountResponse struct {
-	Balance int64 `json:"balance"`
+	Balance float64 `json:"balance"`
 }
 
 type AccountIdRequest struct {

@@ -12,8 +12,8 @@ import (
 )
 
 type TransferRequest struct {
-	AccountDestinationId string `json:"account_Destination_Id"`
-	Amount               int64  `json:"amount"`
+	AccountDestinationId string  `json:"account_Destination_Id"`
+	Amount               float64 `json:"amount"`
 }
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {

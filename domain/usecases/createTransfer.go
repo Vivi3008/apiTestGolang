@@ -21,8 +21,8 @@ func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error)
 		return domain.Transfer{}, ErrInsufficientLimit
 	}
 
-	balanceOrigin := accountOrigin.Balance - accountDestination.Balance
-	balanceDestiny := accountOrigin.Balance + accountDestination.Balance
+	balanceOrigin := accountOrigin.Balance - trans.Amount
+	balanceDestiny := accountDestination.Balance + trans.Amount
 
 	updateAccOrigin := domain.Account{
 		Id:      string(accountOrigin.Id),

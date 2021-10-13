@@ -18,7 +18,7 @@ type Account struct {
 	Name      string
 	Cpf       int64
 	Secret    string
-	Balance   int64
+	Balance   float64
 	CreatedAt time.Time
 }
 

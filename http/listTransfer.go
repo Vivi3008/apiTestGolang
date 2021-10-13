@@ -16,7 +16,7 @@ type TransferResponse struct {
 	Id                   string    `json:"id"`
 	AccountOriginId      string    `json:"accoundId"`
 	AccountDestinationId string    `json:"destinyId"`
-	Amount               int64     `json:"amount"`
+	Amount               float64   `json:"amount"`
 	CreatedAt            time.Time `json:"createdAt"`
 }
 
