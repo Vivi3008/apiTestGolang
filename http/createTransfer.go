@@ -6,23 +6,20 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/dgrijalva/jwt-go"
 )
 
 type TransferRequest struct {
-	AccountDestinationId string  `json:"account_Destination_Id"`
-	Amount               float64 `json:"amount"`
+	AccountDestinationId string `json:"account_Destination_Id"`
+	Amount               int64  `json:"amount"`
 }
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
-	validAuth := strings.Split(r.Header.Get("Auth"), ",")
-
-	if len(validAuth) == 0 {
+	if r.Header["Auth"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode("Invalid Token")
+		json.NewEncoder(w).Encode("Authentication required")
 		return
 	}
 
@@ -70,15 +67,27 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to do transfer: %s\n", err.Error())
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+		return
+	}
+
+	saveTransfer, err := s.tr.SaveTransfer(transfer)
+
+	if err != nil {
+		log.Printf("Failed to save transfer: %s\n", err.Error())
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
 		return
 	}
 
 	response := TransferResponse{
-		Id:                   transfer.Id,
-		AccountOriginId:      transfer.AccountOriginId,
-		AccountDestinationId: transfer.AccountDestinationId,
-		Amount:               transfer.Amount,
-		CreatedAt:            transfer.CreatedAt,
+		Id:                   saveTransfer.Id,
+		AccountOriginId:      saveTransfer.AccountOriginId,
+		AccountDestinationId: saveTransfer.AccountDestinationId,
+		Amount:               saveTransfer.Amount,
+		CreatedAt:            saveTransfer.CreatedAt,
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

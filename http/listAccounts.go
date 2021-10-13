@@ -14,12 +14,12 @@ type ListAccountResponse struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
 	Cpf       int64     `json:"cpf"`
-	Balance   float64   `json:"balance"`
+	Balance   int64     `json:"balance"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 
 type BalanceAccountResponse struct {
-	Balance float64 `json:"balance"`
+	Balance int64 `json:"balance"`
 }
 
 type AccountIdRequest struct {
@@ -64,7 +64,7 @@ func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Failed to list account: %s", err.Error())
 		response := Error{Reason: err.Error()}
 		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}

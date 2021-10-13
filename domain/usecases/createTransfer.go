@@ -5,9 +5,17 @@ import (
 )
 
 func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error) {
-	accountOrigin, _ := a.ListAccountById(domain.AccountId(trans.AccountOriginId))
+	accountOrigin, err := a.ListAccountById(domain.AccountId(trans.AccountOriginId))
 
-	accountDestination, _ := a.ListAccountById(domain.AccountId(trans.AccountDestinationId))
+	if err != nil {
+		return domain.Transfer{}, err
+	}
+
+	accountDestination, err := a.ListAccountById(domain.AccountId(trans.AccountDestinationId))
+
+	if err != nil {
+		return domain.Transfer{}, err
+	}
 
 	if accountOrigin.Balance < trans.Amount {
 		return domain.Transfer{}, ErrInsufficientLimit
@@ -24,7 +32,7 @@ func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error)
 		Balance: balanceOrigin,
 	}
 
-	err := a.store.StoreAccount(updateAccOrigin)
+	err = a.store.StoreAccount(updateAccOrigin)
 
 	if err != nil {
 		return domain.Transfer{}, err
@@ -58,13 +66,3 @@ func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error)
 
 	return newtransfer, nil
 }
-
-/* func (tr Tranfers) SaveTransfer(trans domain.Transfer) (domain.Transfer, error) {
-	err := tr.storeTransfer.StoreTransfer(trans)
-
-	if err != nil {
-		return domain.Transfer{}, err
-	}
-
-	return trans, nil
-} */

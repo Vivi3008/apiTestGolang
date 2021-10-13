@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
@@ -17,16 +16,14 @@ type TransferResponse struct {
 	Id                   string    `json:"id"`
 	AccountOriginId      string    `json:"accoundId"`
 	AccountDestinationId string    `json:"destinyId"`
-	Amount               float64   `json:"amount"`
+	Amount               int64     `json:"amount"`
 	CreatedAt            time.Time `json:"createdAt"`
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
-	validAuth := strings.Split(r.Header.Get("Auth"), ",")
-
-	if len(validAuth) == 0 {
+	if r.Header["Auth"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode("Invalid Token")
+		json.NewEncoder(w).Encode("Authentication required")
 		return
 	}
 

@@ -10,17 +10,17 @@ import (
 )
 
 type AccountRequest struct {
-	Name    string  `json:"name"`
-	Cpf     int64   `json:"cpf"`
-	Secret  string  `json:"secret"`
-	Balance float64 `json:"balance"`
+	Name    string `json:"name"`
+	Cpf     int64  `json:"cpf"`
+	Secret  string `json:"secret"`
+	Balance int64  `json:"balance"`
 }
 
 type AccountResponse struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
 	Cpf       int64     `json:"cpf"`
-	Balance   float64   `json:"balance"`
+	Balance   int64     `json:"balance"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

@@ -42,8 +42,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 
 	if accountId == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("Invalid Credentials")
-		log.Printf("account id: %s", accountId)
+		json.NewEncoder(w).Encode("Cpf invalid")
 		return
 	}
 
@@ -58,7 +57,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	tokenString, err := createToken(accountId)
 
 	if err != nil {
-		response := Error{Reason: "invalid token"}
+		response := Error{Reason: "Invalid token"}
 		log.Printf("error invalid token: %s\n", err.Error())
 		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusBadRequest)
@@ -70,7 +69,6 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 		Token: tokenString,
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resToken)
 }

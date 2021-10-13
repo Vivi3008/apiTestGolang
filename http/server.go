@@ -31,8 +31,6 @@ func NewServer(usecaseAcc usecases.Accounts, usecaseTr usecases.Tranfers) Server
 
 	router := mux.NewRouter()
 
-	/* protected := mux.NewRouter().StrictSlash(true) */
-
 	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
 	router.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
