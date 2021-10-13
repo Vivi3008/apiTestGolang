@@ -3,15 +3,23 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Vivi3008/apiTestGolang/domain/usecases"
 	api "github.com/Vivi3008/apiTestGolang/http"
 	"github.com/Vivi3008/apiTestGolang/store"
+	"github.com/joho/godotenv"
 )
 
-const addr = ":3000"
-
 func main() {
+	err := godotenv.Load("../.env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	addr := os.Getenv("PORT")
+
 	accountStore := store.NewAccountStore()
 	transStore := store.NewTransferStore()
 	transferStore := usecases.SaveNewTransfer(transStore)

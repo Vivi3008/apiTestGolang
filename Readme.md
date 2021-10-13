@@ -142,37 +142,42 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 
 ## Usage
 
-Faça o clone deste repositorio, para criar a imagem da aplicação com docker digite no terminal:
+Faça o clone deste repositorio, entre na pasta apiTestGolang, crie o arquivo .env na raiz do projeto com as variaveis do .env.example e defina a porta que a aplicação ira rodar e o Access_secret que pode ser uma string de valor qualquer que serve para gerar o token.
+
+Para criar a imagem da aplicação com docker digite no terminal.
 
 `docker image build -t apitestegolang .`
 
-Para rodar o container
+Para rodar o container na porta 3000:
 
-`docker run apitestegolang`
+`docker run -it -p 3000:3000 apitestegolang`
 
-Se nao tiver o docker instalado, entre na pasta cmd `cd cmd` e rode a aplicação com `go run main.go`
+Se nao tiver o docker instalado, baixe as dependencias com `go mod tidy` entre na pasta cmd `cd cmd` e rode a aplicação com `go run main.go`
 
 Para rodar os testes entre em cada módulo e rode o comando `go test -v`
 
-### Dependecias utilizadas
+### Dependências utilizadas
+
+Para criaçao e manipulação de tokens:
 
 - JWT-GO: github.com/dgrijalva/jwt-go v3.2.0
- 
- Para criaçao e manipulação de tokens.
+
+Para criação e geração de ids automatico.
 
 - UUID: github.com/google/uuid v1.3.0
- 
- Para criação e geração de ids automatico.
+
+Para manipulação de rotas HTTP
 
 - Gorilla Mux: github.com/gorilla/mux v1.8.0
-  
-  Para manipulação de rotas HTTP
 
-- GO Cryptography: golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-  
-  Para criptografar senhas como hash e outros formatos.
+Para criptografar senhas como hash e outros formatos.
+
+- BCrypt: golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+
+Para maniupular variáveis ambiente:
+
+- GoDotEnv: github.com/joho/godotenv v1.4.0
 
 #### Melhorias definidas
 
 - Adicionar testes a camada HTTP
-- Melhorar o formato do retorno de erros se o id for inexistente da rota `/transfers`.
