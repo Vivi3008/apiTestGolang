@@ -157,4 +157,4 @@ Para rodar os testes entre em cada módulo e rode o comando `go test -v`
 #### Melhorias definidas
 
 - Adicionar testes a camada HTTP
-- Melhorar o formato do retorno de erros se o id for inexistente da rota `/transfers.
+- Melhorar o formato do retorno de erros se o id for inexistente da rota `/transfers`.
