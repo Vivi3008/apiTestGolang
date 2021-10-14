@@ -17,13 +17,13 @@ type TransferRequest struct {
 }
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
-	if r.Header["Authorization"] == nil {
+	if r.Header["Auth"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode("Authentication required")
 		return
 	}
 
-	authHeader := r.Header.Get("Authorization")
+	authHeader := r.Header.Get("Auth")
 
 	var accountId string
 
@@ -61,6 +61,14 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		AccountOriginId:      accountId,
 		AccountDestinationId: body.AccountDestinationId,
 		Amount:               body.Amount,
+	}
+
+	if accountId == transaction.AccountDestinationId {
+		response := Error{Reason: "Account destiny id can't be the same account origin id"}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
 	}
 
 	transfer, err := s.app.CreateTransfer(transaction)
