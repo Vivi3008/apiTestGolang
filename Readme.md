@@ -20,6 +20,22 @@
 
 Sendo que o balance da conta a ser criada não é obrigatório, sendo inicializada assim com 0.
 
+#### Response Suscess
+
+- Status code: `200`
+- Content-Type: `application/json`
+- Body :
+
+```json
+{
+  "id": "91dae4c2-97f4-4e19-9156-2551a7bf21a0",
+  "name": "Wonder Woman",
+  "cpf": 3333,
+  "balance": 900,
+  "createdAt": "2021-10-13T14:47:32.447513422-03:00"
+}
+```
+
 ### Listar todas as contas - Request
 
 - Path: `/accounts`
@@ -119,6 +135,11 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 - Path: `/transfers`
 - Method: `GET`
 - Header: `Auth: token`
+
+#### Response Suscess
+
+- Status code: `200`
+- Content-Type: `application/json`
 - Body :
 
 ```json
