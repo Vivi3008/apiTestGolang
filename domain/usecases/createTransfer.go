@@ -7,8 +7,8 @@ import (
 )
 
 var (
-	ErrIdOriginNotExists  = errors.New("Id da conta de origem é inexistente")
-	ErrIdDestinyNotExists = errors.New("Id da conta de destino é inexistente")
+	ErrIdOriginNotExists  = errors.New("Account origin id not exists")
+	ErrIdDestinyNotExists = errors.New("Account destiny id not exists")
 )
 
 func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error) {
