@@ -28,7 +28,7 @@ func (a Accounts) CreateAccount(person domain.Account) (domain.Account, error) {
 	err = a.store.StoreAccount(account)
 
 	if err != nil {
-		return domain.Account{}, nil
+		return domain.Account{}, err
 	}
 
 	return account, nil
