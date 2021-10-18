@@ -14,20 +14,20 @@ import (
 
 type TransferResponse struct {
 	Id                   string    `json:"id"`
-	AccountOriginId      string    `json:"accoundId"`
-	AccountDestinationId string    `json:"destinyId"`
+	AccountOriginId      string    `json:"account_origin_id"`
+	AccountDestinationId string    `json:"account_destination_id"`
 	Amount               float64   `json:"amount"`
 	CreatedAt            time.Time `json:"createdAt"`
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
-	if r.Header["Auth"] == nil {
+	if r.Header["Authorization"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode("Authentication required")
 		return
 	}
 
-	authHeader := r.Header.Get("Auth")
+	authHeader := r.Header.Get("Authorization")
 
 	var accountId string
 

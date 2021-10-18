@@ -118,7 +118,7 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 
 - Path: `/transfers`
 - Method: `POST`
-- Header: `Auth: token`
+- Header: `Authorization: token`
 - Body :
 
 ```json
@@ -128,13 +128,29 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 }
 ```
 
+#### Response Suscess
+
+- Status code: `200`
+- Content-Type: `application/json`
+- Body :
+
+```json
+{
+  "id": "3422fdcc-37c4-480e-9954-a38502a2cb9b",
+  "account_origin_id": "3d092a28-2c5e-4af2-bf12-b90010cc45fa",
+  "account_destination_id": "de7cb18e-5799-4f08-be4e-f69c2288e3ea",
+  "amount": 10.5,
+  "createdAt": "2021-10-18T12:13:51.288333982-03:00"
+}
+```
+
 ### Listar todas as transferencias do usuario autenticado
 
 Para acessar essa rota o usuario precisa se autenticar definindo o Auth no header com o token gerado no login.
 
 - Path: `/transfers`
 - Method: `GET`
-- Header: `Auth: token`
+- Header: `Authorization: token`
 
 #### Response Suscess
 
@@ -145,18 +161,11 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 ```json
 [
   {
-    "id": "5baae7d9-0d21-49be-80ed-7958d78a39d7",
-    "accoundId": "4be7586e-1ac7-417f-b387-386f7ac1e8d9",
-    "destinyId": "91dae4c2-97f4-4e19-9156-2551a7bf21a0",
+    "id": "3422fdcc-37c4-480e-9954-a38502a2cb9b",
+    "account_origin_id": "3d092a28-2c5e-4af2-bf12-b90010cc45fa",
+    "account_destination_id": "de7cb18e-5799-4f08-be4e-f69c2288e3ea",
     "amount": 10,
-    "createdAt": "2021-10-13T15:16:14.940601387-03:00"
-  },
-  {
-    "id": "d4bbb621-244f-428e-9f10-98d84830b150",
-    "accoundId": "4be7586e-1ac7-417f-b387-386f7ac1e8d9",
-    "destinyId": "91dae4c2-97f4-4e19-9156-2551a7bf21a0",
-    "amount": 10,
-    "createdAt": "2021-10-13T15:16:23.591572909-03:00"
+    "createdAt": "2021-10-18T12:13:51.288333982-03:00"
   }
 ]
 ```
