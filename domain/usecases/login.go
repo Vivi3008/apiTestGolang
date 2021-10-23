@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrInvalidCredentials = errors.New("cpf, secret are invalid")
+	ErrInvalidPassword    = errors.New("Password invalid")
 )
 
 func (a Accounts) NewLogin(u domain.Login) (domain.AccountId, error) {
@@ -18,8 +19,11 @@ func (a Accounts) NewLogin(u domain.Login) (domain.AccountId, error) {
 	var err error
 
 	for _, account := range listAll {
-		if account.Cpf == int64(u.Cpf) {
+		if account.Cpf == u.Cpf {
 			err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(u.Secret))
+			if err != nil {
+				err = ErrInvalidPassword
+			}
 			result = domain.AccountId(account.Id)
 		}
 	}

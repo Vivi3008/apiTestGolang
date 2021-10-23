@@ -13,7 +13,7 @@ import (
 type ListAccountResponse struct {
 	Id        string    `json:"id"`
 	Name      string    `json:"name"`
-	Cpf       int64     `json:"cpf"`
+	Cpf       int       `json:"cpf"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"createdAt"`
 }

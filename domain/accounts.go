@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -11,12 +12,13 @@ import (
 
 var (
 	ErrInvalidValue = errors.New("name, cpf and secret not be empty")
+	ErrCpfCaracters = errors.New("Cpf must have 11 caracters")
 )
 
 type Account struct {
 	Id        string
 	Name      string
-	Cpf       int64
+	Cpf       int
 	Secret    string
 	Balance   float64
 	CreatedAt time.Time
@@ -27,6 +29,12 @@ type AccountId string
 func NewAccount(person Account) (Account, error) {
 	if person.Name == "" || person.Cpf == 0 || person.Secret == "" {
 		return Account{}, ErrInvalidValue
+	}
+
+	cpfFormat := strconv.Itoa(person.Cpf)
+
+	if len(cpfFormat) != 11 {
+		return Account{}, ErrCpfCaracters
 	}
 
 	hashSecret, err := bcrypt.GenerateFromPassword([]byte(person.Secret), 14)

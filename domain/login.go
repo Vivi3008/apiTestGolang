@@ -7,7 +7,7 @@ var (
 )
 
 type Login struct {
-	Cpf    int64
+	Cpf    int
 	Secret string
 }
 

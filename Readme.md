@@ -36,6 +36,28 @@ Sendo que o balance da conta a ser criada não é obrigatório, sendo inicializa
 }
 ```
 
+##### Failure
+
+- Status code: `400`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "This cpf already exists"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+  ```json
+  {
+    "reason": "Cpf must have 11 caracters"
+  }
+  ```
+
 ### Listar todas as contas - Request
 
 - Path: `/accounts`
@@ -83,6 +105,17 @@ Sendo que o balance da conta a ser criada não é obrigatório, sendo inicializa
 }
 ```
 
+##### Failure
+
+- Status code: `400`
+- Content-Type: `application/json`
+- Body (example):
+  ```json
+  {
+    "reason": "Id does not exist"
+  }
+  ```
+
 ### Login
 
 A rota de login retorna um token valido para ser usado nas rotas `/transfers`
@@ -111,6 +144,39 @@ A rota de login retorna um token valido para ser usado nas rotas `/transfers`
 ```
 
 Obs: o token acima não é válido, so servindo para fins de documentação.
+
+##### Failure
+
+- Status code: `400`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Cpf does not exist"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Password invalid"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+  ```json
+  {
+    "reason": "Invalid token"
+  }
+  ```
 
 ### Fazer uma transferência entre contas
 
@@ -144,6 +210,62 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
 }
 ```
 
+##### Failure
+
+- Status code: `401`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Auth required"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Account destiny id can't be the same account origin id"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Account origin id doesn't exists"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Account destiny id doesn't exists"
+  }
+  ```
+
+  - Status code: `400`
+
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Insufficient Limit"
+  }
+  ```
+
 ### Listar todas as transferencias do usuario autenticado
 
 Para acessar essa rota o usuario precisa se autenticar definindo o Auth no header com o token gerado no login.
@@ -169,6 +291,18 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
   }
 ]
 ```
+
+##### Failure
+
+- Status code: `401`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Auth required"
+  }
+  ```
 
 ## Usage
 

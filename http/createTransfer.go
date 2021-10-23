@@ -18,8 +18,10 @@ type TransferRequest struct {
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	if r.Header["Authorization"] == nil {
+		response := Error{Reason: "Auth required"}
+		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode("Authentication required")
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -75,9 +77,10 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to do transfer: %s\n", err.Error())
+		response := Error{Reason: err.Error()}
 		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 

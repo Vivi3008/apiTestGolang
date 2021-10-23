@@ -11,15 +11,13 @@ import (
 )
 
 type LoginRequest struct {
-	Cpf    int64  `json:"cpf"`
+	Cpf    int    `json:"cpf"`
 	Secret string `json:"secret"`
 }
 
 type TokenString struct {
 	Token string `json:"token"`
 }
-
-const ACCESS_SECRET = "fadsfasf6s5f65sa6"
 
 func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	var body LoginRequest
@@ -43,8 +41,10 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	accountId, err := s.app.NewLogin(login)
 
 	if accountId == "" {
+		response := Error{Reason: "Cpf does not exist"}
+		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("Cpf invalid")
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
