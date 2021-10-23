@@ -48,8 +48,7 @@ Sendo que o balance da conta a ser criada não é obrigatório, sendo inicializa
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
   ```json
@@ -126,7 +125,7 @@ A rota de login retorna um token valido para ser usado nas rotas `/transfers`
 
 ```json
 {
-  "cpf": 2222,
+  "cpf": 66568899564,
   "secret": "123"
 }
 ```
@@ -157,8 +156,7 @@ Obs: o token acima não é válido, so servindo para fins de documentação.
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
 
@@ -168,8 +166,7 @@ Obs: o token acima não é válido, so servindo para fins de documentação.
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
   ```json
@@ -222,8 +219,7 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
 
@@ -233,8 +229,7 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
 
@@ -244,8 +239,7 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
 
@@ -255,8 +249,7 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
   }
   ```
 
-  - Status code: `400`
-
+- Status code: `400`
 - Content-Type: `application/json`
 - Body (example):
 
