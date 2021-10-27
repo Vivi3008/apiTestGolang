@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/google/uuid"
 )
 
@@ -37,14 +35,18 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrCpfCaracters
 	}
 
-	hashSecret, err := bcrypt.GenerateFromPassword([]byte(person.Secret), 14)
+	hashSecret, err := GenerateHashPassword(person.Secret)
+
+	if err != nil {
+		return Account{}, err
+	}
 
 	return Account{
 		Id:        uuid.New().String(),
 		Name:      person.Name,
 		Cpf:       person.Cpf,
-		Secret:    string(hashSecret),
+		Secret:    hashSecret,
 		Balance:   person.Balance,
 		CreatedAt: time.Now(),
-	}, err
+	}, nil
 }

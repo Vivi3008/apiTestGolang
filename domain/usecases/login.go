@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -20,7 +19,7 @@ func (a Accounts) NewLogin(u domain.Login) (domain.AccountId, error) {
 
 	for _, account := range listAll {
 		if account.Cpf == u.Cpf {
-			err = bcrypt.CompareHashAndPassword([]byte(account.Secret), []byte(u.Secret))
+			err = domain.VerifyPasswordHash(account.Secret, u.Secret)
 			if err != nil {
 				err = ErrInvalidPassword
 			}

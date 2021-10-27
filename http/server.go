@@ -23,7 +23,11 @@ const (
 	DateLayout      = "2006-01-02T15:04:05Z"
 )
 
-func NewServer(usecaseAcc usecases.Accounts, usecaseTr usecases.Tranfers) Server {
+func NewServer(
+	usecaseAcc usecases.Accounts,
+	usecaseTr usecases.Tranfers,
+) Server {
+
 	server := Server{
 		app: usecaseAcc,
 		tr:  usecaseTr,

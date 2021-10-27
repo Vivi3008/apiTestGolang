@@ -10,5 +10,3 @@ type Login struct {
 	Cpf    int
 	Secret string
 }
-
-type JwtLogin string
