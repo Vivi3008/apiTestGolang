@@ -18,6 +18,10 @@ type TransferStore struct {
 	tranStore map[string]domain.Transfer
 }
 
+type BillStore struct {
+	billStore map[string]domain.Bill
+}
+
 func NewAccountStore() AccountStore {
 	as := make(map[string]domain.Account)
 
@@ -31,5 +35,13 @@ func NewTransferStore() TransferStore {
 
 	return TransferStore{
 		tranStore: tr,
+	}
+}
+
+func NewBillStore() BillStore {
+	bl := make(map[string]domain.Bill)
+
+	return BillStore{
+		billStore: bl,
 	}
 }

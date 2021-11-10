@@ -1,0 +1,12 @@
+package store
+
+import "github.com/Vivi3008/apiTestGolang/domain"
+
+func (b BillStore) StoreBill(bill domain.Bill) error {
+	if bill.Id == "" {
+		return ErrEmptyID
+	}
+
+	b.billStore[bill.Id] = bill
+	return nil
+}
