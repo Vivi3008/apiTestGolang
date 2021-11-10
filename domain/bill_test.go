@@ -12,6 +12,7 @@ func TestNewBill(t *testing.T) {
 
 		data := Bill{
 			Description: "Conta de Luz",
+			AccountId:   "16sfd5465fd6s",
 			Value:       267.65,
 			DueDate:     dueDate,
 		}
@@ -41,6 +42,7 @@ func TestNewBill(t *testing.T) {
 		billScheduled := Bill{
 			Description:   "Conta de Internet",
 			Value:         150,
+			AccountId:     "16sfd5465fd6s",
 			DueDate:       dueDate,
 			ScheduledDate: scheduledDate,
 		}
@@ -64,6 +66,7 @@ func TestNewBill(t *testing.T) {
 		scheduledDate, _ := time.Parse(layoutIso, "2021-11-08")
 
 		billScheduled := Bill{
+			AccountId:     "16sfd5465fd6s",
 			Description:   "Conta de Agua",
 			Value:         90,
 			DueDate:       dueDate,
@@ -74,6 +77,10 @@ func TestNewBill(t *testing.T) {
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err.Error())
+		}
+
+		if newBillScheduled.Id == "" {
+			t.Error("Id doesn't be nil")
 		}
 
 		dateNewBillScheduled := newBillScheduled.ScheduledDate.Format(layoutIso)

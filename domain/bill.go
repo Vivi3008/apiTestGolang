@@ -9,6 +9,7 @@ import (
 
 type Bill struct {
 	Id            string
+	AccountId     string
 	Description   string
 	Value         float64
 	DueDate       time.Time
@@ -39,6 +40,7 @@ func NewBill(bill Bill) (Bill, error) {
 
 	return Bill{
 		Id:            uuid.New().String(),
+		AccountId:     bill.AccountId,
 		Description:   bill.Description,
 		Value:         bill.Value,
 		DueDate:       bill.DueDate,
