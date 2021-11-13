@@ -19,7 +19,7 @@ type TransferStore struct {
 }
 
 type BillStore struct {
-	billStore map[string]domain.Bill
+	blStore map[string]domain.Bill
 }
 
 func NewAccountStore() AccountStore {
@@ -42,6 +42,6 @@ func NewBillStore() BillStore {
 	bl := make(map[string]domain.Bill)
 
 	return BillStore{
-		billStore: bl,
+		blStore: bl,
 	}
 }

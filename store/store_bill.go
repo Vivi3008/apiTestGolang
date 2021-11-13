@@ -7,6 +7,6 @@ func (b BillStore) StoreBill(bill domain.Bill) error {
 		return ErrEmptyID
 	}
 
-	b.billStore[bill.Id] = bill
+	b.blStore[bill.Id] = bill
 	return nil
 }

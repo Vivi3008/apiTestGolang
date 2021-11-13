@@ -50,7 +50,7 @@ func (tr TransferStore) ListTransfers(accountOriginId domain.AccountId) ([]domai
 func (b BillStore) ListBills(accountOriginId domain.AccountId) ([]domain.Bill, error) {
 	var list []domain.Bill
 
-	for _, bill := range b.billStore {
+	for _, bill := range b.blStore {
 		if accountOriginId == domain.AccountId(bill.AccountId) {
 			list = append(list, bill)
 		}
