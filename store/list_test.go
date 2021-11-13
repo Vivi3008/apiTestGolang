@@ -2,6 +2,7 @@ package store
 
 import (
 	"testing"
+	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
@@ -9,6 +10,9 @@ import (
 func TestAccountStore_ListAll(t *testing.T) {
 	store := NewAccountStore()
 	storeTr := NewTransferStore()
+	storeBl := NewBillStore()
+	layoutIso := "2006-01-02"
+	dueDate, _ := time.Parse(layoutIso, "2021-12-31")
 
 	t.Run("Should return all accounts successfully", func(t *testing.T) {
 		person := domain.Account{
@@ -149,6 +153,42 @@ func TestAccountStore_ListAll(t *testing.T) {
 					t.Errorf("expected %+v; got %+v", tr2, transfer)
 				}
 			}
+		}
+	})
+
+	t.Run("Should list all bills", func(t *testing.T) {
+		bill := domain.Bill{
+			AccountId:   "54545453232",
+			Description: "Unimed",
+			Value:       450.00,
+			DueDate:     dueDate,
+		}
+
+		newBill, _ := domain.NewBill(bill)
+		err := storeBl.StoreBill(newBill)
+
+		if err != nil {
+			t.Errorf("Expected nil, got %s", err.Error())
+		}
+
+		bill2 := domain.Bill{
+			AccountId:   "54545453232",
+			Description: "Academia",
+			Value:       100,
+			DueDate:     dueDate,
+		}
+
+		newBill2, _ := domain.NewBill(bill2)
+		err = storeBl.StoreBill(newBill2)
+
+		if err != nil {
+			t.Errorf("Expected nil, got %s", err.Error())
+		}
+
+		bills, err := storeBl.ListBills(domain.AccountId(bill.AccountId))
+
+		if len(bills) != 2 {
+			t.Errorf("Expected list bills 2, got %v", len(bills))
 		}
 	})
 }
