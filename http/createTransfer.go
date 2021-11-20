@@ -2,13 +2,10 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type TransferRequest struct {
@@ -17,38 +14,11 @@ type TransferRequest struct {
 }
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
-	if r.Header["Authorization"] == nil {
-		response := Error{Reason: "Auth required"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(response)
-		return
-	}
-
-	authHeader := r.Header.Get("Authorization")
-
-	var accountId string
-
-	//pegar o id do token
-	token, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method")
-		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
-	})
-
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		accountId = claims["id"].(string)
-	} else {
-		res := err.Error()
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(res)
-		return
-	}
+	accountId, _ := VerifyAuth(w, r)
 
 	var body TransferRequest
 
-	err = json.NewDecoder(r.Body).Decode(&body)
+	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
 		response := Error{Reason: "invalid request body"}
@@ -60,12 +30,12 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transaction := domain.Transfer{
-		AccountOriginId:      accountId,
+		AccountOriginId:      string(accountId),
 		AccountDestinationId: body.AccountDestinationId,
 		Amount:               body.Amount,
 	}
 
-	if accountId == transaction.AccountDestinationId {
+	if string(accountId) == transaction.AccountDestinationId {
 		response := Error{Reason: "Account destiny id can't be the same account origin id"}
 		w.Header().Set(ContentType, JSONContentType)
 		w.WriteHeader(http.StatusBadRequest)
