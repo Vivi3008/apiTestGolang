@@ -17,14 +17,14 @@ func TestTransfers(t *testing.T) {
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     55566689545,
 			Secret:  "dafd33255",
 			Balance: 2500,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
-			Cpf:     65565,
+			Cpf:     11452369875,
 			Secret:  "vivi",
 			Balance: 2500,
 		}
@@ -32,13 +32,13 @@ func TestTransfers(t *testing.T) {
 		account, err := accounts.CreateAccount(person)
 
 		if err != nil {
-			t.Fatal("Account should have been created successfully")
+			t.Errorf("Expected nil, got %s", err)
 		}
 
 		account2, err := accounts.CreateAccount(person2)
 
 		if err != nil {
-			t.Fatal("Account should have been created successfully")
+			t.Errorf("Expected nil, got %s", err)
 		}
 
 		transfer := domain.Transfer{
