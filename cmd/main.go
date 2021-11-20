@@ -24,8 +24,10 @@ func main() {
 	transStore := store.NewTransferStore()
 	transferStore := usecases.SaveNewTransfer(transStore)
 	accountsUsecase := usecases.CreateNewAccount(accountStore)
+	billStore := store.NewBillStore()
+	blStore := usecases.CreateNewBill(billStore)
 
-	server := api.NewServer(accountsUsecase, transferStore)
+	server := api.NewServer(accountsUsecase, transferStore, blStore)
 
 	log.Printf("Starting server on %s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, server))

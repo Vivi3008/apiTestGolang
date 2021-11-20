@@ -14,6 +14,7 @@ type Error struct {
 type Server struct {
 	app usecases.Accounts
 	tr  usecases.Tranfers
+	bl  usecases.Bills
 	http.Handler
 }
 
@@ -26,11 +27,13 @@ const (
 func NewServer(
 	usecaseAcc usecases.Accounts,
 	usecaseTr usecases.Tranfers,
+	usecaseBl usecases.Bills,
 ) Server {
 
 	server := Server{
 		app: usecaseAcc,
 		tr:  usecaseTr,
+		bl:  usecaseBl,
 	}
 
 	router := mux.NewRouter()
@@ -41,6 +44,8 @@ func NewServer(
 	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
 	router.HandleFunc("/transfers", server.ListTransfer).Methods((http.MethodGet))
 	router.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
+	router.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
+	router.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
 
 	server.Handler = router
 	return server
