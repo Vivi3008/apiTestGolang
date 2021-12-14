@@ -8,7 +8,7 @@ func TestCreateTransfer(t *testing.T) {
 		transaction := Transfer{
 			AccountOriginId:      "fasf313",
 			AccountDestinationId: "1fads1",
-			Amount:               1332.1,
+			Amount:               13321,
 		}
 		expected := "fasf313"
 		result, err := NewTransfer(transaction)

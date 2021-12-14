@@ -16,7 +16,7 @@ func TestLogin(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		credentials := domain.Login{

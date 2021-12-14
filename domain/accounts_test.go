@@ -11,7 +11,7 @@ func TestCreateAccount(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 2500,
 		}
 
 		result, err := NewAccount(person)

@@ -16,21 +16,21 @@ func TestAccounts_ListAll(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     77845100032,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
 			Cpf:     55985633301,
 			Secret:  "4f5ds4af54",
-			Balance: 2.600,
+			Balance: 260000,
 		}
 
 		person3 := domain.Account{
 			Name:    "Giovanna",
 			Cpf:     85665232145,
 			Secret:  "fadsfdsaf",
-			Balance: 3.600,
+			Balance: 360000,
 		}
 
 		_, err := accounts.CreateAccount(person)
@@ -71,7 +71,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		account, err := accounts.CreateAccount(person)
