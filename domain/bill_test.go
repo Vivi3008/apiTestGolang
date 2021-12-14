@@ -2,12 +2,13 @@ package domain
 
 import (
 	"testing"
+	"time"
 )
 
 func TestNewBill(t *testing.T) {
 	t.Run("Should create a new bill without scheduled date successfully", func(t *testing.T) {
 		layoutIso := "2006-01-02"
-		dueDate := actualDate.AddDate(0, 0, 3)
+		dueDate := time.Now().AddDate(0, 0, 3)
 
 		data := Bill{
 			Description: "Conta de Luz",
@@ -24,7 +25,7 @@ func TestNewBill(t *testing.T) {
 
 		scheduledDate := newBill.ScheduledDate.Format(layoutIso)
 
-		if scheduledDate != actualDate.Format(layoutIso) {
+		if scheduledDate != time.Now().Format(layoutIso) {
 			t.Errorf("Expected scheduled Date is actual day, got %v", newBill.ScheduledDate)
 		}
 
@@ -35,8 +36,8 @@ func TestNewBill(t *testing.T) {
 
 	t.Run("Should create a new Bill with future scheduled date", func(t *testing.T) {
 		layoutIso := "2006-01-02"
-		dueDate := actualDate.AddDate(0, 0, 5)
-		scheduledDate := actualDate.AddDate(0, 0, 6)
+		dueDate := time.Now().AddDate(0, 0, 5)
+		scheduledDate := time.Now().AddDate(0, 0, 6)
 
 		billScheduled := Bill{
 			Description:   "Conta de Internet",

@@ -27,9 +27,8 @@ const (
 )
 
 var (
-	actualDate     = time.Now()
-	ErrEmpty       = errors.New("Missing is data")
-	ErrDateInvalid = errors.New("Scheduled date cannot be before today")
+	ErrEmpty       = errors.New("missing is data")
+	ErrDateInvalid = errors.New("scheduled date cannot be before today")
 )
 
 func NewBill(bill Bill) (Bill, error) {
@@ -56,11 +55,11 @@ func NewBill(bill Bill) (Bill, error) {
 
 func verifyDate(date time.Time) (time.Time, error) {
 	if date.IsZero() {
-		return actualDate, nil
+		return time.Now(), nil
 	}
 
-	if date.Before(actualDate) {
-		return actualDate, ErrDateInvalid
+	if date.Before(time.Now()) {
+		return time.Now(), ErrDateInvalid
 	}
 
 	return date, nil
