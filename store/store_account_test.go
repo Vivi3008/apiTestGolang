@@ -14,7 +14,7 @@ func TestStoreAccount(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 25000,
 		}
 		account, _ := domain.NewAccount(person) //cria a conta
 		err := store.StoreAccount(account)      // guarda a conta num map

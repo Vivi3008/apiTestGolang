@@ -12,7 +12,7 @@ import (
 type BillReqRes struct {
 	AccountId     string        `json:"account_id"`
 	Description   string        `json:"description"`
-	Value         float64       `json:"value"`
+	Value         int64         `json:"value"`
 	DueDate       time.Time     `json:"due_date"`
 	ScheduledDate time.Time     `json:"scheduled_date"`
 	StatusBill    domain.Status `json:"status"`

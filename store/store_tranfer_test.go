@@ -13,7 +13,7 @@ func TestStoreTransfer(t *testing.T) {
 		transaction := domain.Transfer{
 			AccountOriginId:      "332f3af2",
 			AccountDestinationId: "21daf3ds",
-			Amount:               665.41,
+			Amount:               66541,
 		}
 
 		transfer, _ := domain.NewTransfer(transaction) //cria a transferencia
@@ -34,7 +34,7 @@ func TestStoreTransfer(t *testing.T) {
 		transaction := domain.Transfer{
 			AccountOriginId:      "332f3af2",
 			AccountDestinationId: "21daf3ds",
-			Amount:               665.41,
+			Amount:               66541,
 		}
 
 		err := store.StoreTransfer(transaction)

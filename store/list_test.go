@@ -19,14 +19,14 @@ func TestAccountStore_ListAll(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		acc1, err := domain.NewAccount(person)
@@ -85,7 +85,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			Name:    "Vanny",
 			Cpf:     13323332555,
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		acc1, _ := domain.NewAccount(person)
@@ -93,13 +93,13 @@ func TestAccountStore_ListAll(t *testing.T) {
 		transaction := domain.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daf3ds",
-			Amount:               665.41,
+			Amount:               66541,
 		}
 
 		transaction2 := domain.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daffsda3ds",
-			Amount:               675.41,
+			Amount:               67541,
 		}
 
 		tr1, err := domain.NewTransfer(transaction)
