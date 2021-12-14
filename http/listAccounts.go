@@ -4,18 +4,17 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/gorilla/mux"
 )
 
 type ListAccountResponse struct {
-	Id        string    `json:"id"`
-	Name      string    `json:"name"`
-	Cpf       int       `json:"cpf"`
-	Balance   int64     `json:"balance"`
-	CreatedAt time.Time `json:"createdAt"`
+	Id        string `json:"id"`
+	Name      string `json:"name"`
+	Cpf       int    `json:"cpf"`
+	Balance   int64  `json:"balance"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type BalanceAccountResponse struct {
@@ -45,7 +44,7 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 		response[i].Name = account.Name
 		response[i].Cpf = account.Cpf
 		response[i].Balance = account.Balance
-		response[i].CreatedAt = account.CreatedAt
+		response[i].CreatedAt = account.CreatedAt.Format(DateLayout)
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

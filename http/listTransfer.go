@@ -4,17 +4,16 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 type TransferResponse struct {
-	Id                   string    `json:"id"`
-	AccountOriginId      string    `json:"account_origin_id"`
-	AccountDestinationId string    `json:"account_destination_id"`
-	Amount               int64     `json:"amount"`
-	CreatedAt            time.Time `json:"createdAt"`
+	Id                   string `json:"id"`
+	AccountOriginId      string `json:"account_origin_id"`
+	AccountDestinationId string `json:"account_destination_id"`
+	Amount               int64  `json:"amount"`
+	CreatedAt            string `json:"createdAt"`
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +33,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		response[i].AccountOriginId = transfer.AccountOriginId
 		response[i].AccountDestinationId = transfer.AccountDestinationId
 		response[i].Amount = transfer.Amount
-		response[i].CreatedAt = transfer.CreatedAt
+		response[i].CreatedAt = transfer.CreatedAt.Format(DateLayout)
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

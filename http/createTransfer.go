@@ -68,7 +68,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		AccountOriginId:      saveTransfer.AccountOriginId,
 		AccountDestinationId: saveTransfer.AccountDestinationId,
 		Amount:               saveTransfer.Amount,
-		CreatedAt:            saveTransfer.CreatedAt,
+		CreatedAt:            saveTransfer.CreatedAt.Format(DateLayout),
 	}
 
 	w.Header().Set(ContentType, JSONContentType)
