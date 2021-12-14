@@ -3,7 +3,7 @@ package domain
 import "errors"
 
 var (
-	ErrEmptyData = errors.New("Cpf and secret should not be empty")
+	ErrEmptyData = errors.New("cpf and secret should not be empty")
 )
 
 type Login struct {

@@ -10,7 +10,7 @@ import (
 
 var (
 	ErrInvalidValue = errors.New("name, cpf and secret not be empty")
-	ErrCpfCaracters = errors.New("Cpf must have 11 caracters")
+	ErrCpfCaracters = errors.New("cpf must have 11 caracters")
 )
 
 type Account struct {

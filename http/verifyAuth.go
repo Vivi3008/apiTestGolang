@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	ErrAuth = errors.New("Authentication required")
+	ErrAuth = errors.New("authentication required")
 )
 
 func VerifyAuth(w http.ResponseWriter, r *http.Request) (domain.AccountId, error) {

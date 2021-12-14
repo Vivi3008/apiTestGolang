@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	ErrInsufficientLimit = errors.New("Insufficient Limit")
+	ErrInsufficientLimit = errors.New("insufficient Limit")
 )
 
 func (s Tranfers) ListTransfer(originId domain.AccountId) ([]domain.Transfer, error) {

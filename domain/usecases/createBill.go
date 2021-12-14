@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrValueEmpty = errors.New("Value is empty")
+	ErrValueEmpty = errors.New("value is empty")
 )
 
 //cria o pagamento e atualiza a conta

@@ -8,7 +8,7 @@ import (
 
 var (
 	ErrInvalidCredentials = errors.New("cpf, secret are invalid")
-	ErrInvalidPassword    = errors.New("Password invalid")
+	ErrInvalidPassword    = errors.New("password invalid")
 )
 
 func (a Accounts) NewLogin(u domain.Login) (domain.AccountId, error) {
