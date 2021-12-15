@@ -6,6 +6,13 @@ type Bills struct {
 	storeBill store.BillStore
 }
 
+type MethodPayment string
+
+const (
+	Debit  MethodPayment = "Débito"
+	Credit MethodPayment = "Crédito"
+)
+
 func CreateNewBill(store store.BillStore) Bills {
 	return Bills{
 		storeBill: store,
