@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 func (s Server) ListBills(w http.ResponseWriter, r *http.Request) {
 	accountId, _ := VerifyAuth(w, r)
 
-	list, err := s.bl.ListAllBills(domain.AccountId(accountId))
+	list, err := s.bl.ListAllBills(string(accountId))
 
 	if err != nil {
 		log.Printf("Failed to do list bills: %s\n", err.Error())

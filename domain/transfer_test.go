@@ -28,6 +28,5 @@ func TestCreateTransfer(t *testing.T) {
 		if result.Id == "" {
 			t.Errorf("Expected ID not to be empty")
 		}
-
 	})
 }

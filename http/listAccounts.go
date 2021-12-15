@@ -5,20 +5,19 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/gorilla/mux"
 )
 
 type ListAccountResponse struct {
 	Id        string `json:"id"`
 	Name      string `json:"name"`
-	Cpf       int    `json:"cpf"`
-	Balance   int64  `json:"balance"`
+	Cpf       string `json:"cpf"`
+	Balance   int    `json:"balance"`
 	CreatedAt string `json:"createdAt"`
 }
 
 type BalanceAccountResponse struct {
-	Balance int64 `json:"balance"`
+	Balance int `json:"balance"`
 }
 
 type AccountIdRequest struct {
@@ -55,7 +54,7 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	personId := domain.AccountId(vars["account_id"])
+	personId := vars["account_id"]
 
 	account, err := s.app.ListAccountById(personId)
 

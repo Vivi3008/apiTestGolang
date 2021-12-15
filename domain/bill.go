@@ -11,7 +11,7 @@ type Bill struct {
 	Id            string
 	AccountId     string
 	Description   string
-	Value         int64
+	Value         int
 	DueDate       time.Time
 	ScheduledDate time.Time
 	StatusBill    Status

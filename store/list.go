@@ -18,7 +18,7 @@ func (a AccountStore) ListAll() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error) {
+func (a AccountStore) ListOne(accountId string) (domain.Account, error) {
 	listAll, _ := a.ListAll()
 
 	var listOne domain.Account
@@ -36,22 +36,24 @@ func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId domain.AccountId) ([]domain.Transfer, error) {
+func (tr TransferStore) ListTransfers(accountOriginId string) ([]domain.Transfer, error) {
 	var list []domain.Transfer
 
 	for _, transfer := range tr.tranStore {
-		if transfer.AccountOriginId == string(accountOriginId) {
+		if transfer.AccountOriginId == accountOriginId {
 			list = append(list, transfer)
+		} else {
+			return nil, errors.New("id doesn't exists")
 		}
 	}
 	return list, nil
 }
 
-func (b BillStore) ListBills(accountOriginId domain.AccountId) ([]domain.Bill, error) {
+func (b BillStore) ListBills(accountOriginId string) ([]domain.Bill, error) {
 	var list []domain.Bill
 
 	for _, bill := range b.blStore {
-		if accountOriginId == domain.AccountId(bill.AccountId) {
+		if accountOriginId == bill.AccountId {
 			list = append(list, bill)
 		}
 	}

@@ -18,7 +18,7 @@ func TestBills(t *testing.T) {
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     55566689545,
+			Cpf:     "55566689545",
 			Secret:  "dafd33255",
 			Balance: 2500,
 		}
@@ -58,7 +58,11 @@ func TestBills(t *testing.T) {
 		}
 
 		// verificando se debitou o valor na conta
-		acc, err := accountStore.ListOne(domain.AccountId(account.Id))
+		acc, err := accountStore.ListOne(account.Id)
+
+		if err != nil {
+			t.Errorf("Expected nil, got %s", err)
+		}
 
 		if acc.Balance != 2350 {
 			t.Errorf("Expected %v, got %v", 2350, acc.Balance)

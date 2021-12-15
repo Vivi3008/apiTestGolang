@@ -18,7 +18,7 @@ func (a Accounts) CreateBill(bill domain.Bill) (domain.Bill, error) {
 		return domain.Bill{}, err
 	}
 
-	_, err = a.VerifyAccount(domain.AccountId(bill.AccountId), pay.Value, true)
+	_, err = a.VerifyAccount(bill.AccountId, pay.Value, true)
 
 	if err != nil {
 		return domain.Bill{}, err
@@ -28,9 +28,9 @@ func (a Accounts) CreateBill(bill domain.Bill) (domain.Bill, error) {
 }
 
 // verifica se a conta tem saldo, e atualiza a conta
-func (a Accounts) VerifyAccount(accountId domain.AccountId, value int64, debit bool) (domain.Account, error) {
+func (a Accounts) VerifyAccount(accountId string, value int, debit bool) (domain.Account, error) {
 	acc, err := a.ListAccountById(accountId)
-	var actualBalance int64
+	var actualBalance int
 
 	if err != nil {
 		return domain.Account{}, err
@@ -63,7 +63,7 @@ func (a Accounts) VerifyAccount(accountId domain.AccountId, value int64, debit b
 	return updateAcc, nil
 }
 
-func debitFromAccount(balance int64, value int64) (int64, error) {
+func debitFromAccount(balance int, value int) (int, error) {
 	if balance < value {
 		return 0, ErrInsufficientLimit
 	}
@@ -72,7 +72,7 @@ func debitFromAccount(balance int64, value int64) (int64, error) {
 	return actualBalance, nil
 }
 
-func creditToAccount(balance int64, value int64) (int64, error) {
+func creditToAccount(balance int, value int) (int, error) {
 	if value <= 0 {
 		return 0, ErrValueEmpty
 	}

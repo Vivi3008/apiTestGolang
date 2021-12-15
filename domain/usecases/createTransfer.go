@@ -5,21 +5,21 @@ import (
 )
 
 func (a Accounts) CreateTransfer(trans domain.Transfer) (domain.Transfer, error) {
-	accountOrigin, err := a.VerifyAccount(domain.AccountId(trans.AccountOriginId), trans.Amount, true)
+	accountOrigin, err := a.VerifyAccount(trans.AccountOriginId, trans.Amount, true)
 
 	if err != nil {
 		return domain.Transfer{}, err
 	}
 
-	accountDestination, err := a.VerifyAccount(domain.AccountId(trans.AccountDestinationId), trans.Amount, false)
+	accountDestination, err := a.VerifyAccount(trans.AccountDestinationId, trans.Amount, false)
 
 	if err != nil {
 		return domain.Transfer{}, err
 	}
 
 	transferOk := domain.Transfer{
-		AccountOriginId:      string(accountOrigin.Id),
-		AccountDestinationId: string(accountDestination.Id),
+		AccountOriginId:      accountOrigin.Id,
+		AccountDestinationId: accountDestination.Id,
 		Amount:               trans.Amount,
 	}
 

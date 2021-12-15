@@ -14,21 +14,21 @@ func TestAccounts_ListAll(t *testing.T) {
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     77845100032,
+			Cpf:     "77845100032",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
-			Cpf:     55985633301,
+			Cpf:     "55985633301",
 			Secret:  "4f5ds4af54",
 			Balance: 260000,
 		}
 
 		person3 := domain.Account{
 			Name:    "Giovanna",
-			Cpf:     85665232145,
+			Cpf:     "85665232145",
 			Secret:  "fadsfdsaf",
 			Balance: 360000,
 		}
@@ -69,7 +69,7 @@ func TestAccounts_ListAll(t *testing.T) {
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
@@ -80,7 +80,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			t.Fatal("Account should have been created successfully")
 		}
 
-		account, err = accounts.ListAccountById(domain.AccountId(account.Id))
+		account, err = accounts.ListAccountById(account.Id)
 
 		if err != nil {
 			t.Fatal("expected nil; got ")

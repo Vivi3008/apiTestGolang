@@ -17,14 +17,14 @@ func TestAccountStore_ListAll(t *testing.T) {
 	t.Run("Should return all accounts successfully", func(t *testing.T) {
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
@@ -83,7 +83,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 	t.Run("Should return all transfers from autenticated user", func(t *testing.T) {
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
@@ -132,7 +132,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		transfers, err3 := storeTr.ListTransfers(domain.AccountId(acc1.Id))
+		transfers, err3 := storeTr.ListTransfers(acc1.Id)
 
 		if err3 != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())
@@ -185,7 +185,11 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		bills, err := storeBl.ListBills(domain.AccountId(bill.AccountId))
+		bills, err := storeBl.ListBills(bill.AccountId)
+
+		if err != nil {
+			t.Errorf("Expected nil, got %s", err.Error())
+		}
 
 		if len(bills) != 2 {
 			t.Errorf("Expected list bills 2, got %v", len(bills))

@@ -2,7 +2,6 @@ package domain
 
 import (
 	"errors"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,25 +12,23 @@ var (
 	ErrCpfCaracters = errors.New("cpf must have 11 caracters")
 )
 
+type AccountId string
+
 type Account struct {
 	Id        string
 	Name      string
-	Cpf       int
+	Cpf       string
 	Secret    string
-	Balance   int64
+	Balance   int
 	CreatedAt time.Time
 }
 
-type AccountId string
-
 func NewAccount(person Account) (Account, error) {
-	if person.Name == "" || person.Cpf == 0 || person.Secret == "" {
+	if person.Name == "" || person.Cpf == "" || person.Secret == "" {
 		return Account{}, ErrInvalidValue
 	}
 
-	cpfFormat := strconv.Itoa(person.Cpf)
-
-	if len(cpfFormat) != 11 {
+	if len(person.Cpf) != 11 {
 		return Account{}, ErrCpfCaracters
 	}
 

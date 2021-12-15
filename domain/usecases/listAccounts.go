@@ -14,7 +14,7 @@ func (a Accounts) ListAllAccounts() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a Accounts) ListAccountById(id domain.AccountId) (domain.Account, error) {
+func (a Accounts) ListAccountById(id string) (domain.Account, error) {
 	account, err := a.store.ListOne(id)
 
 	if err != nil {
