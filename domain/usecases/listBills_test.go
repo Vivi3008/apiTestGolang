@@ -29,8 +29,7 @@ func TestBills(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		layoutIso := "2006-01-02"
-		dueDate, _ := time.Parse(layoutIso, "2021-12-31")
+		dueDate := time.Now().AddDate(0, 0, 2)
 
 		bill := domain.Bill{
 			AccountId:   account.Id,
