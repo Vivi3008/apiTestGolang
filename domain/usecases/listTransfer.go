@@ -11,11 +11,12 @@ var (
 	ErrInsufficientLimit = errors.New("insufficient Limit")
 )
 
-func (s Tranfers) ListTransfer(originId domain.AccountId) ([]domain.Transfer, error) {
+func (s Tranfers) ListTransfer(originId string) ([]domain.Transfer, error) {
 	list, err := s.storeTransfer.ListTransfers(originId)
 
+	fmt.Printf("Lista da conta %v\n", list)
 	if err != nil {
-		return nil, fmt.Errorf("Could not list all accounts: %v\n", err)
+		return nil, err
 	}
 
 	return list, nil

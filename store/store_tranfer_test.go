@@ -43,4 +43,18 @@ func TestStoreTransfer(t *testing.T) {
 			t.Errorf("expected %s, got %s", ErrEmptyID, err.Error())
 		}
 	})
+
+	t.Run("Should not list transfers if account origin Id doesnt exists", func(t *testing.T) {
+		transaction := domain.Transfer{
+			AccountOriginId:      "f63cb25b-786c-4ff2-9a67-22a065d307d3",
+			AccountDestinationId: "21daf3ds",
+			Amount:               66541,
+		}
+
+		_, err := store.ListTransfers(transaction.AccountOriginId)
+
+		if err == nil {
+			t.Errorf("Expected error id doesnt exists, got %s", err)
+		}
+	})
 }
