@@ -7,7 +7,6 @@ import (
 
 func TestNewBill(t *testing.T) {
 	t.Run("Should create a new bill without scheduled date successfully", func(t *testing.T) {
-		layoutIso := "2006-01-02"
 		dueDate := time.Now().AddDate(0, 0, 3)
 
 		data := Bill{
@@ -23,10 +22,11 @@ func TestNewBill(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		scheduledDate := newBill.ScheduledDate.Format(layoutIso)
+		scheduledDate := newBill.ScheduledDate.UTC().Truncate(24 * time.Hour)
+		actualDay := time.Now().UTC().Truncate(24 * time.Hour)
 
-		if scheduledDate != time.Now().Format(layoutIso) {
-			t.Errorf("Expected scheduled Date is actual day, got %v", newBill.ScheduledDate)
+		if scheduledDate != actualDay {
+			t.Errorf("Expected scheduled Date is %v, got %v", actualDay, scheduledDate)
 		}
 
 		if newBill.StatusBill != Agendado {
@@ -35,7 +35,6 @@ func TestNewBill(t *testing.T) {
 	})
 
 	t.Run("Should create a new Bill with future scheduled date", func(t *testing.T) {
-		layoutIso := "2006-01-02"
 		dueDate := time.Now().AddDate(0, 0, 5)
 		scheduledDate := time.Now().AddDate(0, 0, 6)
 
@@ -53,10 +52,10 @@ func TestNewBill(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		dateNewBillScheduled := newBillScheduled.ScheduledDate.Format(layoutIso)
+		dateNewBillScheduled := newBillScheduled.ScheduledDate
 
-		if dateNewBillScheduled != scheduledDate.Format(layoutIso) {
-			t.Errorf("Expected %v, got %v", dateNewBillScheduled, scheduledDate.Format(layoutIso))
+		if dateNewBillScheduled != scheduledDate {
+			t.Errorf("Expected %v, got %v", dateNewBillScheduled, scheduledDate)
 		}
 	})
 }
