@@ -1,36 +1,101 @@
 package domain
 
 import (
+	"errors"
+	"reflect"
 	"testing"
+	"time"
 )
 
+var person = Account{
+	Name:    "Vanny",
+	Cpf:     "13323332555",
+	Secret:  "dafd33255",
+	Balance: 2500,
+}
+
 func TestCreateAccount(t *testing.T) {
+	type testCase struct {
+		name string
+		args Account
+		want Account
+		err  error
+	}
 
-	t.Run("Should create an account successfully", func(t *testing.T) {
-		person := Account{
-			Name:    "Vanny",
-			Cpf:     "13323332555",
-			Secret:  "dafd33255",
-			Balance: 2500,
-		}
+	testCases := []testCase{
+		{
+			name: "Should create an account succesfully",
+			args: Account{
+				Name:   person.Name,
+				Cpf:    person.Cpf,
+				Secret: person.Secret,
+			},
+			want: Account{
+				Name:      person.Name,
+				Cpf:       person.Cpf,
+				Balance:   0,
+				CreatedAt: time.Now(),
+			},
+			err: nil,
+		},
+		{
+			name: "Fail to create account with empty name",
+			args: Account{
+				Cpf:    person.Cpf,
+				Secret: person.Secret,
+			},
+			want: Account{},
+			err:  ErrInvalidValue,
+		},
+		{
+			name: "Fail to create account with empty secret",
+			args: Account{
+				Name: person.Name,
+				Cpf:  person.Cpf,
+			},
+			want: Account{},
+			err:  ErrInvalidValue,
+		},
+		{
+			name: "Fail to create account with empty cpf",
+			args: Account{
+				Name:   person.Name,
+				Secret: person.Secret,
+			},
+			want: Account{},
+			err:  ErrInvalidValue,
+		},
+		{
+			name: "Fail to create account with cpf less 11 caracters",
+			args: Account{
+				Name:   "Davy",
+				Cpf:    "146565",
+				Secret: "teset123",
+			},
+			want: Account{},
+			err:  ErrCpfCaracters,
+		},
+	}
 
-		result, err := NewAccount(person)
-		expected := "Vanny"
+	for _, tc := range testCases {
+		tt := tc
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewAccount(tt.args)
 
-		if err != nil {
-			t.Errorf("expected nil, got %s", err.Error())
-		}
+			if !errors.Is(err, tt.err) {
+				t.Errorf("got error %v expected error %v", err, tt.err)
+			}
 
-		if result.Name != expected {
-			t.Errorf("Resultado %v, esperado %v", result.Name, expected)
-		}
+			if got.Id != "" {
+				got.Id = tt.want.Id
+			}
 
-		if result.CreatedAt.IsZero() {
-			t.Errorf("Expected createdAt at not to be zero")
-		}
+			tt.want.Secret = got.Secret
+			tt.want.CreatedAt = got.CreatedAt
 
-		if result.Id == "" {
-			t.Errorf("Expected ID not to be empty")
-		}
-	})
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("got %v expected %v", got, tt.want)
+			}
+		})
+	}
 }
