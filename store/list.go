@@ -37,16 +37,15 @@ func (a AccountStore) ListOne(accountId string) (domain.Account, error) {
 }
 
 func (tr TransferStore) ListTransfers(accountOriginId string) ([]domain.Transfer, error) {
-	var list []domain.Transfer
+	transfers := make([]domain.Transfer, 0)
 
 	for _, transfer := range tr.tranStore {
-		if transfer.AccountOriginId == accountOriginId {
-			list = append(list, transfer)
-		} else {
-			return nil, errors.New("id doesn't exists")
+		if accountOriginId == transfer.AccountOriginId {
+			transfers = append(transfers, transfer)
 		}
 	}
-	return list, nil
+
+	return transfers, nil
 }
 
 func (b BillStore) ListBills(accountOriginId string) ([]domain.Bill, error) {

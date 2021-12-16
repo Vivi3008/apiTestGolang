@@ -17,7 +17,18 @@ type TransferResponse struct {
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 	accountId, _ := VerifyAuth(w, r)
 
-	list, err := s.tr.ListTransfer(string(accountId))
+	account, err := s.app.ListAccountById(string(accountId))
+
+	if err != nil {
+		log.Printf("Failed to list transfer: %s\n", err.Error())
+		response := Error{Reason: err.Error()}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	list, err := s.tr.ListTransfer(string(account.Id))
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
