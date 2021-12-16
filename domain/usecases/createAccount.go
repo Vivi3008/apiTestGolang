@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrCpfExists = errors.New("This cpf already exists")
+	ErrCpfExists = errors.New("this cpf already exists")
 )
 
 func (a Accounts) CreateAccount(person domain.Account) (domain.Account, error) {

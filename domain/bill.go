@@ -11,7 +11,7 @@ type Bill struct {
 	Id            string
 	AccountId     string
 	Description   string
-	Value         float64
+	Value         int
 	DueDate       time.Time
 	ScheduledDate time.Time
 	StatusBill    Status
@@ -27,8 +27,8 @@ const (
 )
 
 var (
-	actualDate = time.Now()
-	ErrEmpty   = errors.New("Missing is data")
+	ErrEmpty       = errors.New("missing is data")
+	ErrDateInvalid = errors.New("scheduled date cannot be before today")
 )
 
 func NewBill(bill Bill) (Bill, error) {
@@ -36,7 +36,11 @@ func NewBill(bill Bill) (Bill, error) {
 		return Bill{}, ErrEmpty
 	}
 
-	scheduled := verifyDate(bill.ScheduledDate)
+	scheduled, err := verifyDate(bill.ScheduledDate)
+
+	if err != nil {
+		return Bill{}, err
+	}
 
 	return Bill{
 		Id:            uuid.New().String(),
@@ -49,10 +53,14 @@ func NewBill(bill Bill) (Bill, error) {
 	}, nil
 }
 
-func verifyDate(date time.Time) time.Time {
-	if date.IsZero() || date.Before(actualDate) {
-		return actualDate
+func verifyDate(date time.Time) (time.Time, error) {
+	if date.IsZero() {
+		return time.Now(), nil
 	}
 
-	return date
+	if date.Before(time.Now().UTC().Truncate(24 * time.Hour)) {
+		return time.Now(), ErrDateInvalid
+	}
+
+	return date, nil
 }

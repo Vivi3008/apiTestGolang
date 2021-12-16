@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	ErrIdNotExists = errors.New("Id does not exist")
+	ErrIdNotExists = errors.New("id does not exist")
 )
 
 func (a AccountStore) ListAll() ([]domain.Account, error) {
@@ -18,7 +18,7 @@ func (a AccountStore) ListAll() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error) {
+func (a AccountStore) ListOne(accountId string) (domain.Account, error) {
 	listAll, _ := a.ListAll()
 
 	var listOne domain.Account
@@ -36,22 +36,23 @@ func (a AccountStore) ListOne(accountId domain.AccountId) (domain.Account, error
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId domain.AccountId) ([]domain.Transfer, error) {
-	var list []domain.Transfer
+func (tr TransferStore) ListTransfers(accountOriginId string) ([]domain.Transfer, error) {
+	transfers := make([]domain.Transfer, 0)
 
 	for _, transfer := range tr.tranStore {
-		if transfer.AccountOriginId == string(accountOriginId) {
-			list = append(list, transfer)
+		if accountOriginId == transfer.AccountOriginId {
+			transfers = append(transfers, transfer)
 		}
 	}
-	return list, nil
+
+	return transfers, nil
 }
 
-func (b BillStore) ListBills(accountOriginId domain.AccountId) ([]domain.Bill, error) {
+func (b BillStore) ListBills(accountOriginId string) ([]domain.Bill, error) {
 	var list []domain.Bill
 
 	for _, bill := range b.blStore {
-		if accountOriginId == domain.AccountId(bill.AccountId) {
+		if accountOriginId == bill.AccountId {
 			list = append(list, bill)
 		}
 	}

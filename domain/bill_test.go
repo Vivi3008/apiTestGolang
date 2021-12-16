@@ -6,14 +6,13 @@ import (
 )
 
 func TestNewBill(t *testing.T) {
-	t.Run("Should create a new bill successfully", func(t *testing.T) {
-		layoutIso := "2006-01-02"
-		dueDate, _ := time.Parse(layoutIso, "2021-12-31")
+	t.Run("Should create a new bill without scheduled date successfully", func(t *testing.T) {
+		dueDate := time.Now().AddDate(0, 0, 3)
 
 		data := Bill{
 			Description: "Conta de Luz",
 			AccountId:   "16sfd5465fd6s",
-			Value:       267.65,
+			Value:       26765,
 			DueDate:     dueDate,
 		}
 
@@ -23,10 +22,11 @@ func TestNewBill(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		dataAgendadaAtual := newBill.ScheduledDate.Format(layoutIso)
+		scheduledDate := newBill.ScheduledDate.UTC().Truncate(24 * time.Hour)
+		actualDay := time.Now().UTC().Truncate(24 * time.Hour)
 
-		if dataAgendadaAtual != actualDate.Format(layoutIso) {
-			t.Errorf("Expected scheduled Date is actual day, got %v", newBill.ScheduledDate)
+		if scheduledDate != actualDay {
+			t.Errorf("Expected scheduled Date is %v, got %v", actualDay, scheduledDate)
 		}
 
 		if newBill.StatusBill != Agendado {
@@ -35,13 +35,12 @@ func TestNewBill(t *testing.T) {
 	})
 
 	t.Run("Should create a new Bill with future scheduled date", func(t *testing.T) {
-		layoutIso := "2006-01-02"
-		dueDate, _ := time.Parse(layoutIso, "2021-12-31")
-		scheduledDate, _ := time.Parse(layoutIso, "2021-11-12")
+		dueDate := time.Now().AddDate(0, 0, 5)
+		scheduledDate := time.Now().AddDate(0, 0, 6)
 
 		billScheduled := Bill{
 			Description:   "Conta de Internet",
-			Value:         150,
+			Value:         15000,
 			AccountId:     "16sfd5465fd6s",
 			DueDate:       dueDate,
 			ScheduledDate: scheduledDate,
@@ -53,40 +52,10 @@ func TestNewBill(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		dateNewBillScheduled := newBillScheduled.ScheduledDate.Format(layoutIso)
+		dateNewBillScheduled := newBillScheduled.ScheduledDate
 
-		if dateNewBillScheduled != scheduledDate.Format(layoutIso) {
-			t.Errorf("Expected %v, got %v", dateNewBillScheduled, scheduledDate.Format(layoutIso))
-		}
-	})
-
-	t.Run("Should create a bill if scheduled date is less than today with actual date", func(t *testing.T) {
-		layoutIso := "2006-01-02"
-		dueDate, _ := time.Parse(layoutIso, "2021-12-31")
-		scheduledDate, _ := time.Parse(layoutIso, "2021-11-08")
-
-		billScheduled := Bill{
-			AccountId:     "16sfd5465fd6s",
-			Description:   "Conta de Agua",
-			Value:         90,
-			DueDate:       dueDate,
-			ScheduledDate: scheduledDate,
-		}
-
-		newBillScheduled, err := NewBill(billScheduled)
-
-		if err != nil {
-			t.Errorf("Expected nil, got %s", err.Error())
-		}
-
-		if newBillScheduled.Id == "" {
-			t.Error("Id doesn't be nil")
-		}
-
-		dateNewBillScheduled := newBillScheduled.ScheduledDate.Format(layoutIso)
-
-		if actualDate.Format(layoutIso) != dateNewBillScheduled {
-			t.Errorf("Expected %v, got %v", actualDate.Format(layoutIso), dateNewBillScheduled)
+		if dateNewBillScheduled != scheduledDate {
+			t.Errorf("Expected %v, got %v", dateNewBillScheduled, scheduledDate)
 		}
 	})
 }

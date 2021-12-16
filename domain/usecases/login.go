@@ -8,22 +8,22 @@ import (
 
 var (
 	ErrInvalidCredentials = errors.New("cpf, secret are invalid")
-	ErrInvalidPassword    = errors.New("Password invalid")
+	ErrInvalidPassword    = errors.New("password invalid")
 )
 
-func (a Accounts) NewLogin(u domain.Login) (domain.AccountId, error) {
-	listAll, _ := a.store.ListAll()
+func (a Accounts) NewLogin(u domain.Login) (string, error) {
+	listAccounts, _ := a.store.ListAll()
 
-	var result domain.AccountId
+	var result string
 	var err error
 
-	for _, account := range listAll {
+	for _, account := range listAccounts {
 		if account.Cpf == u.Cpf {
 			err = domain.VerifyPasswordHash(account.Secret, u.Secret)
 			if err != nil {
 				err = ErrInvalidPassword
 			}
-			result = domain.AccountId(account.Id)
+			result = account.Id
 		}
 	}
 	return result, err

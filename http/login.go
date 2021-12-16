@@ -11,7 +11,7 @@ import (
 )
 
 type LoginRequest struct {
-	Cpf    int    `json:"cpf"`
+	Cpf    string `json:"cpf"`
 	Secret string `json:"secret"`
 }
 
@@ -75,7 +75,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resToken)
 }
 
-func createToken(accountId domain.AccountId) (string, error) {
+func createToken(accountId string) (string, error) {
 	idClaims := jwt.MapClaims{}
 	idClaims["id"] = accountId
 

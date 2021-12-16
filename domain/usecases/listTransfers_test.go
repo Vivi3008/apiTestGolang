@@ -8,23 +8,23 @@ import (
 )
 
 func TestTransfers(t *testing.T) {
-	t.Run("Should create a transfer, save and list it successfull", func(t *testing.T) {
-		transStore := store.NewTransferStore()
-		transfers := SaveNewTransfer(transStore)
+	transStore := store.NewTransferStore()
+	transfers := SaveNewTransfer(transStore)
 
+	t.Run("Should create a transfer, save and list it successfull", func(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     55566689545,
+			Cpf:     "55566689545",
 			Secret:  "dafd33255",
 			Balance: 2500,
 		}
 
 		person2 := domain.Account{
 			Name:    "Viviane",
-			Cpf:     11452369875,
+			Cpf:     "11452369875",
 			Secret:  "vivi",
 			Balance: 2500,
 		}
@@ -63,7 +63,7 @@ func TestTransfers(t *testing.T) {
 			t.Errorf("expected nil, got %s", err.Error())
 		}
 
-		listTransfers, err := transfers.ListTransfer(domain.AccountId(transOk.AccountOriginId))
+		listTransfers, err := transfers.ListTransfer(transOk.AccountOriginId)
 
 		if err != nil {
 			t.Errorf("expected nil, got %s", err.Error())
@@ -72,6 +72,13 @@ func TestTransfers(t *testing.T) {
 		if listTransfers[0].AccountOriginId != transOk.AccountOriginId {
 			t.Errorf("expected %s; got %s", listTransfers[0].AccountOriginId, transOk.AccountOriginId)
 		}
+	})
 
+	t.Run("Should not list transfers if id origin doesnt exists", func(t *testing.T) {
+		_, err := transfers.ListTransfer("f63cb25b-786c-4ff2-9a67-22a065d307d3")
+
+		if err == nil {
+			t.Errorf("Expected err origin id doesnt exists, got %s", err)
+		}
 	})
 }

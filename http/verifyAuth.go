@@ -3,7 +3,6 @@ package http
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -12,7 +11,7 @@ import (
 )
 
 var (
-	ErrAuth = errors.New("Authentication required")
+	ErrAuth = errors.New("authentication required")
 )
 
 func VerifyAuth(w http.ResponseWriter, r *http.Request) (domain.AccountId, error) {
@@ -29,7 +28,7 @@ func VerifyAuth(w http.ResponseWriter, r *http.Request) (domain.AccountId, error
 	//pegar o id do token
 	token, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method")
+			return nil, errors.New("unexpected signing method")
 		}
 		return []byte(os.Getenv("ACCESS_SECRET")), nil
 	})

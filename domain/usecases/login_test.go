@@ -14,13 +14,13 @@ func TestLogin(t *testing.T) {
 
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 250000,
 		}
 
 		credentials := domain.Login{
-			Cpf:    13323332555,
+			Cpf:    "13323332555",
 			Secret: "dafd33255",
 		}
 
@@ -36,7 +36,7 @@ func TestLogin(t *testing.T) {
 			t.Fatal("Login error")
 		}
 
-		if acc != domain.AccountId(account.Id) {
+		if acc != account.Id {
 			t.Fatal("invalid Credentials")
 		}
 	})

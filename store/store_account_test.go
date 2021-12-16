@@ -12,9 +12,9 @@ func TestStoreAccount(t *testing.T) {
 	t.Run("Shoud store an account successfully", func(t *testing.T) {
 		person := domain.Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 25000,
 		}
 		account, _ := domain.NewAccount(person) //cria a conta
 		err := store.StoreAccount(account)      // guarda a conta num map
@@ -32,7 +32,7 @@ func TestStoreAccount(t *testing.T) {
 		acc := domain.Account{
 			Id:     "",
 			Name:   "Viviane",
-			Cpf:    00314522352,
+			Cpf:    "00314522352",
 			Secret: "dadfdasf",
 		}
 		err := store.StoreAccount(acc)

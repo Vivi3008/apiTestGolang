@@ -9,8 +9,8 @@ import (
 )
 
 type TransferRequest struct {
-	AccountDestinationId string  `json:"account_Destination_Id"`
-	Amount               float64 `json:"amount"`
+	AccountDestinationId string `json:"account_Destination_Id"`
+	Amount               int    `json:"amount"`
 }
 
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +68,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		AccountOriginId:      saveTransfer.AccountOriginId,
 		AccountDestinationId: saveTransfer.AccountDestinationId,
 		Amount:               saveTransfer.Amount,
-		CreatedAt:            saveTransfer.CreatedAt,
+		CreatedAt:            saveTransfer.CreatedAt.Format(DateLayout),
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

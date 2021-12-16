@@ -4,24 +4,23 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 type AccountRequest struct {
-	Name    string  `json:"name"`
-	Cpf     int     `json:"cpf"`
-	Secret  string  `json:"secret"`
-	Balance float64 `json:"balance"`
+	Name    string `json:"name"`
+	Cpf     string `json:"cpf"`
+	Secret  string `json:"secret"`
+	Balance int    `json:"balance"`
 }
 
 type AccountResponse struct {
-	Id        string    `json:"id"`
-	Name      string    `json:"name"`
-	Cpf       int       `json:"cpf"`
-	Balance   float64   `json:"balance"`
-	CreatedAt time.Time `json:"createdAt"`
+	Id        string `json:"id"`
+	Name      string `json:"name"`
+	Cpf       string `json:"cpf"`
+	Balance   int    `json:"balance"`
+	CreatedAt string `json:"createdAt"`
 }
 
 func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +59,7 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Name:      account.Name,
 		Cpf:       account.Cpf,
 		Balance:   account.Balance,
-		CreatedAt: account.CreatedAt,
+		CreatedAt: account.CreatedAt.Format(DateLayout),
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

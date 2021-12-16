@@ -10,7 +10,7 @@ type Transfer struct {
 	Id                   string
 	AccountOriginId      string
 	AccountDestinationId string
-	Amount               float64
+	Amount               int
 	CreatedAt            time.Time
 }
 

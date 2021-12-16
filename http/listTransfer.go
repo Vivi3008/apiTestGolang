@@ -4,26 +4,38 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
-
-	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 type TransferResponse struct {
-	Id                   string    `json:"id"`
-	AccountOriginId      string    `json:"account_origin_id"`
-	AccountDestinationId string    `json:"account_destination_id"`
-	Amount               float64   `json:"amount"`
-	CreatedAt            time.Time `json:"createdAt"`
+	Id                   string `json:"id"`
+	AccountOriginId      string `json:"account_origin_id"`
+	AccountDestinationId string `json:"account_destination_id"`
+	Amount               int    `json:"amount"`
+	CreatedAt            string `json:"createdAt"`
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 	accountId, _ := VerifyAuth(w, r)
 
-	list, err := s.tr.ListTransfer(domain.AccountId(accountId))
+	account, err := s.app.ListAccountById(string(accountId))
 
 	if err != nil {
-		log.Printf("Failed to do list transfers: %s\n", err.Error())
+		log.Printf("Failed to list transfer: %s\n", err.Error())
+		response := Error{Reason: err.Error()}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	list, err := s.tr.ListTransfer(string(account.Id))
+
+	if err != nil {
+		log.Printf("Failed to list transfer: %s\n", err.Error())
+		response := Error{Reason: err.Error()}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -34,7 +46,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		response[i].AccountOriginId = transfer.AccountOriginId
 		response[i].AccountDestinationId = transfer.AccountDestinationId
 		response[i].Amount = transfer.Amount
-		response[i].CreatedAt = transfer.CreatedAt
+		response[i].CreatedAt = transfer.CreatedAt.Format(DateLayout)
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

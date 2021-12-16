@@ -2,20 +2,19 @@ package usecases
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
 )
 
 var (
-	ErrInsufficientLimit = errors.New("Insufficient Limit")
+	ErrInsufficientLimit = errors.New("insufficient Limit")
 )
 
-func (s Tranfers) ListTransfer(originId domain.AccountId) ([]domain.Transfer, error) {
+func (s Tranfers) ListTransfer(originId string) ([]domain.Transfer, error) {
 	list, err := s.storeTransfer.ListTransfers(originId)
 
 	if err != nil {
-		return nil, fmt.Errorf("Could not list all accounts: %v\n", err)
+		return nil, err
 	}
 
 	return list, nil

@@ -9,9 +9,9 @@ func TestCreateAccount(t *testing.T) {
 	t.Run("Should create an account successfully", func(t *testing.T) {
 		person := Account{
 			Name:    "Vanny",
-			Cpf:     13323332555,
+			Cpf:     "13323332555",
 			Secret:  "dafd33255",
-			Balance: 2.500,
+			Balance: 2500,
 		}
 
 		result, err := NewAccount(person)

@@ -16,7 +16,7 @@ func TestStoreBill(t *testing.T) {
 		bill := domain.Bill{
 			AccountId:   "54545453232",
 			Description: "Unimed",
-			Value:       450.00,
+			Value:       45000,
 			DueDate:     dueDate,
 		}
 
@@ -27,8 +27,8 @@ func TestStoreBill(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		if store.billStore[bill.Id].Id != bill.Id {
-			t.Errorf("Expected %s, got %s", bill.Id, store.billStore[bill.Id].Id)
+		if store.blStore[bill.Id].Id != bill.Id {
+			t.Errorf("Expected %s, got %s", bill.Id, store.blStore[bill.Id].Id)
 		}
 	})
 }
