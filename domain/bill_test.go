@@ -65,6 +65,28 @@ func TestNewBill(t *testing.T) {
 			want: Bill{},
 			err:  ErrDateInvalid,
 		},
+		{
+			name: "Fail if due date is empty",
+			args: Bill{
+				Description:   "TIM",
+				Value:         5900,
+				AccountId:     "16sfd5465fd6s",
+				ScheduledDate: time.Now().AddDate(0, 0, -1),
+			},
+			want: Bill{},
+			err:  ErrEmpty,
+		},
+		{
+			name: "Fail if description is empty",
+			args: Bill{
+				Value:         5900,
+				DueDate:       time.Now().AddDate(0, 0, 5),
+				AccountId:     "16sfd5465fd6s",
+				ScheduledDate: time.Now().AddDate(0, 0, -1),
+			},
+			want: Bill{},
+			err:  ErrEmpty,
+		},
 	}
 
 	for _, tc := range testCases {

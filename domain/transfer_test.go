@@ -1,32 +1,75 @@
 package domain
 
-import "testing"
+import (
+	"errors"
+	"reflect"
+	"testing"
+	"time"
+)
+
+var transaction = Transfer{
+	AccountOriginId:      "fasf313",
+	AccountDestinationId: "1fads1",
+	Amount:               13321,
+}
 
 func TestCreateTransfer(t *testing.T) {
+	type testCase struct {
+		name string
+		args Transfer
+		want Transfer
+		err  error
+	}
 
-	t.Run("Should create a new transaction successfully", func(t *testing.T) {
-		transaction := Transfer{
-			AccountOriginId:      "fasf313",
-			AccountDestinationId: "1fads1",
-			Amount:               13321,
-		}
-		expected := "fasf313"
-		result, err := NewTransfer(transaction)
+	testCases := []testCase{
+		{
+			name: "Should create a new transfer successfuly",
+			args: transaction,
+			want: Transfer{
+				AccountOriginId:      transaction.AccountOriginId,
+				AccountDestinationId: transaction.AccountDestinationId,
+				Amount:               transaction.Amount,
+				CreatedAt:            time.Now().UTC().Truncate(24 * time.Hour),
+			},
+			err: nil,
+		},
+		{
+			name: "Fail if transfer with 0 amount",
+			args: Transfer{
+				AccountOriginId:      "165465f65",
+				AccountDestinationId: "65d6asf5d",
+			},
+			want: Transfer{},
+			err:  ErrInvalidAmount,
+		},
+		{
+			name: "Fail if transfer with account id empty",
+			args: Transfer{
+				AccountDestinationId: "65d6asf5d",
+				Amount:               1500,
+			},
+			want: Transfer{},
+			err:  ErrEmptyValues,
+		},
+	}
 
-		if err != nil {
-			t.Errorf("expected nil, got %s", err.Error())
-		}
+	for _, tc := range testCases {
+		tt := tc
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		if result.AccountOriginId != expected {
-			t.Errorf("Expected %v, result %v", expected, result.AccountOriginId)
-		}
+			got, err := NewTransfer(tt.args)
 
-		if result.CreatedAt.IsZero() {
-			t.Errorf("Expected createdAt at not to be zero")
-		}
+			if !errors.Is(err, tt.err) {
+				t.Errorf("Error expected: %s, got: %s", tt.err, err)
+			}
 
-		if result.Id == "" {
-			t.Errorf("Expected ID not to be empty")
-		}
-	})
+			tt.want.CreatedAt = got.CreatedAt
+			tt.want.Id = got.Id
+
+			if !reflect.DeepEqual(tt.want, got) {
+				t.Errorf("Expected: %v, got: %v", tt.want, got)
+			}
+		})
+	}
 }
