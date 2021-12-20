@@ -1,9 +1,15 @@
 package domain
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
+)
+
+var (
+	ErrEmptyValues   = errors.New("origin id, destiny id can't be empty")
+	ErrInvalidAmount = errors.New("invalid value")
 )
 
 type Transfer struct {
@@ -15,6 +21,13 @@ type Transfer struct {
 }
 
 func NewTransfer(tr Transfer) (Transfer, error) {
+	if tr.AccountOriginId == "" || tr.AccountDestinationId == "" {
+		return Transfer{}, ErrEmptyValues
+	}
+
+	if tr.Amount <= 0 {
+		return Transfer{}, ErrInvalidAmount
+	}
 
 	return Transfer{
 		Id:                   uuid.New().String(),
