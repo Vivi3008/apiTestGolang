@@ -14,6 +14,8 @@ var transaction = Transfer{
 }
 
 func TestCreateTransfer(t *testing.T) {
+	t.Parallel()
+
 	type testCase struct {
 		name string
 		args Transfer

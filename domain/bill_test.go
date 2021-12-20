@@ -8,6 +8,8 @@ import (
 )
 
 func TestNewBill(t *testing.T) {
+	t.Parallel()
+
 	type testCase struct {
 		name string
 		args Bill

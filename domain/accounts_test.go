@@ -15,6 +15,8 @@ var person = Account{
 }
 
 func TestCreateAccount(t *testing.T) {
+	t.Parallel()
+
 	type testCase struct {
 		name string
 		args Account
@@ -80,6 +82,7 @@ func TestCreateAccount(t *testing.T) {
 	for _, tc := range testCases {
 		tt := tc
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := NewAccount(tt.args)
 
 			if !errors.Is(err, tt.err) {
