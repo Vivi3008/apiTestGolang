@@ -3,7 +3,7 @@ package usecases
 import (
 	"errors"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 var (
@@ -11,19 +11,19 @@ var (
 	ErrInvalidPassword    = errors.New("password invalid")
 )
 
-func (a Accounts) NewLogin(u domain.Login) (string, error) {
+func (a Accounts) NewLogin(u account.Login) (string, error) {
 	listAccounts, _ := a.store.ListAll()
 
 	var result string
 	var err error
 
-	for _, account := range listAccounts {
-		if account.Cpf == u.Cpf {
-			err = domain.VerifyPasswordHash(account.Secret, u.Secret)
+	for _, acc := range listAccounts {
+		if acc.Cpf == u.Cpf {
+			err = account.VerifyPasswordHash(acc.Secret, u.Secret)
 			if err != nil {
 				err = ErrInvalidPassword
 			}
-			result = account.Id
+			result = acc.Id
 		}
 	}
 	return result, err

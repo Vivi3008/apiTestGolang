@@ -3,7 +3,7 @@ package usecases
 import (
 	"testing"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
@@ -12,21 +12,21 @@ func TestAccounts_ListAll(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "77845100032",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		person2 := domain.Account{
+		person2 := account.Account{
 			Name:    "Viviane",
 			Cpf:     "55985633301",
 			Secret:  "4f5ds4af54",
 			Balance: 260000,
 		}
 
-		person3 := domain.Account{
+		person3 := account.Account{
 			Name:    "Giovanna",
 			Cpf:     "85665232145",
 			Secret:  "fadsfdsaf",
@@ -67,7 +67,7 @@ func TestAccounts_ListAll(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",

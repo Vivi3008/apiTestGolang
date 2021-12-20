@@ -3,7 +3,7 @@ package usecases
 import (
 	"testing"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
@@ -15,21 +15,21 @@ func TestTransfers(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "55566689545",
 			Secret:  "dafd33255",
 			Balance: 2500,
 		}
 
-		person2 := domain.Account{
+		person2 := account.Account{
 			Name:    "Viviane",
 			Cpf:     "11452369875",
 			Secret:  "vivi",
 			Balance: 2500,
 		}
 
-		account, err := accounts.CreateAccount(person)
+		acc, err := accounts.CreateAccount(person)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
@@ -41,8 +41,8 @@ func TestTransfers(t *testing.T) {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		transfer := domain.Transfer{
-			AccountOriginId:      account.Id,
+		transfer := account.Transfer{
+			AccountOriginId:      acc.Id,
 			AccountDestinationId: account2.Id,
 			Amount:               5,
 		}

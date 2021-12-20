@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 var (
@@ -11,11 +12,11 @@ var (
 )
 
 type AccountStore struct {
-	accStore map[string]domain.Account
+	accStore map[string]account.Account
 }
 
 type TransferStore struct {
-	tranStore map[string]domain.Transfer
+	tranStore map[string]account.Transfer
 }
 
 type BillStore struct {
@@ -23,7 +24,7 @@ type BillStore struct {
 }
 
 func NewAccountStore() AccountStore {
-	as := make(map[string]domain.Account)
+	as := make(map[string]account.Account)
 
 	return AccountStore{
 		accStore: as,
@@ -31,7 +32,7 @@ func NewAccountStore() AccountStore {
 }
 
 func NewTransferStore() TransferStore {
-	tr := make(map[string]domain.Transfer)
+	tr := make(map[string]account.Transfer)
 
 	return TransferStore{
 		tranStore: tr,

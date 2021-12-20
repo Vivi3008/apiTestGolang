@@ -1,10 +1,10 @@
 package usecases
 
 import (
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-func (a Accounts) ListAllAccounts() ([]domain.Account, error) {
+func (a Accounts) ListAllAccounts() ([]account.Account, error) {
 	list, err := a.store.ListAll()
 
 	if err != nil {
@@ -14,12 +14,12 @@ func (a Accounts) ListAllAccounts() ([]domain.Account, error) {
 	return list, nil
 }
 
-func (a Accounts) ListAccountById(id string) (domain.Account, error) {
-	account, err := a.store.ListOne(id)
+func (a Accounts) ListAccountById(id string) (account.Account, error) {
+	acc, err := a.store.ListOne(id)
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
-	return account, nil
+	return acc, nil
 }

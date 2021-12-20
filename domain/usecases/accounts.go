@@ -1,7 +1,7 @@
 package usecases
 
 import (
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
@@ -15,21 +15,21 @@ func CreateNewAccount(store store.AccountStore) Accounts {
 	}
 }
 
-func (a Accounts) VerifyAccount(accountId string, value int, method MethodPayment) (domain.Account, error) {
+func (a Accounts) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
 	acc, err := a.ListAccountById(accountId)
 	var actualBalance int
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
 	actualBalance, err = modifyBalanceAccount(acc.Balance, value, method)
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
-	updateAcc := domain.Account{
+	updateAcc := account.Account{
 		Id:        acc.Id,
 		Name:      acc.Name,
 		Cpf:       acc.Cpf,
@@ -40,7 +40,7 @@ func (a Accounts) VerifyAccount(accountId string, value int, method MethodPaymen
 	err = a.store.StoreAccount(updateAcc)
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
 	return updateAcc, nil

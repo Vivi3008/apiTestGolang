@@ -4,24 +4,25 @@ import (
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 var (
 	ErrIdNotExists = errors.New("id does not exist")
 )
 
-func (a AccountStore) ListAll() ([]domain.Account, error) {
-	var list []domain.Account
+func (a AccountStore) ListAll() ([]account.Account, error) {
+	var list []account.Account
 	for _, account := range a.accStore {
 		list = append(list, account)
 	}
 	return list, nil
 }
 
-func (a AccountStore) ListOne(accountId string) (domain.Account, error) {
+func (a AccountStore) ListOne(accountId string) (account.Account, error) {
 	listAll, _ := a.ListAll()
 
-	var listOne domain.Account
+	var listOne account.Account
 
 	for _, account := range listAll {
 		if string(accountId) == account.Id {
@@ -30,18 +31,20 @@ func (a AccountStore) ListOne(accountId string) (domain.Account, error) {
 	}
 
 	if listOne.Id == "" {
-		return domain.Account{}, ErrIdNotExists
+		return account.Account{}, ErrIdNotExists
 	} else {
 		return listOne, nil
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId string) ([]domain.Transfer, error) {
-	transfers := make([]domain.Transfer, 0)
+func (tr TransferStore) ListTransfers(accountOriginId string) ([]account.Transfer, error) {
+	transfers := make([]account.Transfer, 0)
 
 	for _, transfer := range tr.tranStore {
 		if accountOriginId == transfer.AccountOriginId {
 			transfers = append(transfers, transfer)
+		} else {
+			return nil, ErrIdNotExists
 		}
 	}
 

@@ -1,4 +1,4 @@
-package domain
+package account
 
 import "golang.org/x/crypto/bcrypt"
 

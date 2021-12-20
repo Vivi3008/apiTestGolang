@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 func TestAccountStore_ListAll(t *testing.T) {
@@ -15,21 +16,21 @@ func TestAccountStore_ListAll(t *testing.T) {
 	dueDate, _ := time.Parse(layoutIso, "2021-12-31")
 
 	t.Run("Should return all accounts successfully", func(t *testing.T) {
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		person2 := domain.Account{
+		person2 := account.Account{
 			Name:    "Viviane",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		acc1, err := domain.NewAccount(person)
+		acc1, err := account.NewAccount(person)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -41,7 +42,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		acc2, err2 := domain.NewAccount(person2)
+		acc2, err2 := account.NewAccount(person2)
 
 		if err2 != nil {
 			t.Fatal("Account should have been created successfully")
@@ -81,28 +82,28 @@ func TestAccountStore_ListAll(t *testing.T) {
 	})
 
 	t.Run("Should return all transfers from autenticated user", func(t *testing.T) {
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		acc1, _ := domain.NewAccount(person)
+		acc1, _ := account.NewAccount(person)
 
-		transaction := domain.Transfer{
+		transaction := account.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,
 		}
 
-		transaction2 := domain.Transfer{
+		transaction2 := account.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daffsda3ds",
 			Amount:               67541,
 		}
 
-		tr1, err := domain.NewTransfer(transaction)
+		tr1, err := account.NewTransfer(transaction)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -120,7 +121,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		tr2, err := domain.NewTransfer(transaction2)
+		tr2, err := account.NewTransfer(transaction2)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")

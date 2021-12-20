@@ -3,33 +3,33 @@ package usecases
 import (
 	"errors"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 var (
 	ErrCpfExists = errors.New("this cpf already exists")
 )
 
-func (a Accounts) CreateAccount(person domain.Account) (domain.Account, error) {
-	account, err := domain.NewAccount(person)
+func (a Accounts) CreateAccount(person account.Account) (account.Account, error) {
+	acc, err := account.NewAccount(person)
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
 	accounts, _ := a.ListAllAccounts()
 
-	for _, acc := range accounts {
-		if account.Cpf == acc.Cpf {
-			return domain.Account{}, ErrCpfExists
+	for _, ac := range accounts {
+		if acc.Cpf == ac.Cpf {
+			return account.Account{}, ErrCpfExists
 		}
 	}
 
-	err = a.store.StoreAccount(account)
+	err = a.store.StoreAccount(acc)
 
 	if err != nil {
-		return domain.Account{}, err
+		return account.Account{}, err
 	}
 
-	return account, nil
+	return acc, nil
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
@@ -16,7 +17,7 @@ func TestBills(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "55566689545",
 			Secret:  "dafd33255",
