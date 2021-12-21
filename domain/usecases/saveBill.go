@@ -1,12 +1,14 @@
 package usecases
 
-import "github.com/Vivi3008/apiTestGolang/domain"
+import (
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+)
 
-func (b Bills) SaveBill(bill domain.Bill) (domain.Bill, error) {
+func (b Bills) SaveBill(bill bills.Bill) (bills.Bill, error) {
 	err := b.storeBill.StoreBill(bill)
 
 	if err != nil {
-		return domain.Bill{}, err
+		return bills.Bill{}, err
 	}
 
 	return bill, nil

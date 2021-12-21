@@ -2,16 +2,15 @@ package usecases
 
 import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
-	"github.com/Vivi3008/apiTestGolang/store"
 )
 
 type Accounts struct {
-	store store.AccountStore
+	accs useCase
 }
 
-func CreateNewAccount(store store.AccountStore) Accounts {
+func CreateNewAccount(acc useCase) Accounts {
 	return Accounts{
-		store: store,
+		accs: acc,
 	}
 }
 
@@ -23,7 +22,7 @@ func (a Accounts) VerifyAccount(accountId string, value int, method MethodPaymen
 		return account.Account{}, err
 	}
 
-	actualBalance, err = modifyBalanceAccount(acc.Balance, value, method)
+	actualBalance, err = ModifyBalanceAccount(acc.Balance, value, method)
 
 	if err != nil {
 		return account.Account{}, err
@@ -37,7 +36,7 @@ func (a Accounts) VerifyAccount(accountId string, value int, method MethodPaymen
 		Secret:    acc.Secret,
 		CreatedAt: acc.CreatedAt,
 	}
-	err = a.store.StoreAccount(updateAcc)
+	err = a.accs.accRepository.StoreAccount(updateAcc)
 
 	if err != nil {
 		return account.Account{}, err
@@ -46,7 +45,7 @@ func (a Accounts) VerifyAccount(accountId string, value int, method MethodPaymen
 	return updateAcc, nil
 }
 
-func modifyBalanceAccount(balance int, value int, method MethodPayment) (int, error) {
+func ModifyBalanceAccount(balance int, value int, method MethodPayment) (int, error) {
 	if method == Debit {
 		if balance < value {
 			return 0, ErrInsufficientLimit

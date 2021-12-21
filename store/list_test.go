@@ -4,8 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
 func TestAccountStore_ListAll(t *testing.T) {
@@ -91,19 +92,19 @@ func TestAccountStore_ListAll(t *testing.T) {
 
 		acc1, _ := account.NewAccount(person)
 
-		transaction := account.Transfer{
+		transaction := transfers.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,
 		}
 
-		transaction2 := account.Transfer{
+		transaction2 := transfers.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daffsda3ds",
 			Amount:               67541,
 		}
 
-		tr1, err := account.NewTransfer(transaction)
+		tr1, err := transfers.NewTransfer(transaction)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -121,7 +122,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		tr2, err := account.NewTransfer(transaction2)
+		tr2, err := transfers.NewTransfer(transaction2)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -158,28 +159,28 @@ func TestAccountStore_ListAll(t *testing.T) {
 	})
 
 	t.Run("Should list all bills", func(t *testing.T) {
-		bill := domain.Bill{
+		bill := bills.Bill{
 			AccountId:   "54545453232",
 			Description: "Unimed",
 			Value:       450.00,
 			DueDate:     dueDate,
 		}
 
-		newBill, _ := domain.NewBill(bill)
+		newBill, _ := bills.NewBill(bill)
 		err := storeBl.StoreBill(newBill)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		bill2 := domain.Bill{
+		bill2 := bills.Bill{
 			AccountId:   "54545453232",
 			Description: "Academia",
 			Value:       100,
 			DueDate:     dueDate,
 		}
 
-		newBill2, _ := domain.NewBill(bill2)
+		newBill2, _ := bills.NewBill(bill2)
 		err = storeBl.StoreBill(newBill2)
 
 		if err != nil {

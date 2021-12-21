@@ -5,7 +5,7 @@ import (
 )
 
 func (a Accounts) ListAllAccounts() ([]account.Account, error) {
-	list, err := a.store.ListAll()
+	list, err := a.ListAllAccounts()
 
 	if err != nil {
 		return nil, err
@@ -15,7 +15,7 @@ func (a Accounts) ListAllAccounts() ([]account.Account, error) {
 }
 
 func (a Accounts) ListAccountById(id string) (account.Account, error) {
-	acc, err := a.store.ListOne(id)
+	acc, err := a.ListAccountById(id)
 
 	if err != nil {
 		return account.Account{}, err

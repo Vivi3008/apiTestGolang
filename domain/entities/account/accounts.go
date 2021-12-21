@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/Vivi3008/apiTestGolang/domain/commom"
 	"github.com/google/uuid"
 )
 
@@ -32,7 +33,7 @@ func NewAccount(person Account) (Account, error) {
 		return Account{}, ErrCpfCaracters
 	}
 
-	hashSecret, err := GenerateHashPassword(person.Secret)
+	hashSecret, err := commom.GenerateHashPassword(person.Secret)
 
 	if err != nil {
 		return Account{}, err

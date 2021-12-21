@@ -1,10 +1,10 @@
 package store
 
 import (
-	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
-func (tr TransferStore) StoreTransfer(transaction account.Transfer) error {
+func (tr TransferStore) StoreTransfer(transaction transfers.Transfer) error {
 	if transaction.Id == "" {
 		return ErrEmptyID
 	}

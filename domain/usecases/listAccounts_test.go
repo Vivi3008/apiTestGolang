@@ -10,7 +10,7 @@ import (
 func TestAccounts_ListAll(t *testing.T) {
 	t.Run("Should return list of accounts succesfully", func(t *testing.T) {
 		accountStore := store.NewAccountStore()
-		accounts := CreateNewAccount(accountStore)
+		var _ = CreateAccountStore(accountStore)
 
 		person := account.Account{
 			Name:    "Vanny",
@@ -33,25 +33,25 @@ func TestAccounts_ListAll(t *testing.T) {
 			Balance: 360000,
 		}
 
-		_, err := accounts.CreateAccount(person)
+		_, err := account.NewAccount(person)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		_, err = accounts.CreateAccount(person2)
+		_, err = account.NewAccount(person2)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		_, err = accounts.CreateAccount(person3)
+		_, err = account.NewAccount(person3)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		list, err := accounts.ListAllAccounts()
+		list, err := accountStore.ListAll()
 
 		if err != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())
@@ -65,7 +65,7 @@ func TestAccounts_ListAll(t *testing.T) {
 
 	t.Run("Should list one account by Id", func(t *testing.T) {
 		accountStore := store.NewAccountStore()
-		accounts := CreateNewAccount(accountStore)
+		var _ = CreateAccountStore(accountStore)
 
 		person := account.Account{
 			Name:    "Vanny",
@@ -74,13 +74,13 @@ func TestAccounts_ListAll(t *testing.T) {
 			Balance: 250000,
 		}
 
-		account, err := accounts.CreateAccount(person)
+		account, err := account.NewAccount(person)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
 		}
 
-		account, err = accounts.ListAccountById(account.Id)
+		account, err = accountStore.ListOne(account.Id)
 
 		if err != nil {
 			t.Fatal("expected nil; got ")

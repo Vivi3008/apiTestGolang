@@ -3,8 +3,9 @@ package store
 import (
 	"errors"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
 var (
@@ -37,8 +38,8 @@ func (a AccountStore) ListOne(accountId string) (account.Account, error) {
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId string) ([]account.Transfer, error) {
-	transfers := make([]account.Transfer, 0)
+func (tr TransferStore) ListTransfers(accountOriginId string) ([]transfers.Transfer, error) {
+	transfers := make([]transfers.Transfer, 0)
 
 	for _, transfer := range tr.tranStore {
 		if accountOriginId == transfer.AccountOriginId {
@@ -51,8 +52,8 @@ func (tr TransferStore) ListTransfers(accountOriginId string) ([]account.Transfe
 	return transfers, nil
 }
 
-func (b BillStore) ListBills(accountOriginId string) ([]domain.Bill, error) {
-	var list []domain.Bill
+func (b BillStore) ListBills(accountOriginId string) ([]bills.Bill, error) {
+	var list []bills.Bill
 
 	for _, bill := range b.blStore {
 		if accountOriginId == bill.AccountId {

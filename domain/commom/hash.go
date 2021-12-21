@@ -1,9 +1,8 @@
-package account
+package commom
 
 import "golang.org/x/crypto/bcrypt"
 
 func GenerateHashPassword(secret string) (string, error) {
-
 	hashSecret, err := bcrypt.GenerateFromPassword([]byte(secret), 14)
 
 	if err != nil {

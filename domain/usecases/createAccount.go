@@ -25,7 +25,7 @@ func (a Accounts) CreateAccount(person account.Account) (account.Account, error)
 		}
 	}
 
-	err = a.store.StoreAccount(acc)
+	err = a.accs.accRepository.StoreAccount(acc)
 
 	if err != nil {
 		return account.Account{}, err
