@@ -55,7 +55,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		accounts, err := store.ListAll()
+		accounts, err := store.ListAllAccounts()
 
 		if err != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())

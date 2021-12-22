@@ -12,7 +12,7 @@ var (
 	ErrIdNotExists = errors.New("id does not exist")
 )
 
-func (a AccountStore) ListAll() ([]account.Account, error) {
+func (a AccountStore) ListAllAccounts() ([]account.Account, error) {
 	var list []account.Account
 	for _, account := range a.accStore {
 		list = append(list, account)
@@ -20,8 +20,8 @@ func (a AccountStore) ListAll() ([]account.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListOne(accountId string) (account.Account, error) {
-	listAll, _ := a.ListAll()
+func (a AccountStore) ListAccountById(accountId string) (account.Account, error) {
+	listAll, _ := a.ListAllAccounts()
 
 	var listOne account.Account
 

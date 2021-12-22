@@ -5,10 +5,10 @@ import (
 )
 
 type Accounts struct {
-	accs useCase
+	accs account.AccountRepository
 }
 
-func CreateNewAccount(acc useCase) Accounts {
+func CreateNewAccount(acc account.AccountRepository) Accounts {
 	return Accounts{
 		accs: acc,
 	}
@@ -36,7 +36,7 @@ func (a Accounts) VerifyAccount(accountId string, value int, method MethodPaymen
 		Secret:    acc.Secret,
 		CreatedAt: acc.CreatedAt,
 	}
-	err = a.accs.accRepository.StoreAccount(updateAcc)
+	err = a.accs.StoreAccount(updateAcc)
 
 	if err != nil {
 		return account.Account{}, err
