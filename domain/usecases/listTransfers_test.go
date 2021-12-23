@@ -1,14 +1,6 @@
 package usecases
 
-import (
-	"testing"
-
-	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
-	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
-	"github.com/Vivi3008/apiTestGolang/store"
-)
-
-func TestTransfers(t *testing.T) {
+/* func TestTransfers(t *testing.T) {
 	transStore := store.NewTransferStore()
 	trans := SaveNewTransfer(transStore)
 
@@ -83,3 +75,4 @@ func TestTransfers(t *testing.T) {
 		}
 	})
 }
+*/

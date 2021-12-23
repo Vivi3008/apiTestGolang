@@ -4,18 +4,18 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-type Accounts struct {
+type AccountUsecase struct {
 	accs account.AccountRepository
 }
 
-func CreateNewAccount(acc account.AccountRepository) Accounts {
-	return Accounts{
+func CreateNewAccount(acc account.AccountRepository) AccountUsecase {
+	return AccountUsecase{
 		accs: acc,
 	}
 }
 
-func (a Accounts) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
-	acc, err := a.ListAccountById(accountId)
+func (a AccountUsecase) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
+	acc, err := a.accs.ListAccountById(accountId)
 	var actualBalance int
 
 	if err != nil {

@@ -4,8 +4,8 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-func (a Accounts) ListAllAccounts() ([]account.Account, error) {
-	list, err := a.ListAllAccounts()
+func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
+	list, err := a.accs.ListAllAccounts()
 
 	if err != nil {
 		return nil, err
@@ -14,8 +14,8 @@ func (a Accounts) ListAllAccounts() ([]account.Account, error) {
 	return list, nil
 }
 
-func (a Accounts) ListAccountById(id string) (account.Account, error) {
-	acc, err := a.ListAccountById(id)
+func (a AccountUsecase) ListAccountById(id string) (account.Account, error) {
+	acc, err := a.accs.ListAccountById(id)
 
 	if err != nil {
 		return account.Account{}, err

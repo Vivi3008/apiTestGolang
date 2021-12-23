@@ -10,14 +10,14 @@ var (
 	ErrCpfExists = errors.New("this cpf already exists")
 )
 
-func (a Accounts) CreateAccount(person account.Account) (account.Account, error) {
+func (a AccountUsecase) CreateAccount(person account.Account) (account.Account, error) {
 	acc, err := account.NewAccount(person)
 
 	if err != nil {
 		return account.Account{}, err
 	}
 
-	accounts, _ := a.ListAllAccounts()
+	accounts, _ := a.accs.ListAllAccounts()
 
 	for _, ac := range accounts {
 		if acc.Cpf == ac.Cpf {
