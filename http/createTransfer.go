@@ -16,9 +16,19 @@ type TransferRequest struct {
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	accountId, _ := VerifyAuth(w, r)
 
+	account, err := s.app.ListAccountById(string(accountId))
+
+	if err != nil {
+		response := Error{Reason: err.Error()}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	var body TransferRequest
 
-	err := json.NewDecoder(r.Body).Decode(&body)
+	err = json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
 		response := Error{Reason: "invalid request body"}
@@ -30,7 +40,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transaction := domain.Transfer{
-		AccountOriginId:      string(accountId),
+		AccountOriginId:      account.AccountId,
 		AccountDestinationId: body.AccountDestinationId,
 		Amount:               body.Amount,
 	}
