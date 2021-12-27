@@ -1,4 +1,4 @@
-package usecases
+package account
 
 import (
 	"errors"
@@ -11,21 +11,21 @@ var (
 )
 
 func (a AccountUsecase) CreateAccount(person account.Account) (account.Account, error) {
+	accounts, _ := a.repo.ListAllAccounts()
+
+	for _, ac := range accounts {
+		if person.Cpf == ac.Cpf {
+			return account.Account{}, ErrCpfExists
+		}
+	}
+
 	acc, err := account.NewAccount(person)
 
 	if err != nil {
 		return account.Account{}, err
 	}
 
-	accounts, _ := a.accs.ListAllAccounts()
-
-	for _, ac := range accounts {
-		if acc.Cpf == ac.Cpf {
-			return account.Account{}, ErrCpfExists
-		}
-	}
-
-	err = a.accs.StoreAccount(acc)
+	err = a.repo.StoreAccount(acc)
 
 	if err != nil {
 		return account.Account{}, err

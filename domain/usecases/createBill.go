@@ -1,17 +1,11 @@
 package usecases
 
 import (
-	"errors"
-
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
-var (
-	ErrValueEmpty = errors.New("value is empty")
-)
-
 //cria o pagamento e atualiza a conta
-func (a Accounts) CreateBill(bill bills.Bill) (bills.Bill, error) {
+func (a AccountUsecase) CreateBill(bill bills.Bill) (bills.Bill, error) {
 	pay, err := bills.NewBill(bill)
 
 	if err != nil {

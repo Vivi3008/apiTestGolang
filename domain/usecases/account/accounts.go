@@ -1,21 +1,35 @@
-package usecases
+package account
 
 import (
+	"errors"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 type AccountUsecase struct {
-	accs account.AccountRepository
+	repo account.AccountRepository
 }
 
-func CreateNewAccount(acc account.AccountRepository) AccountUsecase {
+var (
+	ErrInsufficientLimit = errors.New("insufficient Limit")
+	ErrValueEmpty        = errors.New("value is empty")
+)
+
+type MethodPayment string
+
+const (
+	Debit  MethodPayment = "Débito"
+	Credit MethodPayment = "Crédito"
+)
+
+func CreateNewAccountUsecase(acc account.AccountRepository) AccountUsecase {
 	return AccountUsecase{
-		accs: acc,
+		repo: acc,
 	}
 }
 
 func (a AccountUsecase) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
-	acc, err := a.accs.ListAccountById(accountId)
+	acc, err := a.repo.ListAccountById(accountId)
 	var actualBalance int
 
 	if err != nil {
@@ -36,7 +50,7 @@ func (a AccountUsecase) VerifyAccount(accountId string, value int, method Method
 		Secret:    acc.Secret,
 		CreatedAt: acc.CreatedAt,
 	}
-	err = a.accs.StoreAccount(updateAcc)
+	err = a.repo.StoreAccount(updateAcc)
 
 	if err != nil {
 		return account.Account{}, err

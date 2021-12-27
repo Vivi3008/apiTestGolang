@@ -1,10 +1,11 @@
-package usecases
+package account
 
 import (
 	"errors"
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/google/uuid"
 )
 
 func TestAccounts_ListAll(t *testing.T) {
@@ -36,7 +37,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccount(accountStore)
+		accountUsecase := CreateNewAccountUsecase(accountStore)
 
 		got, err := accountUsecase.ListAllAccounts()
 
@@ -56,7 +57,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccount(accountStore)
+		accountUsecase := CreateNewAccountUsecase(accountStore)
 
 		_, err := accountUsecase.ListAllAccounts()
 
@@ -92,7 +93,7 @@ func TestAccounts_ListAll(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccount(accStore)
+		accountUsecase := CreateNewAccountUsecase(accStore)
 
 		acount, err := accountUsecase.ListAccountById("656565")
 
@@ -102,6 +103,22 @@ func TestAccounts_ListAll(t *testing.T) {
 
 		if acount.Name != "Viviane" {
 			t.Errorf("Expected %s, got %s", "Viviane", acount.Name)
+		}
+	})
+
+	t.Run("Fail to list account by Id", func(t *testing.T) {
+		accMock := account.AccountMock{
+			OnListById: func(accountId string) (account.Account, error) {
+				return account.Account{}, errors.New("This id doesn't exists")
+			},
+		}
+
+		accUsecase := CreateNewAccountUsecase(accMock)
+
+		_, err := accUsecase.ListAccountById(uuid.NewString())
+
+		if err == nil {
+			t.Errorf("Expected error be %s", errors.New("This id doesn't exists"))
 		}
 	})
 }
