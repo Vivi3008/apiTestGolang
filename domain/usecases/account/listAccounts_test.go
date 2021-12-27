@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestAccounts_ListAll(t *testing.T) {
+func TestListAccounts(t *testing.T) {
 	t.Run("Should return list of accounts succesfully", func(t *testing.T) {
 		arrayAccounts := make([]account.Account, 0)
 		arrayAccounts = append(arrayAccounts, account.Account{
@@ -67,35 +67,22 @@ func TestAccounts_ListAll(t *testing.T) {
 	})
 
 	t.Run("Should list account by id", func(t *testing.T) {
-		arrayAccounts := make([]account.Account, 0)
-		arrayAccounts = append(arrayAccounts, account.Account{
-			Name:    "Vanny",
+		person := account.Account{
+			Id:      uuid.New().String(),
+			Name:    "Viviane",
 			Cpf:     "77845100032",
 			Secret:  "dafd33255",
 			Balance: 250000,
-		},
-			account.Account{
-				Name:    "Viviane",
-				Cpf:     "55985633301",
-				Secret:  "4f5ds4af54",
-				Balance: 260000,
-			},
-			account.Account{
-				Name:    "Giovanna",
-				Cpf:     "85665232145",
-				Secret:  "fadsfdsaf",
-				Balance: 360000,
-			},
-		)
+		}
 		accStore := account.AccountMock{
 			OnListById: func(accountId string) (account.Account, error) {
-				return arrayAccounts[1], nil
+				return person, nil
 			},
 		}
 
 		accountUsecase := CreateNewAccountUsecase(accStore)
 
-		acount, err := accountUsecase.ListAccountById("656565")
+		acount, err := accountUsecase.ListAccountById(person.Id)
 
 		if err != nil {
 			t.Errorf("expected nil got %s", err)
