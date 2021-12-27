@@ -1,16 +1,18 @@
-package usecases
+package transfers
 
 import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 )
 
-func (a Accounts) CreateTransfer(trans transfers.Transfer) (transfers.Transfer, error) {
-	accountOrigin, err := a.VerifyAccount(trans.AccountOriginId, trans.Amount, Debit)
+func (a TranfersUsecase) CreateTransfer(trans transfers.Transfer) (transfers.Transfer, error) {
+	accountOrigin, err := a.accUsecase.VerifyAccount(trans.AccountOriginId, trans.Amount, account.Debit)
 
 	if err != nil {
 		return transfers.Transfer{}, err
 	}
-	accountDestination, err := a.VerifyAccount(trans.AccountDestinationId, trans.Amount, Credit)
+
+	accountDestination, err := a.accUsecase.VerifyAccount(trans.AccountDestinationId, trans.Amount, account.Credit)
 
 	if err != nil {
 		return transfers.Transfer{}, err
