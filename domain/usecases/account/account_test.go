@@ -1,6 +1,8 @@
 package account
 
 import (
+	"errors"
+	"reflect"
 	"testing"
 	"time"
 
@@ -10,75 +12,136 @@ import (
 )
 
 func TestAccountUsecase(t *testing.T) {
-	t.Run("Should modify balance account with credit and debit", func(t *testing.T) {
-		secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
-		person := account.Account{
-			Id:        uuid.New().String(),
-			Name:      "Viviane",
-			Cpf:       "55985633301",
-			Secret:    secretHash,
-			Balance:   260000,
-			CreatedAt: time.Now(),
-		}
+	t.Parallel()
 
-		accMock := account.AccountMock{
-			OnListById: func(accountId string) (account.Account, error) {
-				return person, nil
+	secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
+	person := account.Account{
+		Id:        uuid.New().String(),
+		Name:      "Viviane",
+		Cpf:       "55985633301",
+		Secret:    secretHash,
+		Balance:   260000,
+		CreatedAt: time.Now(),
+	}
+
+	type args struct {
+		id      string
+		value   int
+		payment MethodPayment
+	}
+
+	type TestCase struct {
+		name       string
+		args       args
+		repository account.AccountRepository
+		want       account.Account
+		err        error
+	}
+
+	testCases := []TestCase{
+		{
+			name: "Should modify balance account with credit",
+			repository: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return person, nil
+				},
+				OnStoreAccount: func(account account.Account) error {
+					return nil
+				},
 			},
-			OnStoreAccount: func(account account.Account) error {
-				return nil
+			args: args{
+				id:      person.Id,
+				value:   1000,
+				payment: Credit,
 			},
-		}
-
-		accUsecase := NewAccountUsecase(accMock)
-
-		accUpdated, err := accUsecase.VerifyAccount(person.Id, 1000, Credit)
-
-		if err != nil {
-			t.Errorf("Expected nil got %s", err)
-		}
-
-		if accUpdated.Balance != 261000 {
-			t.Errorf("Expected balance %v, got %v", 261000, accUpdated.Balance)
-		}
-
-		accUpdated, err = accUsecase.VerifyAccount(accUpdated.Id, 1000, Debit)
-
-		if err != nil {
-			t.Errorf("Expected nil got %s", err)
-		}
-
-		if accUpdated.Balance != 259000 {
-			t.Errorf("Expected balance %v, got %v", 259000, accUpdated.Balance)
-		}
-	})
-
-	t.Run("Should fail if balance has insufficient limit", func(t *testing.T) {
-		secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
-		person := account.Account{
-			Id:        uuid.New().String(),
-			Name:      "Viviane",
-			Cpf:       "55985633301",
-			Secret:    secretHash,
-			Balance:   260000,
-			CreatedAt: time.Now(),
-		}
-
-		accMock := account.AccountMock{
-			OnListById: func(accountId string) (account.Account, error) {
-				return person, nil
+			want: account.Account{
+				Id:        person.Id,
+				Name:      "Viviane",
+				Cpf:       "55985633301",
+				Secret:    secretHash,
+				Balance:   261000,
+				CreatedAt: person.CreatedAt,
 			},
-			OnStoreAccount: func(account account.Account) error {
-				return nil
+			err: nil,
+		},
+		{
+			name: "Should modify balance account with debit",
+			repository: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return person, nil
+				},
+				OnStoreAccount: func(account account.Account) error {
+					return nil
+				},
 			},
-		}
+			args: args{
+				id:      person.Id,
+				value:   1000,
+				payment: Debit,
+			},
+			want: account.Account{
+				Id:        person.Id,
+				Name:      "Viviane",
+				Cpf:       "55985633301",
+				Secret:    secretHash,
+				Balance:   259000,
+				CreatedAt: person.CreatedAt,
+			},
+			err: nil,
+		},
+		{
+			name: "Should fail if balance has insufficient limit",
+			repository: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return person, nil
+				},
+				OnStoreAccount: func(account account.Account) error {
+					return nil
+				},
+			},
+			args: args{
+				id:      person.Id,
+				value:   300000,
+				payment: Debit,
+			},
+			want: account.Account{},
+			err:  ErrInsufficientLimit,
+		},
+		{
+			name: "Fail if value is zero",
+			repository: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return person, nil
+				},
+				OnStoreAccount: func(account account.Account) error {
+					return nil
+				},
+			},
+			args: args{
+				id:      person.Id,
+				payment: Debit,
+			},
+			want: account.Account{},
+			err:  ErrValueEmpty,
+		},
+	}
 
-		accUsecase := NewAccountUsecase(accMock)
+	for _, tc := range testCases {
+		tt := tc
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		_, err := accUsecase.VerifyAccount(person.Id, 300000, Debit)
+			uc := NewAccountUsecase(tt.repository)
 
-		if err != ErrInsufficientLimit {
-			t.Errorf("Expected %s, got nil", ErrInsufficientLimit)
-		}
-	})
+			got, err := uc.VerifyAccount(tt.args.id, tt.args.value, tt.args.payment)
+
+			if !errors.Is(err, tt.err) {
+				t.Errorf("Expected %s, got %s", tt.err, err)
+			}
+
+			if !reflect.DeepEqual(tt.want, got) {
+				t.Errorf("Expected %v, got %v", tt.want, got)
+			}
+		})
+	}
 }
