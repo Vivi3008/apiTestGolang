@@ -6,13 +6,13 @@ import (
 )
 
 func (a TranfersUsecase) CreateTransfer(trans transfers.Transfer) (transfers.Transfer, error) {
-	accountOrigin, err := a.accUsecase.VerifyAccount(trans.AccountOriginId, trans.Amount, account.Debit)
+	accountOrigin, err := a.accUsecase.UpdateAccountBalance(trans.AccountOriginId, trans.Amount, account.Debit)
 
 	if err != nil {
 		return transfers.Transfer{}, err
 	}
 
-	accountDestination, err := a.accUsecase.VerifyAccount(trans.AccountDestinationId, trans.Amount, account.Credit)
+	accountDestination, err := a.accUsecase.UpdateAccountBalance(trans.AccountDestinationId, trans.Amount, account.Credit)
 
 	if err != nil {
 		return transfers.Transfer{}, err

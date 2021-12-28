@@ -10,7 +10,7 @@ type TranfersUsecase struct {
 	accUsecase account.AccountUsecase
 }
 
-func CreateNewTransferUsecase(tr transfers.TransferRepository, acc account.AccountUsecase) TranfersUsecase {
+func NewTransferUsecase(tr transfers.TransferRepository, acc account.AccountUsecase) TranfersUsecase {
 	return TranfersUsecase{
 		repo:       tr,
 		accUsecase: acc,
