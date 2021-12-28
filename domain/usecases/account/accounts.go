@@ -28,7 +28,7 @@ func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {
 	}
 }
 
-func (a AccountUsecase) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
+func (a AccountUsecase) UpdateAccountBalance(accountId string, value int, method MethodPayment) (account.Account, error) {
 	acc, err := a.repo.ListAccountById(accountId)
 	var actualBalance int
 

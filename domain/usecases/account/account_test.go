@@ -133,7 +133,7 @@ func TestAccountUsecase(t *testing.T) {
 
 			uc := NewAccountUsecase(tt.repository)
 
-			got, err := uc.VerifyAccount(tt.args.id, tt.args.value, tt.args.payment)
+			got, err := uc.UpdateAccountBalance(tt.args.id, tt.args.value, tt.args.payment)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
