@@ -22,13 +22,13 @@ const (
 	Credit MethodPayment = "Crédito"
 )
 
-func CreateNewAccountUsecase(acc account.AccountRepository) AccountUsecase {
+func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {
 	return AccountUsecase{
 		repo: acc,
 	}
 }
 
-func (a AccountUsecase) VerifyAccount(accountId string, value int, method MethodPayment) (account.Account, error) {
+func (a AccountUsecase) UpdateAccountBalance(accountId string, value int, method MethodPayment) (account.Account, error) {
 	acc, err := a.repo.ListAccountById(accountId)
 	var actualBalance int
 
@@ -60,17 +60,16 @@ func (a AccountUsecase) VerifyAccount(accountId string, value int, method Method
 }
 
 func ModifyBalanceAccount(balance int, value int, method MethodPayment) (int, error) {
+	if value <= 0 {
+		return 0, ErrValueEmpty
+	}
+
 	if method == Debit {
 		if balance < value {
 			return 0, ErrInsufficientLimit
 		}
-
 		return balance - value, nil
-	} else {
-		if value <= 0 {
-			return 0, ErrValueEmpty
-		}
-
-		return balance + value, nil
 	}
+
+	return balance + value, nil
 }
