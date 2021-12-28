@@ -30,7 +30,7 @@ func TestAccountUsecase(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accMock)
+		accUsecase := NewAccountUsecase(accMock)
 
 		accUpdated, err := accUsecase.VerifyAccount(person.Id, 1000, Credit)
 
@@ -73,7 +73,7 @@ func TestAccountUsecase(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accMock)
+		accUsecase := NewAccountUsecase(accMock)
 
 		_, err := accUsecase.VerifyAccount(person.Id, 300000, Debit)
 

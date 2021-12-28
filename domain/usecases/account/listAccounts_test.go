@@ -37,7 +37,7 @@ func TestListAccounts(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccountUsecase(accountStore)
+		accountUsecase := NewAccountUsecase(accountStore)
 
 		got, err := accountUsecase.ListAllAccounts()
 
@@ -57,7 +57,7 @@ func TestListAccounts(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccountUsecase(accountStore)
+		accountUsecase := NewAccountUsecase(accountStore)
 
 		_, err := accountUsecase.ListAllAccounts()
 
@@ -80,7 +80,7 @@ func TestListAccounts(t *testing.T) {
 			},
 		}
 
-		accountUsecase := CreateNewAccountUsecase(accStore)
+		accountUsecase := NewAccountUsecase(accStore)
 
 		acount, err := accountUsecase.ListAccountById(person.Id)
 
@@ -100,7 +100,7 @@ func TestListAccounts(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accMock)
+		accUsecase := NewAccountUsecase(accMock)
 
 		_, err := accUsecase.ListAccountById(uuid.NewString())
 

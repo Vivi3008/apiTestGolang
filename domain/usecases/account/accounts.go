@@ -22,7 +22,7 @@ const (
 	Credit MethodPayment = "Crédito"
 )
 
-func CreateNewAccountUsecase(acc account.AccountRepository) AccountUsecase {
+func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {
 	return AccountUsecase{
 		repo: acc,
 	}

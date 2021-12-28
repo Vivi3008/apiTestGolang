@@ -28,7 +28,7 @@ func TestCreateAccount(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accountMock)
+		accUsecase := NewAccountUsecase(accountMock)
 
 		newAccount, err := accUsecase.CreateAccount(person)
 
@@ -58,7 +58,7 @@ func TestCreateAccount(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accountMock)
+		accUsecase := NewAccountUsecase(accountMock)
 
 		_, err := accUsecase.CreateAccount(person)
 
@@ -81,7 +81,7 @@ func TestCreateAccount(t *testing.T) {
 			},
 		}
 
-		accUsecase := CreateNewAccountUsecase(accMock)
+		accUsecase := NewAccountUsecase(accMock)
 
 		_, err := accUsecase.CreateAccount(personFail)
 
