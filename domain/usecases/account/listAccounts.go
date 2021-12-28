@@ -1,7 +1,13 @@
 package account
 
 import (
+	"errors"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+)
+
+var (
+	ErrIdNotExists = errors.New("id doesn't exists")
 )
 
 func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
@@ -15,11 +21,19 @@ func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
 }
 
 func (a AccountUsecase) ListAccountById(id string) (account.Account, error) {
-	acc, err := a.repo.ListAccountById(id)
+	list, _ := a.repo.ListAllAccounts()
 
-	if err != nil {
-		return account.Account{}, err
+	var accRes account.Account
+
+	if len(list) == 0 {
+		return account.Account{}, ErrIdNotExists
 	}
 
-	return acc, nil
+	for _, acc := range list {
+		if acc.Id == id {
+			accRes = acc
+		}
+	}
+
+	return accRes, nil
 }
