@@ -4,19 +4,20 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
 func TestBills(t *testing.T) {
 	t.Run("Should create a bill successfully", func(t *testing.T) {
 		billStore := store.NewBillStore()
-		bills := CreateNewBill(billStore)
+		bls := CreateNewBill(billStore)
 
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "55566689545",
 			Secret:  "dafd33255",
@@ -31,33 +32,33 @@ func TestBills(t *testing.T) {
 
 		dueDate := time.Now().AddDate(0, 0, 2)
 
-		bill := domain.Bill{
+		bill := bills.Bill{
 			AccountId:   account.Id,
 			Description: "Conta internet",
 			Value:       150,
 			DueDate:     dueDate,
 		}
 
-		newBill, err := domain.NewBill(bill)
+		newBill, err := bills.NewBill(bill)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		billOk, err := accounts.CreateBill(newBill)
+		billOk, err := CreateNewBill(newBill)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
-		_, err = bills.SaveBill(billOk)
+		_, err = bls.SaveBill(billOk)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)
 		}
 
 		// verificando se debitou o valor na conta
-		acc, err := accountStore.ListOne(account.Id)
+		acc, err := accountStore.ListAccountById(account.Id)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err)

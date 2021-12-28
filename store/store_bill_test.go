@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
 func TestStoreBill(t *testing.T) {
@@ -13,14 +13,14 @@ func TestStoreBill(t *testing.T) {
 	dueDate, _ := time.Parse(layoutIso, "2021-12-31")
 
 	t.Run("Should store a bill successfuly", func(t *testing.T) {
-		bill := domain.Bill{
+		bill := bills.Bill{
 			AccountId:   "54545453232",
 			Description: "Unimed",
 			Value:       45000,
 			DueDate:     dueDate,
 		}
 
-		newBill, _ := domain.NewBill(bill)
+		newBill, _ := bills.NewBill(bill)
 		err := store.StoreBill(newBill)
 
 		if err != nil {

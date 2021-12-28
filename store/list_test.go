@@ -4,7 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
 func TestAccountStore_ListAll(t *testing.T) {
@@ -15,21 +17,21 @@ func TestAccountStore_ListAll(t *testing.T) {
 	dueDate, _ := time.Parse(layoutIso, "2021-12-31")
 
 	t.Run("Should return all accounts successfully", func(t *testing.T) {
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		person2 := domain.Account{
+		person2 := account.Account{
 			Name:    "Viviane",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		acc1, err := domain.NewAccount(person)
+		acc1, err := account.NewAccount(person)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -41,7 +43,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		acc2, err2 := domain.NewAccount(person2)
+		acc2, err2 := account.NewAccount(person2)
 
 		if err2 != nil {
 			t.Fatal("Account should have been created successfully")
@@ -53,7 +55,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		accounts, err := store.ListAll()
+		accounts, err := store.ListAllAccounts()
 
 		if err != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())
@@ -81,28 +83,28 @@ func TestAccountStore_ListAll(t *testing.T) {
 	})
 
 	t.Run("Should return all transfers from autenticated user", func(t *testing.T) {
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		acc1, _ := domain.NewAccount(person)
+		acc1, _ := account.NewAccount(person)
 
-		transaction := domain.Transfer{
+		transaction := transfers.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,
 		}
 
-		transaction2 := domain.Transfer{
+		transaction2 := transfers.Transfer{
 			AccountOriginId:      acc1.Id,
 			AccountDestinationId: "21daffsda3ds",
 			Amount:               67541,
 		}
 
-		tr1, err := domain.NewTransfer(transaction)
+		tr1, err := transfers.NewTransfer(transaction)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -120,7 +122,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		tr2, err := domain.NewTransfer(transaction2)
+		tr2, err := transfers.NewTransfer(transaction2)
 
 		if err != nil {
 			t.Fatal("Account should have been created successfully")
@@ -157,28 +159,28 @@ func TestAccountStore_ListAll(t *testing.T) {
 	})
 
 	t.Run("Should list all bills", func(t *testing.T) {
-		bill := domain.Bill{
+		bill := bills.Bill{
 			AccountId:   "54545453232",
 			Description: "Unimed",
 			Value:       450.00,
 			DueDate:     dueDate,
 		}
 
-		newBill, _ := domain.NewBill(bill)
+		newBill, _ := bills.NewBill(bill)
 		err := storeBl.StoreBill(newBill)
 
 		if err != nil {
 			t.Errorf("Expected nil, got %s", err.Error())
 		}
 
-		bill2 := domain.Bill{
+		bill2 := bills.Bill{
 			AccountId:   "54545453232",
 			Description: "Academia",
 			Value:       100,
 			DueDate:     dueDate,
 		}
 
-		newBill2, _ := domain.NewBill(bill2)
+		newBill2, _ := bills.NewBill(bill2)
 		err = storeBl.StoreBill(newBill2)
 
 		if err != nil {

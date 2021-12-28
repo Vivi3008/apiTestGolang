@@ -1,8 +1,10 @@
 package store
 
-import "github.com/Vivi3008/apiTestGolang/domain"
+import (
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+)
 
-func (b BillStore) StoreBill(bill domain.Bill) error {
+func (b BillStore) StoreBill(bill bills.Bill) error {
 	if bill.Id == "" {
 		return ErrEmptyID
 	}

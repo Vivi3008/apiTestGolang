@@ -3,7 +3,7 @@ package usecases
 import (
 	"testing"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/store"
 )
 
@@ -12,14 +12,14 @@ func TestLogin(t *testing.T) {
 		accountStore := store.NewAccountStore()
 		accounts := CreateNewAccount(accountStore)
 
-		person := domain.Account{
+		person := account.Account{
 			Name:    "Vanny",
 			Cpf:     "13323332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
 
-		credentials := domain.Login{
+		credentials := account.Login{
 			Cpf:    "13323332555",
 			Secret: "dafd33255",
 		}

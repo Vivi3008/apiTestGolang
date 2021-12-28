@@ -3,21 +3,21 @@ package store
 import (
 	"testing"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
 func TestStoreTransfer(t *testing.T) {
 	store := NewTransferStore()
 
 	t.Run("Should store any transfer", func(t *testing.T) {
-		transaction := domain.Transfer{
+		transaction := transfers.Transfer{
 			AccountOriginId:      "332f3af2",
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,
 		}
 
-		transfer, _ := domain.NewTransfer(transaction) //cria a transferencia
-		err := store.StoreTransfer(transfer)           //guarda a transfer num map
+		transfer, _ := transfers.NewTransfer(transaction) //cria a transferencia
+		err := store.StoreTransfer(transfer)              //guarda a transfer num map
 
 		if err != nil {
 			t.Errorf("expected nil; got '%v'", err)
@@ -31,7 +31,7 @@ func TestStoreTransfer(t *testing.T) {
 	})
 
 	t.Run("Should return error if transfer id is empty", func(t *testing.T) {
-		transaction := domain.Transfer{
+		transaction := transfers.Transfer{
 			AccountOriginId:      "332f3af2",
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,
@@ -45,7 +45,7 @@ func TestStoreTransfer(t *testing.T) {
 	})
 
 	t.Run("Should not list transfers if account origin Id doesnt exists", func(t *testing.T) {
-		transaction := domain.Transfer{
+		transaction := transfers.Transfer{
 			AccountOriginId:      "f63cb25b-786c-4ff2-9a67-22a065d307d3",
 			AccountDestinationId: "21daf3ds",
 			Amount:               66541,

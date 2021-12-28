@@ -1,8 +1,10 @@
 package store
 
-import "github.com/Vivi3008/apiTestGolang/domain"
+import (
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+)
 
-func (a AccountStore) StoreAccount(account domain.Account) error {
+func (a AccountStore) StoreAccount(account account.Account) error {
 	if account.Id == "" {
 		return ErrEmptyID
 	}
