@@ -1,8 +1,12 @@
 package transfers
 
 import (
+	"errors"
+	"reflect"
 	"testing"
+	"time"
 
+	"github.com/Vivi3008/apiTestGolang/domain/commom"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 	accUse "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
@@ -10,6 +14,7 @@ import (
 )
 
 func TestTransfers(t *testing.T) {
+	t.Parallel()
 	person := account.Account{
 		Id:      uuid.New().String(),
 		Name:    "Vanny",
@@ -17,44 +22,129 @@ func TestTransfers(t *testing.T) {
 		Secret:  "dafd33255",
 		Balance: 2500,
 	}
-
-	person2 := account.Account{
-		Id:      uuid.New().String(),
-		Name:    "Viviane",
-		Cpf:     "11452369875",
-		Secret:  "vivi",
-		Balance: 2500,
+	secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
+	listAccounts := []account.Account{
+		{
+			Id:        "fads1fdsa3",
+			Name:      "David",
+			Cpf:       "556565656555",
+			Secret:    secretHash,
+			Balance:   260000,
+			CreatedAt: time.Now(),
+		},
+		{
+			Id:        "5df4s5df45",
+			Name:      "Vale",
+			Cpf:       "656565656565",
+			Secret:    secretHash,
+			Balance:   260000,
+			CreatedAt: time.Now(),
+		},
+		{
+			Id:        "a6fd56sad5f3",
+			Name:      "Biscui",
+			Cpf:       "21545454545",
+			Secret:    secretHash,
+			Balance:   260000,
+			CreatedAt: time.Now(),
+		},
 	}
 
-	t.Run("Should list a transfer successfull", func(t *testing.T) {
-		transMock := transfers.TransferMock{
-			OnListAll: func(id string) ([]transfers.Transfer, error) {
-				return []transfers.Transfer{
-					{AccountOriginId: person.Id,
-						AccountDestinationId: person2.Id,
-						Amount:               100},
-				}, nil
+	trans := transfers.Transfer{
+		Id:                   uuid.New().String(),
+		AccountOriginId:      person.Id,
+		AccountDestinationId: "asdf65asd6f5sa",
+		Amount:               100,
+		CreatedAt:            time.Now(),
+	}
+
+	type TestCase struct {
+		name       string
+		repository transfers.TransferRepository
+		accRepo    account.AccountRepository
+		args       string
+		want       []transfers.Transfer
+		err        error
+	}
+
+	testCases := []TestCase{
+		{
+			name: "Should list a transfer successfull",
+			repository: transfers.TransferMock{
+				OnListAll: func(id string) ([]transfers.Transfer, error) {
+					return []transfers.Transfer{trans}, nil
+				},
 			},
-		}
-
-		accMock := account.AccountMock{
-			OnCreate: func(account account.Account) (account.Account, error) {
-				return person, nil
+			accRepo: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return listAccounts[0], nil
+				},
+				OnListAll: func() ([]account.Account, error) {
+					return listAccounts, nil
+				},
 			},
-		}
+			args: listAccounts[0].Id,
+			want: []transfers.Transfer{trans},
+			err:  nil,
+		},
+		{
+			name: "Fail to list transfer if id doesnt exists",
+			repository: transfers.TransferMock{
+				OnListAll: func(id string) ([]transfers.Transfer, error) {
+					return []transfers.Transfer{trans}, nil
+				},
+			},
+			accRepo: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return person, accUse.ErrIdNotExists
+				},
+				OnListAll: func() ([]account.Account, error) {
+					return listAccounts, nil
+				},
+			},
+			args: person.Id,
+			want: []transfers.Transfer{},
+			err:  accUse.ErrIdNotExists,
+		},
+		{
+			name: "Should list empty transfers",
+			repository: transfers.TransferMock{
+				OnListAll: func(id string) ([]transfers.Transfer, error) {
+					return []transfers.Transfer{}, nil
+				},
+			},
+			accRepo: account.AccountMock{
+				OnListById: func(accountId string) (account.Account, error) {
+					return listAccounts[1], accUse.ErrIdNotExists
+				},
+				OnListAll: func() ([]account.Account, error) {
+					return listAccounts, nil
+				},
+			},
+			args: listAccounts[1].Id,
+			want: []transfers.Transfer{},
+			err:  nil,
+		},
+	}
 
-		accUsecase := accUse.CreateNewAccountUsecase(accMock)
+	for _, tc := range testCases {
+		tt := tc
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		transUsecase := CreateNewTransferUsecase(transMock, accUsecase)
+			ac := accUse.NewAccountUsecase(tt.accRepo)
 
-		list, err := transUsecase.repo.ListTransfer(person.Id)
+			transUse := NewTransferUsecase(tt.repository, ac)
 
-		if err != nil {
-			t.Errorf("Expected error to be nil, got %s", err)
-		}
+			got, err := transUse.ListTransfer(tt.args)
 
-		if len(list) != 1 {
-			t.Errorf("Expected 1 item in list transfer, got %v", len(list))
-		}
-	})
+			if !errors.Is(tt.err, err) {
+				t.Errorf("Expected %s, got %s", tt.err, err)
+			}
+
+			if !reflect.DeepEqual(tt.want, got) {
+				t.Errorf("Expected %v, got %v", tt.want, got)
+			}
+		})
+	}
 }
