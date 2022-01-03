@@ -1,4 +1,4 @@
-package usecases
+package account
 
 import (
 	"errors"
@@ -8,24 +8,29 @@ import (
 )
 
 var (
-	ErrInvalidCredentials = errors.New("cpf, secret are invalid")
-	ErrInvalidPassword    = errors.New("password invalid")
+	ErrCpfNotExists    = errors.New("this cpf doesn't exists")
+	ErrInvalidPassword = errors.New("password invalid")
 )
 
-func (a Accounts) NewLogin(u account.Login) (string, error) {
+func (a AccountUsecase) NewLogin(u account.Login) (string, error) {
 	listAccounts, _ := a.ListAllAccounts()
 
-	var result string
 	var err error
+	var result string
 
 	for _, acc := range listAccounts {
 		if acc.Cpf == u.Cpf {
 			err = commom.VerifyPasswordHash(acc.Secret, u.Secret)
 			if err != nil {
-				err = ErrInvalidPassword
+				return "", ErrInvalidPassword
 			}
 			result = acc.Id
 		}
 	}
-	return result, err
+
+	if result == "" {
+		return result, ErrCpfNotExists
+	}
+
+	return result, nil
 }
