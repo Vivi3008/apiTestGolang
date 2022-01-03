@@ -65,7 +65,7 @@ func TestBills(t *testing.T) {
 			err:  nil,
 		},
 		{
-			name: "Fail if id account doenst exists",
+			name: "Fail if id account doens't exists",
 			repository: bills.BillMock{
 				OnListAll: func(id string) ([]bills.Bill, error) {
 					return []bills.Bill{payment}, nil
