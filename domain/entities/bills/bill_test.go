@@ -64,8 +64,14 @@ func TestNewBill(t *testing.T) {
 				DueDate:       time.Now().AddDate(0, 0, 5),
 				ScheduledDate: time.Now().AddDate(0, 0, -1),
 			},
-			want: Bill{},
-			err:  ErrDateInvalid,
+			want: Bill{
+				Description:   "TIM",
+				Value:         5900,
+				AccountId:     "16sfd5465fd6s",
+				DueDate:       time.Now().AddDate(0, 0, 5).UTC().Truncate(24 * time.Hour),
+				ScheduledDate: time.Now().UTC().Truncate(24 * time.Hour),
+			},
+			err: nil,
 		},
 		{
 			name: "Fail if due date is empty",
@@ -104,6 +110,7 @@ func TestNewBill(t *testing.T) {
 			tt.want.Id = got.Id
 			got.ScheduledDate = got.ScheduledDate.UTC().Truncate(24 * time.Hour)
 			got.DueDate = got.DueDate.UTC().Truncate(24 * time.Hour)
+			tt.want.StatusBill = got.StatusBill
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %v expected %v", got, tt.want)
