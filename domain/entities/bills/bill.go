@@ -59,7 +59,7 @@ func verifyDate(date time.Time) (time.Time, error) {
 	}
 
 	if date.Before(time.Now().UTC().Truncate(24 * time.Hour)) {
-		return time.Now(), ErrDateInvalid
+		return time.Now(), nil
 	}
 
 	return date, nil
