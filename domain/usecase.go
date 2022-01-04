@@ -15,6 +15,6 @@ type Usecase interface {
 	SaveTransfer(transfers.Transfer) (transfers.Transfer, error)
 	CreateTransfer(transfers.Transfer) (transfers.Transfer, error)
 	CreateBill(bills.Bill) (bills.Bill, error)
-	SaveBill(bills.Bill) (bills.Bill, error)
+	SaveBill(bills.Bill) error
 	ListAllBills(string) ([]bills.Bill, error)
 }
