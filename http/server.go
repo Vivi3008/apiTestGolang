@@ -3,7 +3,9 @@ package http
 import (
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/domain/usecases"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/gorilla/mux"
 )
 
@@ -12,9 +14,9 @@ type Error struct {
 }
 
 type Server struct {
-	app usecases.Accounts
-	tr  usecases.Tranfers
-	bl  usecases.Bills
+	app account.AccountUsecase
+	tr  transfers.TranfersUsecase
+	bl  bill.BillUsecase
 	http.Handler
 }
 
@@ -25,9 +27,9 @@ const (
 )
 
 func NewServer(
-	usecaseAcc usecases.Accounts,
-	usecaseTr usecases.Tranfers,
-	usecaseBl usecases.Bills,
+	usecaseAcc account.AccountUsecase,
+	usecaseTr transfers.TranfersUsecase,
+	usecaseBl bill.BillUsecase,
 ) Server {
 
 	server := Server{
