@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	ErrIdNotExists = errors.New("id doesn't exists")
+	ErrIdNotExists      = errors.New("id doesn't exists")
+	ErrListAccountEmpty = errors.New("list account is empty")
 )
 
 func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
@@ -26,13 +27,17 @@ func (a AccountUsecase) ListAccountById(id string) (account.Account, error) {
 	var accRes account.Account
 
 	if len(list) == 0 {
-		return account.Account{}, ErrIdNotExists
+		return account.Account{}, ErrListAccountEmpty
 	}
 
 	for _, acc := range list {
 		if acc.Id == id {
 			accRes = acc
 		}
+	}
+
+	if accRes.Id == "" {
+		return account.Account{}, ErrIdNotExists
 	}
 
 	return accRes, nil
