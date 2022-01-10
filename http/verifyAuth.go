@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -14,7 +14,7 @@ var (
 	ErrAuth = errors.New("authentication required")
 )
 
-func VerifyAuth(w http.ResponseWriter, r *http.Request) (domain.AccountId, error) {
+func VerifyAuth(w http.ResponseWriter, r *http.Request) (account.AccountId, error) {
 	if r.Header["Authorization"] == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode("Authentication required")
@@ -42,5 +42,5 @@ func VerifyAuth(w http.ResponseWriter, r *http.Request) (domain.AccountId, error
 		return "", ErrAuth
 	}
 
-	return domain.AccountId(accountId), nil
+	return account.AccountId(accountId), nil
 }

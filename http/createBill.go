@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
 type BillReqRes struct {
-	AccountId     string        `json:"account_id"`
-	Description   string        `json:"description"`
-	Value         int           `json:"value"`
-	DueDate       time.Time     `json:"due_date"`
-	ScheduledDate time.Time     `json:"scheduled_date"`
-	StatusBill    domain.Status `json:"status"`
+	AccountId     string       `json:"account_id"`
+	Description   string       `json:"description"`
+	Value         int          `json:"value"`
+	DueDate       time.Time    `json:"due_date"`
+	ScheduledDate time.Time    `json:"scheduled_date"`
+	StatusBill    bills.Status `json:"status"`
 }
 
 func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
@@ -34,14 +34,14 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bill := domain.Bill{
+	bill := bills.Bill{
 		AccountId:   string(accountId),
 		Description: body.Description,
 		Value:       body.Value,
 		DueDate:     body.DueDate,
 	}
 
-	billOk, err := s.app.CreateBill(bill)
+	billOk, err := s.bl.CreateBill(bill)
 
 	if err != nil {
 		log.Printf("Failed to pay bill: %s\n", err.Error())
@@ -52,16 +52,16 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	billStatusOk := domain.Bill{
+	newBill := bills.Bill{
 		Id:          billOk.Id,
 		AccountId:   billOk.AccountId,
 		Description: billOk.Description,
 		Value:       billOk.Value,
 		DueDate:     billOk.DueDate,
-		StatusBill:  domain.Pago,
+		StatusBill:  bills.Pago,
 	}
 
-	saveBill, err := s.bl.SaveBill(billStatusOk)
+	err = s.bl.SaveBill(newBill)
 
 	if err != nil {
 		log.Printf("Failed to save bill: %s\n", err.Error())
@@ -71,15 +71,15 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 	}
 
 	billResonse := BillReqRes{
-		AccountId:     saveBill.AccountId,
-		Description:   saveBill.Description,
-		Value:         saveBill.Value,
-		DueDate:       saveBill.DueDate,
-		ScheduledDate: saveBill.ScheduledDate,
-		StatusBill:    saveBill.StatusBill,
+		AccountId:     newBill.AccountId,
+		Description:   newBill.Description,
+		Value:         newBill.Value,
+		DueDate:       newBill.DueDate,
+		ScheduledDate: newBill.ScheduledDate,
+		StatusBill:    newBill.StatusBill,
 	}
 
 	w.Header().Set(ContentType, JSONContentType)
 	json.NewEncoder(w).Encode(billResonse)
-	log.Printf("sent successful response for transfer %s\n", saveBill.Id)
+	log.Printf("sent successful response for transfer %s\n", newBill.Id)
 }

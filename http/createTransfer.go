@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
 type TransferRequest struct {
@@ -39,8 +39,8 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transaction := domain.Transfer{
-		AccountOriginId:      account.AccountId,
+	transaction := transfers.Transfer{
+		AccountOriginId:      account.Id,
 		AccountDestinationId: body.AccountDestinationId,
 		Amount:               body.Amount,
 	}
@@ -53,7 +53,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := s.app.CreateTransfer(transaction)
+	transfer, err := s.tr.CreateTransfer(transaction)
 
 	if err != nil {
 		log.Printf("Failed to do transfer: %s\n", err.Error())
@@ -64,7 +64,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	saveTransfer, err := s.tr.SaveTransfer(transfer)
+	err = s.tr.SaveTransfer(transfer)
 
 	if err != nil {
 		log.Printf("Failed to save transfer: %s\n", err.Error())
@@ -74,11 +74,11 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := TransferResponse{
-		Id:                   saveTransfer.Id,
-		AccountOriginId:      saveTransfer.AccountOriginId,
-		AccountDestinationId: saveTransfer.AccountDestinationId,
-		Amount:               saveTransfer.Amount,
-		CreatedAt:            saveTransfer.CreatedAt.Format(DateLayout),
+		Id:                   transfer.Id,
+		AccountOriginId:      transfer.AccountOriginId,
+		AccountDestinationId: transfer.AccountDestinationId,
+		Amount:               transfer.Amount,
+		CreatedAt:            transfer.CreatedAt.Format(DateLayout),
 	}
 
 	w.Header().Set(ContentType, JSONContentType)

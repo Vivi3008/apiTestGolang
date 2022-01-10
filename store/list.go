@@ -38,7 +38,7 @@ func (a AccountStore) ListAccountById(accountId string) (account.Account, error)
 	}
 }
 
-func (tr TransferStore) ListTransfers(accountOriginId string) ([]transfers.Transfer, error) {
+func (tr TransferStore) ListTransfer(accountOriginId string) ([]transfers.Transfer, error) {
 	transfers := make([]transfers.Transfer, 0)
 
 	for _, transfer := range tr.tranStore {
