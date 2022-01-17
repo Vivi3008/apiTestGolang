@@ -28,8 +28,6 @@ func LoginMiddleware(next http.Handler) http.Handler {
 
 		authHeader := r.Header.Get("Authorization")
 
-		var accountId string
-
 		//pegar o id do token
 		accountId, err := commom.AuthJwt(authHeader)
 
