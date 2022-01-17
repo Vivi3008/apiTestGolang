@@ -7,7 +7,15 @@ import (
 )
 
 func (s Server) ListBills(w http.ResponseWriter, r *http.Request) {
-	accountId, _ := VerifyAuth(w, r)
+	accountId, ok := GetAccountId(r.Context())
+
+	if !ok || accountId == "" {
+		response := Error{Reason: "Error to get id from token"}
+		w.Header().Set(ContentType, JSONContentType)
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	list, err := s.bl.ListAllBills(string(accountId))
 
