@@ -1,46 +1,53 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
-	"os"
 
-	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/Vivi3008/apiTestGolang/commom"
 )
 
 var (
 	ErrAuth = errors.New("authentication required")
 )
 
-func VerifyAuth(w http.ResponseWriter, r *http.Request) (account.AccountId, error) {
-	if r.Header["Authorization"] == nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode("Authentication required")
-		return "", ErrAuth
-	}
+type AuthContextKey string
 
-	authHeader := r.Header.Get("Authorization")
+var contextAccountID = AuthContextKey("account_id")
 
-	var accountId string
+func LoginMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header["Authorization"] == nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode("Authentication required")
 
-	//pegar o id do token
-	token, err := jwt.Parse(authHeader, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, errors.New("unexpected signing method")
 		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
+
+		authHeader := r.Header.Get("Authorization")
+
+		var accountId string
+
+		//pegar o id do token
+		accountId, err := commom.AuthJwt(authHeader)
+
+		if err != nil {
+			log.Printf("Login failed: %s\n", err.Error())
+			response := Error{Reason: err.Error()}
+			w.Header().Set(ContentType, JSONContentType)
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), contextAccountID, accountId)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		accountId = claims["id"].(string)
-	} else {
-		res := err.Error()
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(res)
-		return "", ErrAuth
-	}
-
-	return account.AccountId(accountId), nil
+func GetAccountId(ctx context.Context) (string, bool) {
+	tokenStr, ok := ctx.Value(contextAccountID).(string)
+	return tokenStr, ok
 }
