@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain/commom"
+	"github.com/Vivi3008/apiTestGolang/commom"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/google/uuid"
 )

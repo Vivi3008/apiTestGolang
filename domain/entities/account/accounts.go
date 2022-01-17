@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/domain/commom"
+	"github.com/Vivi3008/apiTestGolang/commom"
 	"github.com/google/uuid"
 )
 
