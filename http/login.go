@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -33,7 +33,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	login := domain.Login{
+	login := account.Login{
 		Cpf:    body.Cpf,
 		Secret: body.Secret,
 	}

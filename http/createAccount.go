@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/domain"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
 type AccountRequest struct {
@@ -37,7 +37,7 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	person := domain.Account{
+	person := account.Account{
 		Name:    body.Name,
 		Cpf:     body.Cpf,
 		Secret:  body.Secret,

@@ -17,7 +17,7 @@ func TestStoreTransfer(t *testing.T) {
 		}
 
 		transfer, _ := transfers.NewTransfer(transaction) //cria a transferencia
-		err := store.StoreTransfer(transfer)              //guarda a transfer num map
+		err := store.SaveTransfer(transfer)               //guarda a transfer num map
 
 		if err != nil {
 			t.Errorf("expected nil; got '%v'", err)
@@ -37,7 +37,7 @@ func TestStoreTransfer(t *testing.T) {
 			Amount:               66541,
 		}
 
-		err := store.StoreTransfer(transaction)
+		err := store.SaveTransfer(transaction)
 
 		if err != ErrEmptyID {
 			t.Errorf("expected %s, got %s", ErrEmptyID, err.Error())
@@ -51,7 +51,7 @@ func TestStoreTransfer(t *testing.T) {
 			Amount:               66541,
 		}
 
-		_, err := store.ListTransfers(transaction.AccountOriginId)
+		_, err := store.ListTransfer(transaction.AccountOriginId)
 
 		if err == nil {
 			t.Errorf("Expected error id doesnt exists, got %s", err)

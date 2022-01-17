@@ -116,7 +116,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		err = storeTr.StoreTransfer(tr1)
+		err = storeTr.SaveTransfer(tr1)
 
 		if err != nil {
 			t.Fatal("Account should have been stored successfully")
@@ -128,13 +128,13 @@ func TestAccountStore_ListAll(t *testing.T) {
 			t.Fatal("Account should have been created successfully")
 		}
 
-		err2 := storeTr.StoreTransfer(tr2)
+		err2 := storeTr.SaveTransfer(tr2)
 
 		if err2 != nil {
 			t.Fatal("Account should have been stored successfully")
 		}
 
-		transfers, err3 := storeTr.ListTransfers(acc1.Id)
+		transfers, err3 := storeTr.ListTransfer(acc1.Id)
 
 		if err3 != nil {
 			t.Errorf("expected nil; got '%s'", err.Error())

@@ -54,12 +54,8 @@ func NewBill(bill Bill) (Bill, error) {
 }
 
 func verifyDate(date time.Time) (time.Time, error) {
-	if date.IsZero() {
+	if date.IsZero() || date.Before(time.Now().UTC().Truncate(24*time.Hour)) {
 		return time.Now(), nil
-	}
-
-	if date.Before(time.Now().UTC().Truncate(24 * time.Hour)) {
-		return time.Now(), ErrDateInvalid
 	}
 
 	return date, nil
