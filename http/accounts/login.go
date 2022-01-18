@@ -1,4 +1,4 @@
-package http
+package accounts
 
 import (
 	"encoding/json"
@@ -22,7 +22,7 @@ type TokenString struct {
 	Token string `json:"token"`
 }
 
-func (s Server) Login(w http.ResponseWriter, r *http.Request) {
+func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var body LoginRequest
 
 	err := json.NewDecoder(r.Body).Decode(&body)
@@ -37,7 +37,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 		Secret: body.Secret,
 	}
 
-	accountId, err := s.app.NewLogin(login)
+	accountId, err := h.acc.NewLogin(login)
 
 	if accountId == "" {
 		response.SendError(w, ErrCpfNotExists, http.StatusBadRequest)

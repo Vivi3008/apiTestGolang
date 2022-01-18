@@ -6,6 +6,8 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
+	"github.com/Vivi3008/apiTestGolang/http/accounts"
+	"github.com/Vivi3008/apiTestGolang/http/middlewares"
 	"github.com/gorilla/mux"
 )
 
@@ -23,24 +25,20 @@ func NewServer(
 ) Server {
 
 	server := Server{
-		app: usecaseAcc,
-		tr:  usecaseTr,
-		bl:  usecaseBl,
+		tr: usecaseTr,
+		bl: usecaseBl,
 	}
 
 	router := mux.NewRouter()
 	routerAuth := router.NewRoute().Subrouter()
 
-	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
-	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
-	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
+	accounts.NewHandler(router, usecaseAcc)
 
-	routerAuth.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
 	routerAuth.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
 	routerAuth.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
 	routerAuth.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
 	routerAuth.HandleFunc("/transfers", server.ListTransfer).Methods(http.MethodGet)
-	routerAuth.Use()
+	routerAuth.Use(middlewares.Auth)
 
 	server.Handler = router
 	return server

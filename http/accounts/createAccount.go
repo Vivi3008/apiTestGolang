@@ -1,4 +1,4 @@
-package http
+package accounts
 
 import (
 	"encoding/json"
@@ -24,7 +24,7 @@ type AccountResponse struct {
 	CreatedAt string `json:"createdAt"`
 }
 
-func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
+func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	var body AccountRequest
 
 	err := json.NewDecoder(r.Body).Decode(&body)
@@ -41,7 +41,7 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Balance: body.Balance,
 	}
 
-	account, err := s.app.CreateAccount(person)
+	account, err := h.acc.CreateAccount(person)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)

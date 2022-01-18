@@ -1,4 +1,4 @@
-package http
+package accounts
 
 import (
 	"log"
@@ -24,8 +24,8 @@ type AccountIdRequest struct {
 	Id string `json:"id"`
 }
 
-func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
-	list, err := s.app.ListAllAccounts()
+func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
+	list, err := h.acc.ListAllAccounts()
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
@@ -47,12 +47,12 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Sent all accounts. Total: %d", len(accounts))
 }
 
-func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ListOne(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	personId := vars["account_id"]
 
-	account, err := s.app.ListAccountById(personId)
+	account, err := h.acc.ListAccountById(personId)
 
 	if err != nil {
 		log.Printf("Failed to list account: %s", err.Error())
