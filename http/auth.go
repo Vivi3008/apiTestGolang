@@ -18,7 +18,7 @@ type AuthContextKey string
 
 var contextAccountID = AuthContextKey("account_id")
 
-func LoginMiddleware(next http.Handler) http.Handler {
+func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header["Authorization"] == nil {
 			w.WriteHeader(http.StatusUnauthorized)

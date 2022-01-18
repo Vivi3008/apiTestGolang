@@ -50,7 +50,7 @@ func NewServer(
 	routerAuth.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
 	routerAuth.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
 	routerAuth.HandleFunc("/transfers", server.ListTransfer).Methods(http.MethodGet)
-	routerAuth.Use(LoginMiddleware)
+	routerAuth.Use(Auth)
 
 	server.Handler = router
 	return server
