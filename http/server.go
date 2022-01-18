@@ -39,15 +39,18 @@ func NewServer(
 	}
 
 	router := mux.NewRouter()
+	routerAuth := router.NewRoute().Subrouter()
 
 	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
-	router.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
 	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
-	router.HandleFunc("/transfers", server.ListTransfer).Methods((http.MethodGet))
-	router.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
-	router.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
-	router.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
+
+	routerAuth.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
+	routerAuth.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
+	routerAuth.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
+	routerAuth.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
+	routerAuth.HandleFunc("/transfers", server.ListTransfer).Methods(http.MethodGet)
+	routerAuth.Use(Auth)
 
 	server.Handler = router
 	return server
