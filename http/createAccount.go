@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
 type AccountRequest struct {
@@ -29,11 +30,7 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -47,22 +44,18 @@ func (s Server) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	account, err := s.app.CreateAccount(person)
 
 	if err != nil {
-		response := Error{Reason: err.Error()}
-		log.Printf("Failed to create account: %s\n", err.Error())
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	response := AccountResponse{
+	accountResponse := AccountResponse{
 		Id:        account.Id,
 		Name:      account.Name,
 		Cpf:       account.Cpf,
 		Balance:   account.Balance,
-		CreatedAt: account.CreatedAt.Format(DateLayout),
+		CreatedAt: account.CreatedAt.Format(response.DateLayout),
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(response)
+	response.SendRequest(w, accountResponse, http.StatusOK)
 	log.Printf("sent successful response for account %s\n", account.Id)
 }

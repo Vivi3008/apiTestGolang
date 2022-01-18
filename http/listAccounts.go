@@ -1,10 +1,10 @@
 package http
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
+	"github.com/Vivi3008/apiTestGolang/http/response"
 	"github.com/gorilla/mux"
 )
 
@@ -29,26 +29,22 @@ func (s Server) ListAll(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	response := make([]ListAccountResponse, len(list))
+	accounts := make([]ListAccountResponse, len(list))
 
 	for i, account := range list {
-		response[i].Id = account.Id
-		response[i].Name = account.Name
-		response[i].Cpf = account.Cpf
-		response[i].Balance = account.Balance
-		response[i].CreatedAt = account.CreatedAt.Format(DateLayout)
+		accounts[i].Id = account.Id
+		accounts[i].Name = account.Name
+		accounts[i].Cpf = account.Cpf
+		accounts[i].Balance = account.Balance
+		accounts[i].CreatedAt = account.CreatedAt.Format(response.DateLayout)
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(response)
-	log.Printf("Sent all accounts. Total: %d", len(response))
+	response.SendRequest(w, accounts, http.StatusOK)
+	log.Printf("Sent all accounts. Total: %d", len(accounts))
 }
 
 func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
@@ -60,17 +56,13 @@ func (s Server) ListOne(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list account: %s", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	response := BalanceAccountResponse{
+	balance := BalanceAccountResponse{
 		Balance: account.Balance,
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(response)
+	response.SendRequest(w, balance, http.StatusOK)
 }

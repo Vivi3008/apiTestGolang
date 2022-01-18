@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
 type BillReqRes struct {
@@ -19,13 +21,10 @@ type BillReqRes struct {
 }
 
 func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
-	accountId, ok := GetAccountId(r.Context())
+	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
-		response := Error{Reason: "Error to get id from token"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
@@ -34,11 +33,7 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -52,11 +47,7 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 	billOk, err := s.bl.CreateBill(bill)
 
 	if err != nil {
-		log.Printf("Failed to pay bill: %s\n", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -72,13 +63,11 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 	err = s.bl.SaveBill(newBill)
 
 	if err != nil {
-		log.Printf("Failed to save bill: %s\n", err.Error())
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	billResonse := BillReqRes{
+	billResponse := BillReqRes{
 		AccountId:     newBill.AccountId,
 		Description:   newBill.Description,
 		Value:         newBill.Value,
@@ -87,7 +76,6 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 		StatusBill:    newBill.StatusBill,
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(billResonse)
+	response.SendRequest(w, billResponse, http.StatusOK)
 	log.Printf("sent successful response for transfer %s\n", newBill.Id)
 }

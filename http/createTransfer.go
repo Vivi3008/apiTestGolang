@@ -2,10 +2,13 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/Vivi3008/apiTestGolang/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
 type TransferRequest struct {
@@ -13,24 +16,23 @@ type TransferRequest struct {
 	Amount               int    `json:"amount"`
 }
 
+var (
+	ErrGetTokenId = errors.New("error to get id from token")
+	ErrIdDestiny  = errors.New("account destiny id can't be the same account origin id")
+)
+
 func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
-	accountId, ok := GetAccountId(r.Context())
+	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
-		response := Error{Reason: "Error to get id from token"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
 	account, err := s.app.ListAccountById(string(accountId))
 
 	if err != nil {
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -39,11 +41,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	err = json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -54,21 +52,14 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if string(accountId) == transaction.AccountDestinationId {
-		response := Error{Reason: "Account destiny id can't be the same account origin id"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, ErrIdDestiny, http.StatusBadRequest)
 		return
 	}
 
 	transfer, err := s.tr.CreateTransfer(transaction)
 
 	if err != nil {
-		log.Printf("Failed to do transfer: %s\n", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -76,20 +67,18 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to save transfer: %s\n", err.Error())
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(err.Error())
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	response := TransferResponse{
+	transferResponse := TransferResponse{
 		Id:                   transfer.Id,
 		AccountOriginId:      transfer.AccountOriginId,
 		AccountDestinationId: transfer.AccountDestinationId,
 		Amount:               transfer.Amount,
-		CreatedAt:            transfer.CreatedAt.Format(DateLayout),
+		CreatedAt:            transfer.CreatedAt.Format(response.DateLayout),
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(response)
+	response.SendRequest(w, transferResponse, http.StatusOK)
 	log.Printf("sent successful response for transfer %s\n", transfer.Id)
 }

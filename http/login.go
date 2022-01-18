@@ -2,13 +2,16 @@ package http
 
 import (
 	"encoding/json"
-	"log"
+	"errors"
 	"net/http"
 	"os"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 	"github.com/dgrijalva/jwt-go"
 )
+
+var ErrCpfNotExists = errors.New("cpf doesn't exists")
 
 type LoginRequest struct {
 	Cpf    string `json:"cpf"`
@@ -25,11 +28,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response := Error{Reason: "invalid request body"}
-		log.Printf("error decoding body: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -41,29 +40,19 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 	accountId, err := s.app.NewLogin(login)
 
 	if accountId == "" {
-		response := Error{Reason: "Cpf does not exist"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, ErrCpfNotExists, http.StatusBadRequest)
 		return
 	}
 
 	if err != nil {
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusUnauthorized)
 		return
 	}
 
 	tokenString, err := createToken(accountId)
 
 	if err != nil {
-		response := Error{Reason: "Invalid token"}
-		log.Printf("error invalid token: %s\n", err.Error())
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusUnauthorized)
 		return
 	}
 
@@ -71,8 +60,7 @@ func (s Server) Login(w http.ResponseWriter, r *http.Request) {
 		Token: tokenString,
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resToken)
+	response.SendRequest(w, resToken, http.StatusOK)
 }
 
 func createToken(accountId string) (string, error) {

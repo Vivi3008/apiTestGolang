@@ -1,9 +1,11 @@
 package http
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/Vivi3008/apiTestGolang/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
 type TransferResponse struct {
@@ -15,13 +17,10 @@ type TransferResponse struct {
 }
 
 func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
-	accountId, ok := GetAccountId(r.Context())
+	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
-		response := Error{Reason: "Error to get id from token"}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
@@ -29,10 +28,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -40,25 +36,21 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
-		response := Error{Reason: err.Error()}
-		w.Header().Set(ContentType, JSONContentType)
-		w.WriteHeader(http.StatusInternalServerError)
-		json.NewEncoder(w).Encode(response)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	response := make([]TransferResponse, len(list))
+	transfers := make([]TransferResponse, len(list))
 
 	for i, transfer := range list {
-		response[i].Id = transfer.Id
-		response[i].AccountOriginId = transfer.AccountOriginId
-		response[i].AccountDestinationId = transfer.AccountDestinationId
-		response[i].Amount = transfer.Amount
-		response[i].CreatedAt = transfer.CreatedAt.Format(DateLayout)
+		transfers[i].Id = transfer.Id
+		transfers[i].AccountOriginId = transfer.AccountOriginId
+		transfers[i].AccountDestinationId = transfer.AccountDestinationId
+		transfers[i].Amount = transfer.Amount
+		transfers[i].CreatedAt = transfer.CreatedAt.Format(response.DateLayout)
 	}
 
-	w.Header().Set(ContentType, JSONContentType)
-	json.NewEncoder(w).Encode(response)
+	response.SendRequest(w, transfers, http.StatusOK)
 	log.Printf("Sent all transfers from Id %s", accountId)
-	log.Printf("Sent all transfers. Total: %d", len(response))
+	log.Printf("Sent all transfers. Total: %d", len(transfers))
 }
