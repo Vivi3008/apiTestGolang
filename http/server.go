@@ -9,22 +9,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Error struct {
-	Reason string `json:"reason"`
-}
-
 type Server struct {
 	app account.AccountUsecase
 	tr  transfers.TranfersUsecase
 	bl  bill.BillUsecase
 	http.Handler
 }
-
-const (
-	ContentType     = "Content-Type"
-	JSONContentType = "application/json"
-	DateLayout      = "2006-01-02T15:04:05Z"
-)
 
 func NewServer(
 	usecaseAcc account.AccountUsecase,
@@ -50,7 +40,7 @@ func NewServer(
 	routerAuth.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
 	routerAuth.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
 	routerAuth.HandleFunc("/transfers", server.ListTransfer).Methods(http.MethodGet)
-	routerAuth.Use(Auth)
+	routerAuth.Use()
 
 	server.Handler = router
 	return server
