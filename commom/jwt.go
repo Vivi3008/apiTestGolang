@@ -25,3 +25,18 @@ func AuthJwt(tokenStr string) (string, error) {
 
 	return accountId, nil
 }
+
+func CreateToken(accountId string) (string, error) {
+	idClaims := jwt.MapClaims{}
+	idClaims["id"] = accountId
+
+	tokenStr := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), idClaims)
+
+	tokenString, err := tokenStr.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}

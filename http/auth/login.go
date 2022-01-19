@@ -1,14 +1,13 @@
-package accounts
+package auth
 
 import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 
+	"github.com/Vivi3008/apiTestGolang/commom"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/http/response"
-	"github.com/dgrijalva/jwt-go"
 )
 
 var ErrCpfNotExists = errors.New("cpf doesn't exists")
@@ -37,7 +36,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		Secret: body.Secret,
 	}
 
-	accountId, err := h.acc.NewLogin(login)
+	accountId, err := h.accUse.NewLogin(login)
 
 	if accountId == "" {
 		response.SendError(w, ErrCpfNotExists, http.StatusBadRequest)
@@ -49,7 +48,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString, err := createToken(accountId)
+	tokenString, err := commom.CreateToken(accountId)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusUnauthorized)
@@ -61,19 +60,4 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.SendRequest(w, resToken, http.StatusOK)
-}
-
-func createToken(accountId string) (string, error) {
-	idClaims := jwt.MapClaims{}
-	idClaims["id"] = accountId
-
-	tokenStr := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), idClaims)
-
-	tokenString, err := tokenStr.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
-
-	if err != nil {
-		return "", err
-	}
-
-	return tokenString, nil
 }
