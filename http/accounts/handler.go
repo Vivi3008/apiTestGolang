@@ -12,7 +12,7 @@ type Handler struct {
 }
 
 func NewHandler(router *mux.Router, accUse usecase.AccountUsecase) *Handler {
-	h := &Handler{accUse}
+	h := &Handler{acc: accUse}
 
 	router.HandleFunc("/accounts", h.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", h.ListAll).Methods(http.MethodGet)

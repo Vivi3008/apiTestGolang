@@ -1,4 +1,4 @@
-package http
+package bills
 
 import (
 	"log"
@@ -8,7 +8,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
-func (s Server) ListBills(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
@@ -16,7 +16,7 @@ func (s Server) ListBills(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list, err := s.bl.ListAllBills(string(accountId))
+	list, err := h.blUse.ListAllBills(accountId)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)

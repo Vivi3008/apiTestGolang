@@ -1,7 +1,8 @@
-package http
+package bills
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -20,7 +21,11 @@ type BillReqRes struct {
 	StatusBill    bills.Status `json:"status"`
 }
 
-func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
+var (
+	ErrGetTokenId = errors.New("error to get id from token")
+)
+
+func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
@@ -44,23 +49,16 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 		DueDate:     body.DueDate,
 	}
 
-	billOk, err := s.bl.CreateBill(bill)
+	billOk, err := h.blUse.CreateBill(bill)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	newBill := bills.Bill{
-		Id:          billOk.Id,
-		AccountId:   billOk.AccountId,
-		Description: billOk.Description,
-		Value:       billOk.Value,
-		DueDate:     billOk.DueDate,
-		StatusBill:  bills.Pago,
-	}
+	billOk.StatusBill = bills.Pago
 
-	err = s.bl.SaveBill(newBill)
+	err = h.blUse.SaveBill(billOk)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
@@ -68,14 +66,14 @@ func (s Server) CreateBill(w http.ResponseWriter, r *http.Request) {
 	}
 
 	billResponse := BillReqRes{
-		AccountId:     newBill.AccountId,
-		Description:   newBill.Description,
-		Value:         newBill.Value,
-		DueDate:       newBill.DueDate,
-		ScheduledDate: newBill.ScheduledDate,
-		StatusBill:    newBill.StatusBill,
+		AccountId:     billOk.AccountId,
+		Description:   billOk.Description,
+		Value:         billOk.Value,
+		DueDate:       billOk.DueDate,
+		ScheduledDate: billOk.ScheduledDate,
+		StatusBill:    billOk.StatusBill,
 	}
 
 	response.SendRequest(w, billResponse, http.StatusOK)
-	log.Printf("sent successful response for transfer %s\n", newBill.Id)
+	log.Printf("sent successful response for transfer %s\n", billOk.Id)
 }
