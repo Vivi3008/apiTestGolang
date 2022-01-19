@@ -1,4 +1,4 @@
-package http
+package transfers
 
 import (
 	"encoding/json"
@@ -21,7 +21,7 @@ var (
 	ErrIdDestiny  = errors.New("account destiny id can't be the same account origin id")
 )
 
-func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
+func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
@@ -29,7 +29,7 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	account, err := s.app.ListAccountById(string(accountId))
+	account, err := h.accUse.ListAccountById(accountId)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
@@ -56,14 +56,14 @@ func (s Server) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	transfer, err := s.tr.CreateTransfer(transaction)
+	transfer, err := h.transfUse.CreateTransfer(transaction)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
-	err = s.tr.SaveTransfer(transfer)
+	err = h.transfUse.SaveTransfer(transfer)
 
 	if err != nil {
 		log.Printf("Failed to save transfer: %s\n", err.Error())

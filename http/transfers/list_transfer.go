@@ -1,4 +1,4 @@
-package http
+package transfers
 
 import (
 	"log"
@@ -16,7 +16,7 @@ type TransferResponse struct {
 	CreatedAt            string `json:"createdAt"`
 }
 
-func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
+func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
 	if !ok || accountId == "" {
@@ -24,7 +24,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	account, err := s.app.ListAccountById(string(accountId))
+	account, err := h.accUse.ListAccountById(accountId)
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
@@ -32,7 +32,7 @@ func (s Server) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list, err := s.tr.ListTransfer(string(account.Id))
+	list, err := h.transfUse.ListTransfer(account.Id)
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
