@@ -25,7 +25,6 @@ func NewServer(
 
 	accounts.NewHandler(router, accountUc)
 	auth.NewHandler(router, accountUc)
-
 	transfer.NewHandler(routerAuth, usecaseTr, accountUc)
 	bl.NewHandler(routerAuth, usecaseBl, accountUc)
 
