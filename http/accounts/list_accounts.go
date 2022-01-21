@@ -43,7 +43,7 @@ func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 		accounts[i].CreatedAt = account.CreatedAt.Format(response.DateLayout)
 	}
 
-	response.SendRequest(w, accounts, http.StatusOK)
+	response.Send(w, accounts, http.StatusOK)
 	log.Printf("Sent all accounts. Total: %d", len(accounts))
 }
 
@@ -64,5 +64,5 @@ func (h Handler) ListOne(w http.ResponseWriter, r *http.Request) {
 		Balance: account.Balance,
 	}
 
-	response.SendRequest(w, balance, http.StatusOK)
+	response.Send(w, balance, http.StatusOK)
 }

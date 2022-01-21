@@ -54,5 +54,5 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		Token: tokenString,
 	}
 
-	response.SendRequest(w, resToken, http.StatusOK)
+	response.Send(w, resToken, http.StatusOK)
 }

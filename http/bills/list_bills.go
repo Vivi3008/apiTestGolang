@@ -34,7 +34,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 		payments[i].StatusBill = bill.StatusBill
 	}
 
-	response.SendRequest(w, payments, http.StatusOK)
+	response.Send(w, payments, http.StatusOK)
 	log.Printf("Sent all bills from Id %s", accountId)
 	log.Printf("Sent all bills. Total: %d", len(payments))
 }

@@ -79,6 +79,6 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:            transfer.CreatedAt.Format(response.DateLayout),
 	}
 
-	response.SendRequest(w, transferResponse, http.StatusOK)
+	response.Send(w, transferResponse, http.StatusOK)
 	log.Printf("sent successful response for transfer %s\n", transfer.Id)
 }

@@ -74,6 +74,6 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		StatusBill:    billOk.StatusBill,
 	}
 
-	response.SendRequest(w, billResponse, http.StatusOK)
+	response.Send(w, billResponse, http.StatusOK)
 	log.Printf("sent successful response for transfer %s\n", billOk.Id)
 }
