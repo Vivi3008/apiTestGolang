@@ -38,11 +38,6 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	accountId, err := h.accUse.NewLogin(login)
 
-	if accountId == "" {
-		response.SendError(w, ErrCpfNotExists, http.StatusBadRequest)
-		return
-	}
-
 	if err != nil {
 		response.SendError(w, err, http.StatusUnauthorized)
 		return
