@@ -24,7 +24,7 @@ func SendError(w http.ResponseWriter, err error, statusCode int) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func SendRequest(w http.ResponseWriter, res interface{}, statusCode int) {
+func Send(w http.ResponseWriter, res interface{}, statusCode int) {
 	w.Header().Set(ContentType, JSONContentType)
 	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(res)

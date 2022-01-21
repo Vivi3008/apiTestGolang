@@ -56,6 +56,6 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		CreatedAt: account.CreatedAt.Format(response.DateLayout),
 	}
 
-	response.SendRequest(w, accountResponse, http.StatusOK)
+	response.Send(w, accountResponse, http.StatusOK)
 	log.Printf("sent successful response for account %s\n", account.Id)
 }

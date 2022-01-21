@@ -29,16 +29,9 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	account, err := h.accUse.ListAccountById(accountId)
-
-	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
-		return
-	}
-
 	var body TransferRequest
 
-	err = json.NewDecoder(r.Body).Decode(&body)
+	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
@@ -46,14 +39,9 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	transaction := transfers.Transfer{
-		AccountOriginId:      account.Id,
+		AccountOriginId:      accountId,
 		AccountDestinationId: body.AccountDestinationId,
 		Amount:               body.Amount,
-	}
-
-	if string(accountId) == transaction.AccountDestinationId {
-		response.SendError(w, ErrIdDestiny, http.StatusBadRequest)
-		return
 	}
 
 	transfer, err := h.transfUse.CreateTransfer(transaction)
@@ -79,6 +67,6 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:            transfer.CreatedAt.Format(response.DateLayout),
 	}
 
-	response.SendRequest(w, transferResponse, http.StatusOK)
+	response.Send(w, transferResponse, http.StatusOK)
 	log.Printf("sent successful response for transfer %s\n", transfer.Id)
 }

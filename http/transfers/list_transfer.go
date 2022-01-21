@@ -50,7 +50,7 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		transfers[i].CreatedAt = transfer.CreatedAt.Format(response.DateLayout)
 	}
 
-	response.SendRequest(w, transfers, http.StatusOK)
+	response.Send(w, transfers, http.StatusOK)
 	log.Printf("Sent all transfers from Id %s", accountId)
 	log.Printf("Sent all transfers. Total: %d", len(transfers))
 }
