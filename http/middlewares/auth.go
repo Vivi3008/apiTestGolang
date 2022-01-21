@@ -1,13 +1,12 @@
-package http
+package middlewares
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/commom"
+	"github.com/Vivi3008/apiTestGolang/http/response"
 )
 
 var (
@@ -21,9 +20,8 @@ var contextAccountID = AuthContextKey("account_id")
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header["Authorization"] == nil {
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode("Authentication required")
-
+			response.SendError(w, ErrAuth, http.StatusUnauthorized)
+			return
 		}
 
 		authHeader := r.Header.Get("Authorization")
@@ -32,11 +30,7 @@ func Auth(next http.Handler) http.Handler {
 		accountId, err := commom.AuthJwt(authHeader)
 
 		if err != nil {
-			log.Printf("Login failed: %s\n", err.Error())
-			response := Error{Reason: err.Error()}
-			w.Header().Set(ContentType, JSONContentType)
-			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(response)
+			response.SendError(w, err, http.StatusUnauthorized)
 			return
 		}
 

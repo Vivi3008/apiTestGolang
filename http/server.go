@@ -6,52 +6,29 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
+	"github.com/Vivi3008/apiTestGolang/http/accounts"
+	"github.com/Vivi3008/apiTestGolang/http/auth"
+	bl "github.com/Vivi3008/apiTestGolang/http/bills"
+	"github.com/Vivi3008/apiTestGolang/http/middlewares"
+	transfer "github.com/Vivi3008/apiTestGolang/http/transfers"
+
 	"github.com/gorilla/mux"
 )
 
-type Error struct {
-	Reason string `json:"reason"`
-}
-
-type Server struct {
-	app account.AccountUsecase
-	tr  transfers.TranfersUsecase
-	bl  bill.BillUsecase
-	http.Handler
-}
-
-const (
-	ContentType     = "Content-Type"
-	JSONContentType = "application/json"
-	DateLayout      = "2006-01-02T15:04:05Z"
-)
-
 func NewServer(
-	usecaseAcc account.AccountUsecase,
+	accountUc account.AccountUsecase,
 	usecaseTr transfers.TranfersUsecase,
 	usecaseBl bill.BillUsecase,
-) Server {
-
-	server := Server{
-		app: usecaseAcc,
-		tr:  usecaseTr,
-		bl:  usecaseBl,
-	}
-
+) http.Handler {
 	router := mux.NewRouter()
 	routerAuth := router.NewRoute().Subrouter()
 
-	router.HandleFunc("/accounts", server.CreateAccount).Methods(http.MethodPost)
-	router.HandleFunc("/accounts", server.ListAll).Methods(http.MethodGet)
-	router.HandleFunc("/login", server.Login).Methods((http.MethodPost))
+	accounts.NewHandler(router, accountUc)
+	auth.NewHandler(router, accountUc)
+	transfer.NewHandler(routerAuth, usecaseTr, accountUc)
+	bl.NewHandler(routerAuth, usecaseBl, accountUc)
 
-	routerAuth.HandleFunc("/accounts/{account_id}/balance", server.ListOne).Methods(http.MethodGet)
-	routerAuth.HandleFunc("/transfers", server.CreateTransfer).Methods((http.MethodPost))
-	routerAuth.HandleFunc("/bills", server.CreateBill).Methods((http.MethodPost))
-	routerAuth.HandleFunc("/bills", server.ListBills).Methods((http.MethodGet))
-	routerAuth.HandleFunc("/transfers", server.ListTransfer).Methods(http.MethodGet)
-	routerAuth.Use(Auth)
+	routerAuth.Use(middlewares.Auth)
 
-	server.Handler = router
-	return server
+	return router
 }
