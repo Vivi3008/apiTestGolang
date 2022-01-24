@@ -1,0 +1,18 @@
+
+version: "3.1"
+
+services:
+  apiBank-db:
+    container_name: apiBank-db
+    image: postgres:13.2-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: apiBank-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: 
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
