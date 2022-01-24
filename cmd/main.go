@@ -1,26 +1,43 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
-	"os"
 
+	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	api "github.com/Vivi3008/apiTestGolang/http"
 	"github.com/Vivi3008/apiTestGolang/store"
-	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	err := godotenv.Load(".env")
+	/* 	err := godotenv.Load(".env")
 
+	   	if err != nil {
+	   		log.Fatalf("Error loading .env file: %s", err)
+	   	} */
+
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+		log.Fatal("Unable to load configuration")
 	}
 
-	addr := os.Getenv("PORT")
+	db, err := sql.Open("postgres", cfg.DSN())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+	err = db.Ping()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	addr := ":3000"
 
 	accountStore := store.NewAccountStore()
 	transStore := store.NewTransferStore()
