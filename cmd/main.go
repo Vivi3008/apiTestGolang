@@ -10,7 +10,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
-	api "github.com/Vivi3008/apiTestGolang/http"
+	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	"github.com/Vivi3008/apiTestGolang/store"
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"

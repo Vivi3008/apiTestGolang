@@ -6,11 +6,11 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
-	"github.com/Vivi3008/apiTestGolang/http/accounts"
-	"github.com/Vivi3008/apiTestGolang/http/auth"
-	bl "github.com/Vivi3008/apiTestGolang/http/bills"
-	"github.com/Vivi3008/apiTestGolang/http/middlewares"
-	transfer "github.com/Vivi3008/apiTestGolang/http/transfers"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/accounts"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/auth"
+	bl "github.com/Vivi3008/apiTestGolang/gateways/http/bills"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
+	transfer "github.com/Vivi3008/apiTestGolang/gateways/http/transfers"
 
 	"github.com/gorilla/mux"
 )
