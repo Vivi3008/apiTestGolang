@@ -12,6 +12,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	"github.com/Vivi3008/apiTestGolang/store"
+	"github.com/golang-migrate/migrate/v4"
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -39,6 +40,16 @@ func main() {
 	}
 
 	fmt.Println(greeting)
+
+	m, err := migrate.New(
+		"gateways/db/postgres/migrations",
+		os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := m.Up(); err != nil {
+		log.Fatal(err)
+	}
 
 	addr := os.Getenv("PORT")
 
