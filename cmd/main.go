@@ -1,43 +1,46 @@
 package main
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
-	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	api "github.com/Vivi3008/apiTestGolang/http"
 	"github.com/Vivi3008/apiTestGolang/store"
+	"github.com/jackc/pgx/v4"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	/* 	err := godotenv.Load(".env")
-
-	   	if err != nil {
-	   		log.Fatalf("Error loading .env file: %s", err)
-	   	} */
-
-	cfg, err := config.LoadConfig()
-	if err != nil {
-		log.Fatal("Unable to load configuration")
-	}
-
-	db, err := sql.Open("postgres", cfg.DSN())
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	err = db.Ping()
+	err := godotenv.Load(".env")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error loading .env file: %s", err)
 	}
 
-	addr := ":3000"
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
+	var greeting string
+	err = conn.QueryRow(context.Background(), "select 'Connect to database sucessfully'").Scan(&greeting)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println(greeting)
+
+	addr := os.Getenv("PORT")
 
 	accountStore := store.NewAccountStore()
 	transStore := store.NewTransferStore()
