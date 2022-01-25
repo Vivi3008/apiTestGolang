@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,10 +9,11 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	"github.com/Vivi3008/apiTestGolang/store"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/jackc/pgx/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -25,30 +25,10 @@ func main() {
 		log.Fatalf("Error loading .env file: %s", err)
 	}
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	connect, err := postgres.ConnectPool()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		fmt.Fprintf(os.Stderr, connect, err)
 		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
-
-	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Connect to database sucessfully'").Scan(&greeting)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(greeting)
-
-	m, err := migrate.New(
-		"gateways/db/postgres/migrations",
-		os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	if err := m.Up(); err != nil {
-		log.Fatal(err)
 	}
 
 	addr := os.Getenv("PORT")
