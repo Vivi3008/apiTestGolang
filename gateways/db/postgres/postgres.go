@@ -4,8 +4,8 @@ import (
 	"context"
 	"embed"
 	"errors"
-	"os"
 
+	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	"github.com/jackc/pgx/v4"
@@ -14,8 +14,8 @@ import (
 //go:embed migrations
 var fs embed.FS //nolint:gochecknoglobals
 
-func ConnectPool() (string, error) {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+func ConnectPool(cfg config.Config) (string, error) {
+	conn, err := pgx.Connect(context.Background(), cfg.URL())
 	if err != nil {
 		return "Unable to connect to database:", err
 	}
@@ -27,7 +27,7 @@ func ConnectPool() (string, error) {
 		return "QueryRow failed:", err
 	}
 
-	err = RunMigrations()
+	err = RunMigrations(cfg)
 	if err != nil {
 		return "", err
 	}
@@ -35,12 +35,12 @@ func ConnectPool() (string, error) {
 	return greeting, nil
 }
 
-func RunMigrations() error {
+func RunMigrations(cfg config.Config) error {
 	d, err := iofs.New(fs, "migrations")
 	if err != nil {
 		return err
 	}
-	m, err := migrate.NewWithSourceInstance("iofs", d, os.Getenv("DATABASE_URL"))
+	m, err := migrate.NewWithSourceInstance("iofs", d, cfg.URL())
 	if err != nil {
 		return err
 	}

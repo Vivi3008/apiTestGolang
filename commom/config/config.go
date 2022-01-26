@@ -31,20 +31,20 @@ type PostgresConfig struct {
 	Hostname              string `envconfig:"HOSTNAME" default:"localhost"`
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfig() (Config, error) {
 	var config Config
 	noPrefix := ""
 
 	err := envconfig.Process(noPrefix, &config)
 	if err != nil {
-		return nil, err
+		return Config{}, err
 	}
-	return &config, nil
+	return config, nil
 }
 
 type APIConfig struct {
 	AppName string `envconfig:"APP_NAME" default:"apiBank-db"`
-	Port    string `envconfig:"API_PORT" default:"3000"`
+	Port    string `envconfig:"PORT" default:":3000"`
 }
 
 func (c Config) DSN() string {
