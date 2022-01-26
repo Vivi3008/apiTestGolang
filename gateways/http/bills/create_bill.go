@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
-	"github.com/Vivi3008/apiTestGolang/http/middlewares"
-	"github.com/Vivi3008/apiTestGolang/http/response"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
 
 type BillReqRes struct {

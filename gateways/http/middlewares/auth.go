@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/commom"
-	"github.com/Vivi3008/apiTestGolang/http/response"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
 
 var (

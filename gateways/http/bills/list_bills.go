@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/http/middlewares"
-	"github.com/Vivi3008/apiTestGolang/http/response"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
 
 func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {

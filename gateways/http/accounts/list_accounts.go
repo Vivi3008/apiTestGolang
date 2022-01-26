@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Vivi3008/apiTestGolang/http/response"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"github.com/gorilla/mux"
 )
 

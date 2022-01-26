@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
-	"github.com/Vivi3008/apiTestGolang/http/middlewares"
-	"github.com/Vivi3008/apiTestGolang/http/response"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
+	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
 
 type TransferRequest struct {
