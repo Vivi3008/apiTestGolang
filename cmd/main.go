@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
@@ -20,18 +20,21 @@ import (
 
 func main() {
 	err := godotenv.Load(".env")
-
 	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+		sendError(err)
 	}
 
-	connect, err := postgres.ConnectPool()
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, connect, err)
-		os.Exit(1)
+		sendError(err)
 	}
 
-	addr := os.Getenv("PORT")
+	_, err = postgres.ConnectPool(cfg)
+	if err != nil {
+		sendError(err)
+	}
+
+	addr := cfg.API.Port
 
 	accountStore := store.NewAccountStore()
 	transStore := store.NewTransferStore()
@@ -45,4 +48,9 @@ func main() {
 
 	log.Printf("Starting server on %s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, server))
+}
+
+func sendError(err error) {
+	log.Fatalf("Error loading database config: %s", err)
+	os.Exit(1)
 }
