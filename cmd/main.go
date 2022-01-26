@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	"github.com/Vivi3008/apiTestGolang/store"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -34,9 +36,14 @@ func main() {
 		sendError(err)
 	}
 
+	db, err := sql.Open("postgres", cfg.DSN())
+	if err != nil {
+		sendError(err)
+	}
+
 	addr := cfg.API.Port
 
-	accountStore := store.NewAccountStore()
+	accountStore := account_postgres.NewRepository(db)
 	transStore := store.NewTransferStore()
 	billStore := store.NewBillStore()
 
