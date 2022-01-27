@@ -8,31 +8,32 @@ import (
 	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 //go:embed migrations
 var fs embed.FS //nolint:gochecknoglobals
 
-func ConnectPool(cfg config.Config) (string, error) {
-	conn, err := pgx.Connect(context.Background(), cfg.URL())
+func ConnectPool(ctx context.Context, cfg config.Config) (*pgxpool.Pool, error) {
+	conn, err := pgxpool.Connect(ctx, cfg.URL())
+
 	if err != nil {
-		return "Unable to connect to database:", err
+		return nil, err
 	}
-	defer conn.Close(context.Background())
+	defer conn.Close()
 
 	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Connect to database sucessfully'").Scan(&greeting)
+	err = conn.QueryRow(ctx, "select 'Connect to database sucessfully'").Scan(&greeting)
 	if err != nil {
-		return "QueryRow failed:", err
+		return nil, err
 	}
 
 	err = RunMigrations(cfg)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return greeting, nil
+	return conn, nil
 }
 
 func RunMigrations(cfg config.Config) error {

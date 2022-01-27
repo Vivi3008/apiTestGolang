@@ -1,7 +1,7 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -31,12 +31,8 @@ func main() {
 		sendError(err)
 	}
 
-	_, err = postgres.ConnectPool(cfg)
-	if err != nil {
-		sendError(err)
-	}
-
-	db, err := sql.Open("postgres", cfg.DSN())
+	ctx := context.Background()
+	db, err := postgres.ConnectPool(ctx, cfg)
 	if err != nil {
 		sendError(err)
 	}
