@@ -1,7 +1,9 @@
 package account
 
+import "context"
+
 type AccountRepository interface {
-	StoreAccount(account Account) error
-	ListAllAccounts() ([]Account, error)
-	ListAccountById(accountId string) (Account, error)
+	StoreAccount(ctx context.Context, account Account) error
+	ListAllAccounts(ctx context.Context) ([]Account, error)
+	ListAccountById(ctx context.Context, accountId string) (Account, error)
 }

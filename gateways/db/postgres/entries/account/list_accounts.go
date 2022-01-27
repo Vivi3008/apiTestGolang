@@ -1,10 +1,12 @@
 package account
 
 import (
+	"context"
+
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-func (r Repository) ListAllAccounts() ([]entities.Account, error) {
+func (r Repository) ListAllAccounts(ctx context.Context) ([]entities.Account, error) {
 	statement := `SELECT id,
 	   		name,
 	   		cpf,
@@ -14,7 +16,7 @@ func (r Repository) ListAllAccounts() ([]entities.Account, error) {
 
 	var accounts []entities.Account
 
-	rows, err := r.DB.Query(statement)
+	rows, err := r.DB.Query(ctx, statement)
 
 	if err != nil {
 		return []entities.Account{}, err

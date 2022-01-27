@@ -1,13 +1,14 @@
 package account
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-func (r Repository) ListAccountById(id string) (entities.Account, error) {
+func (r Repository) ListAccountById(ctx context.Context, id string) (entities.Account, error) {
 	statement := `SELECT id,
 		name,
 		cpf,
@@ -17,7 +18,7 @@ func (r Repository) ListAccountById(id string) (entities.Account, error) {
 
 	var account entities.Account
 
-	err := r.DB.QueryRow(statement, id).Scan(&account.Id, &account.Name, &account.Cpf, &account.Balance, &account.CreatedAt)
+	err := r.DB.QueryRow(ctx, statement, id).Scan(&account.Id, &account.Name, &account.Cpf, &account.Balance, &account.CreatedAt)
 
 	switch {
 	case err == sql.ErrNoRows:
