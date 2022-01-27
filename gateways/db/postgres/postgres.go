@@ -20,7 +20,6 @@ func ConnectPool(ctx context.Context, cfg config.Config) (*pgxpool.Pool, error) 
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
 
 	var greeting string
 	err = conn.QueryRow(ctx, "select 'Connect to database sucessfully'").Scan(&greeting)

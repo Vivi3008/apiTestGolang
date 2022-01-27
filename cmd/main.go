@@ -36,12 +36,13 @@ func main() {
 	if err != nil {
 		sendError(err)
 	}
+	defer db.Close()
 
 	accountStore := account_postgres.NewRepository(db)
 	transStore := store.NewTransferStore()
 	billStore := store.NewBillStore()
 
-	accUsecase := account.NewAccountUsecase(accountStore)
+	accUsecase := account.NewAccountUsecase(ctx, accountStore)
 	transferStore := transfers.NewTransferUsecase(transStore, accUsecase)
 	blStore := bill.NewBillUseCase(billStore, accUsecase)
 
