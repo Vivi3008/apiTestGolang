@@ -42,7 +42,7 @@ func main() {
 	transStore := store.NewTransferStore()
 	billStore := store.NewBillStore()
 
-	accUsecase := account.NewAccountUsecase(ctx, accountStore)
+	accUsecase := account.NewAccountUsecase(accountStore)
 	transferStore := transfers.NewTransferUsecase(transStore, accUsecase)
 	blStore := bill.NewBillUseCase(billStore, accUsecase)
 
