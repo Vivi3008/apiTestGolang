@@ -5,22 +5,29 @@ import (
 )
 
 func (r Repository) ListAllAccounts() ([]entities.Account, error) {
-	/* 	statement := `SELECT id,
+	statement := `SELECT id,
 	   		name,
 	   		cpf,
 	   		balance,
 	   		created_at FROM accounts
 	   		`
 
-	   	var accounts []entities.Account
+	var accounts []entities.Account
 
-	   	rows := r.DB.QueryRowContext(ctx, statement)
+	rows, err := r.DB.Query(statement)
 
-	   	for rows {
-	   	} */
-	return []entities.Account{}, nil
-}
+	if err != nil {
+		return []entities.Account{}, err
+	}
 
-func (r Repository) ListAccountById(id string) (entities.Account, error) {
-	return entities.Account{}, nil
+	var account entities.Account
+
+	for rows.Next() {
+		err = rows.Scan(&account.Id, &account.Name, &account.Cpf, &account.Balance, &account.CreatedAt)
+		if err != nil {
+			return []entities.Account{}, err
+		}
+		accounts = append(accounts, account)
+	}
+	return accounts, nil
 }
