@@ -1,6 +1,8 @@
 package bill
 
 import (
+	"context"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 )
@@ -13,7 +15,7 @@ func (b BillUsecase) CreateBill(bill bills.Bill) (bills.Bill, error) {
 		return bills.Bill{}, err
 	}
 
-	_, err = b.acRepo.UpdateAccountBalance(bill.AccountId, bill.Value, account.Debit)
+	_, err = b.acRepo.UpdateAccountBalance(context.Background(), bill.AccountId, bill.Value, account.Debit)
 
 	if err != nil {
 		return bills.Bill{}, err

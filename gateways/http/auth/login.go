@@ -36,7 +36,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 		Secret: body.Secret,
 	}
 
-	accountId, err := h.accUse.NewLogin(login)
+	accountId, err := h.accUse.NewLogin(r.Context(), login)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusUnauthorized)

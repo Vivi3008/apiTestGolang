@@ -16,7 +16,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list, err := h.blUse.ListAllBills(accountId)
+	list, err := h.blUse.ListAllBills(r.Context(), accountId)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)

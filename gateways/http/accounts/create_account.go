@@ -41,7 +41,7 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Balance: body.Balance,
 	}
 
-	account, err := h.acc.CreateAccount(person)
+	account, err := h.acc.CreateAccount(r.Context(), person)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)

@@ -25,7 +25,7 @@ type AccountIdRequest struct {
 }
 
 func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
-	list, err := h.acc.ListAllAccounts()
+	list, err := h.acc.ListAllAccounts(r.Context())
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
@@ -52,7 +52,7 @@ func (h Handler) ListOne(w http.ResponseWriter, r *http.Request) {
 
 	personId := vars["account_id"]
 
-	account, err := h.acc.ListAccountById(personId)
+	account, err := h.acc.ListAccountById(r.Context(), personId)
 
 	if err != nil {
 		log.Printf("Failed to list account: %s", err.Error())

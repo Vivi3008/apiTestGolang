@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -102,7 +103,7 @@ func TestCreateAccount(t *testing.T) {
 			t.Parallel()
 			uc := NewAccountUsecase(tt.repository)
 
-			got, err := uc.CreateAccount(tt.args)
+			got, err := uc.CreateAccount(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

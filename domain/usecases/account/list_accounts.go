@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
@@ -11,8 +12,8 @@ var (
 	ErrListAccountEmpty = errors.New("list account is empty")
 )
 
-func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
-	list, err := a.repo.ListAllAccounts()
+func (a AccountUsecase) ListAllAccounts(ctx context.Context) ([]account.Account, error) {
+	list, err := a.repo.ListAllAccounts(ctx)
 
 	if err != nil {
 		return nil, err
@@ -21,8 +22,8 @@ func (a AccountUsecase) ListAllAccounts() ([]account.Account, error) {
 	return list, nil
 }
 
-func (a AccountUsecase) ListAccountById(id string) (account.Account, error) {
-	list, _ := a.repo.ListAllAccounts()
+func (a AccountUsecase) ListAccountById(ctx context.Context, id string) (account.Account, error) {
+	list, _ := a.repo.ListAllAccounts(ctx)
 
 	var accRes account.Account
 

@@ -1,6 +1,7 @@
 package transfers
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -144,7 +145,7 @@ func TestCreateTransfer(t *testing.T) {
 			ac := accUse.NewAccountUsecase(tt.accRepo)
 			uc := NewTransferUsecase(tt.repo, ac)
 
-			got, err := uc.CreateTransfer(tt.args)
+			got, err := uc.CreateTransfer(context.Background(), tt.args)
 
 			if !errors.Is(tt.err, err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

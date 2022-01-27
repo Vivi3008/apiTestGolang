@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
@@ -10,8 +11,8 @@ var (
 	ErrCpfExists = errors.New("this cpf already exists")
 )
 
-func (a AccountUsecase) CreateAccount(person account.Account) (account.Account, error) {
-	accounts, _ := a.repo.ListAllAccounts()
+func (a AccountUsecase) CreateAccount(ctx context.Context, person account.Account) (account.Account, error) {
+	accounts, _ := a.repo.ListAllAccounts(ctx)
 
 	for _, ac := range accounts {
 		if person.Cpf == ac.Cpf {
@@ -25,7 +26,7 @@ func (a AccountUsecase) CreateAccount(person account.Account) (account.Account, 
 		return account.Account{}, err
 	}
 
-	err = a.repo.StoreAccount(acc)
+	err = a.repo.StoreAccount(ctx, acc)
 
 	if err != nil {
 		return account.Account{}, err

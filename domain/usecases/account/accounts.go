@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
@@ -28,8 +29,8 @@ func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {
 	}
 }
 
-func (a AccountUsecase) UpdateAccountBalance(accountId string, value int, method MethodPayment) (account.Account, error) {
-	acc, err := a.repo.ListAccountById(accountId)
+func (a AccountUsecase) UpdateAccountBalance(ctx context.Context, accountId string, value int, method MethodPayment) (account.Account, error) {
+	acc, err := a.repo.ListAccountById(ctx, accountId)
 	var actualBalance int
 
 	if err != nil {
@@ -50,7 +51,7 @@ func (a AccountUsecase) UpdateAccountBalance(accountId string, value int, method
 		Secret:    acc.Secret,
 		CreatedAt: acc.CreatedAt,
 	}
-	err = a.repo.StoreAccount(updateAcc)
+	err = a.repo.StoreAccount(ctx, updateAcc)
 
 	if err != nil {
 		return account.Account{}, err
