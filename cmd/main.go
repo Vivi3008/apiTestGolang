@@ -41,8 +41,6 @@ func main() {
 		sendError(err)
 	}
 
-	addr := cfg.API.Port
-
 	accountStore := account_postgres.NewRepository(db)
 	transStore := store.NewTransferStore()
 	billStore := store.NewBillStore()
@@ -53,11 +51,11 @@ func main() {
 
 	server := api.NewServer(accUsecase, transferStore, blStore)
 
-	log.Printf("Starting server on %s\n", addr)
-	log.Fatal(http.ListenAndServe(addr, server))
+	log.Printf("Starting server on %s\n", cfg.API.Port)
+	log.Fatal(http.ListenAndServe(cfg.API.Port, server))
 }
 
 func sendError(err error) {
-	log.Fatalf("Error loading database config: %s", err)
+	log.Fatalf("Error: %s", err)
 	os.Exit(1)
 }
