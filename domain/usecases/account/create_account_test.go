@@ -31,9 +31,6 @@ func TestCreateAccount(t *testing.T) {
 		{
 			name: "Should create an account successfull",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{}, nil
-				},
 				OnStoreAccount: func(account account.Account) error {
 					return nil
 				},
@@ -49,11 +46,8 @@ func TestCreateAccount(t *testing.T) {
 		{
 			name: "Should not create an account if cpf already exists",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{person}, nil
-				},
 				OnStoreAccount: func(account account.Account) error {
-					return nil
+					return ErrCpfExists
 				},
 			},
 			args: person,
@@ -63,9 +57,6 @@ func TestCreateAccount(t *testing.T) {
 		{
 			name: "Fail if name, cpf or secret is empty or missing caracters",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{person}, nil
-				},
 				OnStoreAccount: func(account account.Account) error {
 					return nil
 				},
@@ -80,9 +71,6 @@ func TestCreateAccount(t *testing.T) {
 		{
 			name: "Fail if cpf has less than 11 caracters",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{}, nil
-				},
 				OnStoreAccount: func(account account.Account) error {
 					return nil
 				},
