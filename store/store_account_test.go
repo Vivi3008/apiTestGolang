@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
@@ -16,8 +17,8 @@ func TestStoreAccount(t *testing.T) {
 			Secret:  "dafd33255",
 			Balance: 25000,
 		}
-		account, _ := account.NewAccount(person) //cria a conta
-		err := store.StoreAccount(account)       // guarda a conta num map
+		account, _ := account.NewAccount(person)                 //cria a conta
+		err := store.StoreAccount(context.Background(), account) // guarda a conta num map
 
 		if err != nil {
 			t.Errorf("expected nil; got '%v'", err)
@@ -35,7 +36,7 @@ func TestStoreAccount(t *testing.T) {
 			Cpf:    "00314522352",
 			Secret: "dadfdasf",
 		}
-		err := store.StoreAccount(acc)
+		err := store.StoreAccount(context.Background(), acc)
 		if err != ErrEmptyID {
 			t.Errorf("expected %s, got %s", ErrEmptyID, err.Error())
 		}
