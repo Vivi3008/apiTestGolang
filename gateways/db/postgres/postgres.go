@@ -27,7 +27,7 @@ func ConnectPool(ctx context.Context, cfg config.Config) (*pgxpool.Pool, error) 
 		return nil, err
 	}
 
-	err = RunMigrations(cfg)
+	err = RunMigrations(cfg.URL(), fs)
 	if err != nil {
 		return nil, err
 	}
@@ -35,12 +35,12 @@ func ConnectPool(ctx context.Context, cfg config.Config) (*pgxpool.Pool, error) 
 	return conn, nil
 }
 
-func RunMigrations(cfg config.Config) error {
+func RunMigrations(databaseUrl string, fs embed.FS) error {
 	d, err := iofs.New(fs, "migrations")
 	if err != nil {
 		return err
 	}
-	m, err := migrate.NewWithSourceInstance("iofs", d, cfg.URL())
+	m, err := migrate.NewWithSourceInstance("iofs", d, databaseUrl)
 	if err != nil {
 		return err
 	}
@@ -53,3 +53,22 @@ func RunMigrations(cfg config.Config) error {
 	}
 	return nil
 }
+
+/* func RunMigrations(databaseUrl string) error {
+	d, err := iofs.New(fs, "migrations")
+	if err != nil {
+		return err
+	}
+	m, err := migrate.NewWithSourceInstance("iofs", d, databaseUrl)
+	if err != nil {
+		return err
+	}
+	if err := m.Up(); err != nil {
+		if errors.Is(err, migrate.ErrNoChange) {
+			return nil
+		} else {
+			return err
+		}
+	}
+	return nil
+} */

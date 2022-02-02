@@ -2,15 +2,18 @@ package postgres
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"log"
 	"time"
 
-	"github.com/golang-migrate/migrate/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 )
+
+//go:embed migrations
+var fstes embed.FS //nolint:gochecknoglobals
 
 func GetTestPool() (*pgxpool.Pool, func()) {
 	var db *pgxpool.Pool
@@ -55,17 +58,24 @@ func GetTestPool() (*pgxpool.Pool, func()) {
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
 
-	migration, err := migrate.New(
-		"file://migrations",
-		databaseUrl)
-
+	err = RunMigrations(databaseUrl, fstes)
 	if err != nil {
-		log.Fatalf("Could not read migration files: %s", err)
+		log.Fatalf("error run migration: %s", err)
 	}
+	/* 	d, err := iofs.New(fs, "migrations")
+	   	if err != nil {
+	   		log.Fatalf("error in migration: %s", err)
+	   	}
+	   	m, err := migrate.NewWithSourceInstance("iofs", d, databaseUrl)
+	   	if err != nil {
+	   		log.Fatalf("error new source: %s", err)
+	   	}
 
-	if err := migration.Up(); err != nil {
-		log.Fatal(err)
-	}
+	   	if err := m.Up(); err != nil {
+	   		if !errors.Is(err, migrate.ErrNoChange) {
+	   			log.Fatalf("error in migration: %s", err)
+	   		}
+	   	} */
 
 	// tearDown should be called to destroy container at the end of the test
 	tearDown := func() {
