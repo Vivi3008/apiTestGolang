@@ -12,14 +12,6 @@ var (
 )
 
 func (a AccountUsecase) CreateAccount(ctx context.Context, person account.Account) (account.Account, error) {
-	accounts, _ := a.repo.ListAllAccounts(ctx)
-
-	for _, ac := range accounts {
-		if person.Cpf == ac.Cpf {
-			return account.Account{}, ErrCpfExists
-		}
-	}
-
 	acc, err := account.NewAccount(person)
 
 	if err != nil {
