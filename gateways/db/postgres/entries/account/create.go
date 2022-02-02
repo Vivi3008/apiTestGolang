@@ -2,8 +2,14 @@ package account
 
 import (
 	"context"
+	"errors"
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/jackc/pgconn"
+)
+
+var (
+	ErrCpfExists = errors.New("this cpf already exists")
 )
 
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
@@ -23,6 +29,14 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 		account.Secret,
 		account.Balance,
 	).Scan(&account.CreatedAt)
+
+	var pgError *pgconn.PgError
+
+	if errors.As(err, &pgError) {
+		if pgError.SQLState() == "23505" {
+			return ErrCpfExists
+		}
+	}
 
 	return err
 }
