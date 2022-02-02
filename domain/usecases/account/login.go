@@ -14,24 +14,17 @@ var (
 )
 
 func (a AccountUsecase) NewLogin(ctx context.Context, u account.Login) (string, error) {
-	listAccounts, _ := a.ListAllAccounts(ctx)
+	account, err := a.repo.ListAccountByCpf(ctx, u.Cpf)
 
-	var err error
-	var result string
-
-	for _, acc := range listAccounts {
-		if acc.Cpf == u.Cpf {
-			err = commom.VerifyPasswordHash(acc.Secret, u.Secret)
-			if err != nil {
-				return "", ErrInvalidPassword
-			}
-			result = acc.Id
-		}
+	if err != nil {
+		return "", err
 	}
 
-	if result == "" {
-		return result, ErrCpfNotExists
+	err = commom.VerifyPasswordHash(account.Secret, u.Secret)
+
+	if err != nil {
+		return "", ErrInvalidPassword
 	}
 
-	return result, nil
+	return account.Id, nil
 }
