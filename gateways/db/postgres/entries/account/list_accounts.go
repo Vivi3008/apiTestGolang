@@ -7,7 +7,7 @@ import (
 )
 
 func (r Repository) ListAllAccounts(ctx context.Context) ([]entities.Account, error) {
-	statement := `SELECT id,
+	const statement = `SELECT id,
 	   		name,
 	   		cpf,
 	   		balance,

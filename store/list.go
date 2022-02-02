@@ -10,7 +10,7 @@ import (
 
 var (
 	ErrIdNotExists  = errors.New("id does not exist")
-	ErrCpfNotExists = errors.New("cpf don't exists")
+	ErrCpfNotExists = errors.New("cpf does not exist")
 )
 
 func (a AccountStore) ListAllAccounts() ([]account.Account, error) {

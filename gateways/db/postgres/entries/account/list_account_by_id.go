@@ -9,12 +9,12 @@ import (
 )
 
 func (r Repository) ListAccountById(ctx context.Context, id string) (entities.Account, error) {
-	statement := `SELECT id,
+	const statement = `SELECT id,
 		name,
 		cpf,
 		balance,
 		created_at FROM accounts
-		WHERE id=?`
+		WHERE id=$1`
 
 	var account entities.Account
 

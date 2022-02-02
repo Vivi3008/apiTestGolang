@@ -13,14 +13,16 @@ var (
 )
 
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
-	statement := `INSERT INTO accounts
-		(id,
-		 name,
-		 cpf,
-		 secret,
-		 balance)
-		VALUES ($1, $2, $3, $4, $5)
-		returning created_at`
+	const statement = `INSERT INTO 
+	accounts (
+		id,
+		name,
+		cpf,
+		secret,
+		balance,
+		created_at
+	)
+		VALUES ($1, $2, $3, $4, $5, $6)`
 
 	err := r.DB.QueryRow(ctx, statement,
 		account.Id,
@@ -28,7 +30,8 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 		account.Cpf,
 		account.Secret,
 		account.Balance,
-	).Scan(&account.CreatedAt)
+		account.CreatedAt,
+	).Scan()
 
 	var pgError *pgconn.PgError
 
@@ -38,5 +41,5 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 		}
 	}
 
-	return err
+	return nil
 }
