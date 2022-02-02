@@ -1,7 +1,13 @@
 package store
 
 import (
+	"errors"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+)
+
+var (
+	ErrCpfExists = errors.New("this cpf already exists")
 )
 
 func (a AccountStore) StoreAccount(account account.Account) error {
@@ -9,6 +15,12 @@ func (a AccountStore) StoreAccount(account account.Account) error {
 		return ErrEmptyID
 	}
 
-	a.accStore[account.Id] = account
-	return nil
+	_, err := a.ListAccountByCpf(account.Cpf)
+
+	if err == ErrCpfNotExists {
+		a.accStore[account.Id] = account
+		return nil
+	} else {
+		return ErrCpfExists
+	}
 }
