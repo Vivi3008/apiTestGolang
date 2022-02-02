@@ -44,7 +44,7 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		Amount:               body.Amount,
 	}
 
-	transfer, err := h.transfUse.CreateTransfer(transaction)
+	transfer, err := h.transfUse.CreateTransfer(r.Context(), transaction)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)

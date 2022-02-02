@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -59,7 +60,7 @@ func TestListAllAccounts(t *testing.T) {
 
 			uc := NewAccountUsecase(tt.repository)
 
-			got, err := uc.ListAllAccounts()
+			got, err := uc.ListAllAccounts(context.Background())
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

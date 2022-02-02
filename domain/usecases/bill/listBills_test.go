@@ -1,6 +1,7 @@
 package bill
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -112,7 +113,7 @@ func TestBills(t *testing.T) {
 			ac := accUse.NewAccountUsecase(tt.accRepo)
 			uc := NewBillUseCase(tt.repository, ac)
 
-			got, err := uc.ListAllBills(tt.args)
+			got, err := uc.ListAllBills(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

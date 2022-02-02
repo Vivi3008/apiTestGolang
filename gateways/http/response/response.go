@@ -2,7 +2,6 @@ package response
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -17,7 +16,6 @@ const (
 )
 
 func SendError(w http.ResponseWriter, err error, statusCode int) {
-	log.Printf("Login failed: %s\n", err.Error())
 	response := Error{Reason: err.Error()}
 	w.Header().Set(ContentType, JSONContentType)
 	w.WriteHeader(statusCode)

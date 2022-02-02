@@ -24,7 +24,7 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	account, err := h.accUse.ListAccountById(accountId)
+	account, err := h.accUse.ListAccountById(r.Context(), accountId)
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
@@ -32,7 +32,7 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list, err := h.transfUse.ListTransfer(account.Id)
+	list, err := h.transfUse.ListTransfer(r.Context(), account.Id)
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())

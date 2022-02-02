@@ -1,6 +1,7 @@
 package transfers
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -136,7 +137,7 @@ func TestTransfers(t *testing.T) {
 
 			transUse := NewTransferUsecase(tt.repository, ac)
 
-			got, err := transUse.ListTransfer(tt.args)
+			got, err := transUse.ListTransfer(context.Background(), tt.args)
 
 			if !errors.Is(tt.err, err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

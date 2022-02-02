@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -82,7 +83,7 @@ func TestLogin(t *testing.T) {
 
 			uc := NewAccountUsecase(tt.repository)
 
-			got, err := uc.NewLogin(tt.args)
+			got, err := uc.NewLogin(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

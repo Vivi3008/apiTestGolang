@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	"github.com/Vivi3008/apiTestGolang/store"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -29,14 +31,14 @@ func main() {
 		sendError(err)
 	}
 
-	_, err = postgres.ConnectPool(cfg)
+	ctx := context.Background()
+	db, err := postgres.ConnectPool(ctx, cfg)
 	if err != nil {
 		sendError(err)
 	}
+	defer db.Close()
 
-	addr := cfg.API.Port
-
-	accountStore := store.NewAccountStore()
+	accountStore := account_postgres.NewRepository(db)
 	transStore := store.NewTransferStore()
 	billStore := store.NewBillStore()
 
@@ -46,11 +48,11 @@ func main() {
 
 	server := api.NewServer(accUsecase, transferStore, blStore)
 
-	log.Printf("Starting server on %s\n", addr)
-	log.Fatal(http.ListenAndServe(addr, server))
+	log.Printf("Starting server on %s\n", cfg.API.Port)
+	log.Fatal(http.ListenAndServe(cfg.API.Port, server))
 }
 
 func sendError(err error) {
-	log.Fatalf("Error loading database config: %s", err)
+	log.Fatalf("Error: %s", err)
 	os.Exit(1)
 }

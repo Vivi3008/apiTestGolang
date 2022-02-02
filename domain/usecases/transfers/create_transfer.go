@@ -1,6 +1,7 @@
 package transfers
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
@@ -9,18 +10,18 @@ import (
 
 var ErrIdDestiny = errors.New("account destiny id can't be the same account origin id")
 
-func (a TranfersUsecase) CreateTransfer(trans transfers.Transfer) (transfers.Transfer, error) {
+func (a TranfersUsecase) CreateTransfer(ctx context.Context, trans transfers.Transfer) (transfers.Transfer, error) {
 	if trans.AccountOriginId == trans.AccountDestinationId {
 		return transfers.Transfer{}, ErrIdDestiny
 	}
 
-	accountOrigin, err := a.accUsecase.UpdateAccountBalance(trans.AccountOriginId, trans.Amount, account.Debit)
+	accountOrigin, err := a.accUsecase.UpdateAccountBalance(ctx, trans.AccountOriginId, trans.Amount, account.Debit)
 
 	if err != nil {
 		return transfers.Transfer{}, err
 	}
 
-	accountDestination, err := a.accUsecase.UpdateAccountBalance(trans.AccountDestinationId, trans.Amount, account.Credit)
+	accountDestination, err := a.accUsecase.UpdateAccountBalance(ctx, trans.AccountDestinationId, trans.Amount, account.Credit)
 
 	if err != nil {
 		return transfers.Transfer{}, err

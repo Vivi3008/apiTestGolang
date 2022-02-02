@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/commom"
@@ -12,8 +13,8 @@ var (
 	ErrInvalidPassword = errors.New("password invalid")
 )
 
-func (a AccountUsecase) NewLogin(u account.Login) (string, error) {
-	listAccounts, _ := a.ListAllAccounts()
+func (a AccountUsecase) NewLogin(ctx context.Context, u account.Login) (string, error) {
+	listAccounts, _ := a.ListAllAccounts(ctx)
 
 	var err error
 	var result string

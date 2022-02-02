@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	ErrIdNotExists = errors.New("id does not exist")
+	ErrIdNotExists  = errors.New("id does not exist")
+	ErrCpfNotExists = errors.New("cpf does not exist")
 )
 
 func (a AccountStore) ListAllAccounts() ([]account.Account, error) {
@@ -33,6 +34,24 @@ func (a AccountStore) ListAccountById(accountId string) (account.Account, error)
 
 	if listOne.Id == "" {
 		return account.Account{}, ErrIdNotExists
+	} else {
+		return listOne, nil
+	}
+}
+
+func (a AccountStore) ListAccountByCpf(cpf string) (account.Account, error) {
+	listAll, _ := a.ListAllAccounts()
+
+	var listOne account.Account
+
+	for _, account := range listAll {
+		if account.Cpf == cpf {
+			listOne = account
+		}
+	}
+
+	if listOne.Id == "" {
+		return account.Account{}, ErrCpfNotExists
 	} else {
 		return listOne, nil
 	}
