@@ -10,34 +10,24 @@ import (
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 )
 
-func TestListAccountByCpf(t *testing.T) {
+func TestListAllAccounts(t *testing.T) {
 	t.Parallel()
 
-	testRepo, tearDown := postgres.GetTestPool()
-	repo := NewRepository(testRepo)
+	testDb, tearDown := postgres.GetTestPool()
+	repo := NewRepository(testDb)
 
 	type TestCase struct {
 		Name      string
 		runBefore bool
-		args      string
-		want      account.Account
+		want      []account.Account
 		err       error
 	}
 
 	testCases := []TestCase{
 		{
-			Name:      "Should list account by cpf successfull",
+			Name:      "Should list all accounts successfull",
 			runBefore: true,
-			args:      accountsTest[0].Cpf,
-			want:      accountsTest[0],
-			err:       nil,
-		},
-		{
-			Name:      "Fail if cpf doesn't exist",
-			runBefore: false,
-			args:      "1111111",
-			want:      account.Account{},
-			err:       ErrCpfNotExists,
+			want:      accountsTest,
 		},
 	}
 
@@ -45,20 +35,21 @@ func TestListAccountByCpf(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
-
 			t.Cleanup(tearDown)
 
 			if tt.runBefore {
-				_ = createAccountTest(testRepo)
+				_ = createAccountTest(testDb)
 			}
 
-			got, err := repo.ListAccountByCpf(context.Background(), tt.args)
+			got, err := repo.ListAllAccounts(context.Background())
 
-			if !errors.Is(err, tt.err) {
+			if !errors.Is(tt.err, err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
 			}
 
-			tt.want.CreatedAt = got.CreatedAt
+			for i := 0; i < len(tt.want); i++ {
+				tt.want[i].CreatedAt = got[i].CreatedAt
+			}
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Expected %v, got %v", tt.want, got)

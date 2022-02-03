@@ -16,8 +16,6 @@ func TestCreateAccount(t *testing.T) {
 	testPool, tearDown := postgres.GetTestPool()
 	repository := NewRepository(testPool)
 
-	t.Cleanup(tearDown)
-
 	type TestCase struct {
 		Name string
 		args account.Account
@@ -70,6 +68,9 @@ func TestCreateAccount(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
+
+			t.Cleanup(tearDown)
+
 			err := repository.StoreAccount(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {

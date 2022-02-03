@@ -14,7 +14,7 @@ import (
 func TestListAccountById(t *testing.T) {
 	t.Parallel()
 
-	testRepo, _ := postgres.GetTestPool()
+	testRepo, tearDown := postgres.GetTestPool()
 	repo := NewRepository(testRepo)
 
 	type TestCase struct {
@@ -55,6 +55,7 @@ func TestListAccountById(t *testing.T) {
 
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
+			t.Cleanup(tearDown)
 
 			if tt.cleanTable {
 				defer cleanAccountsTable(testRepo)
