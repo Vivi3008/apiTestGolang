@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	ErrCpfExists = errors.New("this cpf already exists")
+	ErrCpfExists      = errors.New("this cpf already exists")
+	ErrBalanceInvalid = errors.New("balance can't be less than 0")
 )
 
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
@@ -36,8 +37,11 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 	var pgError *pgconn.PgError
 
 	if errors.As(err, &pgError) {
-		if pgError.SQLState() == "23505" {
+		switch pgError.SQLState() {
+		case "23505":
 			return ErrCpfExists
+		case "23514":
+			return ErrBalanceInvalid
 		}
 	}
 

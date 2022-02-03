@@ -7,6 +7,7 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	"github.com/google/uuid"
 )
 
 func TestCreateAccount(t *testing.T) {
@@ -36,6 +37,32 @@ func TestCreateAccount(t *testing.T) {
 			Name: "Should create account successfull",
 			args: acc,
 			err:  nil,
+		},
+		{
+			Name: "Fail to create account with same cpf",
+			args: acc,
+			err:  ErrCpfExists,
+		},
+		{
+			Name: "Fail to create account with same id",
+			args: account.Account{
+				Id:     acc.Id,
+				Name:   "teste3",
+				Cpf:    "654656",
+				Secret: "16656",
+			},
+			err: ErrCpfExists,
+		},
+		{
+			Name: "Fail to create account with negative balance",
+			args: account.Account{
+				Id:      uuid.NewString(),
+				Name:    "teste3",
+				Cpf:     "654656",
+				Balance: -56,
+				Secret:  "16656",
+			},
+			err: ErrBalanceInvalid,
 		},
 	}
 
