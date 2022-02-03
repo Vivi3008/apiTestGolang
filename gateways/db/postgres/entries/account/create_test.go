@@ -69,6 +69,7 @@ func TestCreateAccount(t *testing.T) {
 	for _, tc := range testCases {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
+			t.Parallel()
 			err := repository.StoreAccount(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
