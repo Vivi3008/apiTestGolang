@@ -4,21 +4,18 @@ import (
 	"context"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/commom"
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var hashSecret, _ = commom.GenerateHashPassword("123456")
 var accountsTest = []entities.Account{
 	{
 		Id:        uuid.NewString(),
 		Name:      "Teste1",
 		Cpf:       "13256589412",
 		Balance:   16565,
-		Secret:    hashSecret,
 		CreatedAt: time.Now(),
 	},
 	{
@@ -26,7 +23,6 @@ var accountsTest = []entities.Account{
 		Name:      "Teste2",
 		Cpf:       "132565889412",
 		Balance:   16565,
-		Secret:    hashSecret,
 		CreatedAt: time.Now(),
 	},
 	{
@@ -34,7 +30,6 @@ var accountsTest = []entities.Account{
 		Name:      "Teste3",
 		Cpf:       "13256589712",
 		Balance:   16565,
-		Secret:    hashSecret,
 		CreatedAt: time.Now(),
 	},
 }
@@ -62,6 +57,19 @@ func createAccountTest(pool *pgxpool.Pool) error {
 	defer br.Close()
 
 	_, err := br.Exec()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+//clean all rows in accounts table
+func cleanAccountsTable(pool *pgxpool.Pool) error {
+	const statement = `TRUNCATE TABLE accounts;`
+
+	_, err := pool.Query(context.Background(), statement)
 
 	if err != nil {
 		return err
