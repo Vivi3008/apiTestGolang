@@ -24,9 +24,9 @@ func (r Repository) ListAccountById(ctx context.Context, id string) (entities.Ac
 
 	switch {
 	case err == sql.ErrNoRows:
-		return entities.Account{}, ErrIdNotExists
-	case err != nil:
 		return entities.Account{}, err
+	case err != nil:
+		return entities.Account{}, ErrIdNotExists
 	}
 
 	return account, nil
