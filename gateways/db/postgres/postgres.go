@@ -53,22 +53,3 @@ func RunMigrations(databaseUrl string, fs embed.FS) error {
 	}
 	return nil
 }
-
-/* func RunMigrations(databaseUrl string) error {
-	d, err := iofs.New(fs, "migrations")
-	if err != nil {
-		return err
-	}
-	m, err := migrate.NewWithSourceInstance("iofs", d, databaseUrl)
-	if err != nil {
-		return err
-	}
-	if err := m.Up(); err != nil {
-		if errors.Is(err, migrate.ErrNoChange) {
-			return nil
-		} else {
-			return err
-		}
-	}
-	return nil
-} */
