@@ -8,6 +8,11 @@ import (
 	"github.com/jackc/pgconn"
 )
 
+const (
+	AccountsKeyUnique    = "accounts_pkey"
+	AccountsBalanceCheck = "accounts_balance_check"
+)
+
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
 	const statement = `INSERT INTO 
 	accounts (
@@ -32,10 +37,10 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 	var pgError *pgconn.PgError
 
 	if errors.As(err, &pgError) {
-		switch pgError.SQLState() {
-		case "23505":
+		switch pgError.ConstraintName {
+		case AccountsKeyUnique:
 			return ErrCpfExists
-		case "23514":
+		case AccountsBalanceCheck:
 			return ErrBalanceInvalid
 		}
 	}

@@ -64,16 +64,3 @@ func createAccountTest(pool *pgxpool.Pool) error {
 
 	return nil
 }
-
-//clean all rows in accounts table
-func cleanAccountsTable(pool *pgxpool.Pool) error {
-	const statement = `TRUNCATE TABLE accounts;`
-
-	_, err := pool.Query(context.Background(), statement)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}

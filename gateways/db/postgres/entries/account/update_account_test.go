@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -23,7 +24,7 @@ func TestUpdateAccount(t *testing.T) {
 		Name      string
 		runBefore func(pgx *pgxpool.Pool) error
 		args      args
-		want      int
+		want      account.Account
 		err       error
 	}
 
@@ -34,7 +35,13 @@ func TestUpdateAccount(t *testing.T) {
 				return createAccountTest(pgx)
 			},
 			args: args{1000, accountsTest[0].Id},
-			want: 1000,
+			want: account.Account{
+				Id:        accountsTest[0].Id,
+				Name:      accountsTest[0].Name,
+				Cpf:       accountsTest[0].Cpf,
+				Balance:   1000,
+				CreatedAt: accountsTest[0].CreatedAt,
+			},
 		},
 		{
 			Name: "Fail if amount is invalid",
@@ -42,7 +49,7 @@ func TestUpdateAccount(t *testing.T) {
 				return createAccountTest(pgx)
 			},
 			args: args{-50, accountsTest[0].Id},
-			want: 0,
+			want: account.Account{},
 			err:  ErrBalanceInvalid,
 		},
 		{
@@ -51,7 +58,7 @@ func TestUpdateAccount(t *testing.T) {
 				return createAccountTest(pgx)
 			},
 			args: args{2000, uuid.NewString()},
-			want: 0,
+			want: account.Account{},
 			err:  ErrIdNotExists,
 		},
 	}
@@ -79,7 +86,9 @@ func TestUpdateAccount(t *testing.T) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
 			}
 
-			if !reflect.DeepEqual(got.Balance, tt.want) {
+			tt.want.CreatedAt = got.CreatedAt
+
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Expected %v, got %v", tt.want, got)
 			}
 		})
