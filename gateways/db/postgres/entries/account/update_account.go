@@ -6,6 +6,7 @@ import (
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 )
 
 func (r Repository) UpdateAccount(ctx context.Context, balance int, id string) (entities.Account, error) {
@@ -15,7 +16,6 @@ func (r Repository) UpdateAccount(ctx context.Context, balance int, id string) (
 			id,
 			name,
 			cpf,
-			secret,
 			balance,
 			created_at
 		;`
@@ -24,14 +24,18 @@ func (r Repository) UpdateAccount(ctx context.Context, balance int, id string) (
 
 	err := r.DB.QueryRow(ctx, statement, balance, id).Scan(&account.Id, &account.Name, &account.Cpf, &account.Balance, &account.CreatedAt)
 
-	var pgError *pgconn.PgError
+	if err != nil {
+		var pgError *pgconn.PgError
+		if errors.As(err, &pgError) {
+			if pgError.SQLState() == "23514" {
+				return entities.Account{}, ErrBalanceInvalid
+			}
 
-	if errors.As(err, &pgError) {
-		if pgError.SQLState() == "23514" {
-			return entities.Account{}, ErrBalanceInvalid
-		} else {
-			return entities.Account{}, err
 		}
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entities.Account{}, ErrIdNotExists
+		}
+		return entities.Account{}, err
 	}
 
 	return account, nil
