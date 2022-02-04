@@ -3,6 +3,7 @@ package account
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -46,8 +47,15 @@ func TestAccountUsecase(t *testing.T) {
 				OnListById: func(accountId string) (account.Account, error) {
 					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{
+						Id:        person.Id,
+						Name:      person.Name,
+						Cpf:       person.Cpf,
+						Secret:    person.Secret,
+						Balance:   261000,
+						CreatedAt: person.CreatedAt,
+					}, nil
 				},
 			},
 			args: args{
@@ -57,9 +65,9 @@ func TestAccountUsecase(t *testing.T) {
 			},
 			want: account.Account{
 				Id:        person.Id,
-				Name:      "Viviane",
-				Cpf:       "55985633301",
-				Secret:    secretHash,
+				Name:      person.Name,
+				Cpf:       person.Cpf,
+				Secret:    person.Secret,
 				Balance:   261000,
 				CreatedAt: person.CreatedAt,
 			},
@@ -71,8 +79,15 @@ func TestAccountUsecase(t *testing.T) {
 				OnListById: func(accountId string) (account.Account, error) {
 					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{
+						Id:        person.Id,
+						Name:      "Viviane",
+						Cpf:       "55985633301",
+						Secret:    secretHash,
+						Balance:   259000,
+						CreatedAt: person.CreatedAt,
+					}, nil
 				},
 			},
 			args: args{
@@ -96,8 +111,8 @@ func TestAccountUsecase(t *testing.T) {
 				OnListById: func(accountId string) (account.Account, error) {
 					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{}, fmt.Errorf("error")
 				},
 			},
 			args: args{
@@ -114,8 +129,8 @@ func TestAccountUsecase(t *testing.T) {
 				OnListById: func(accountId string) (account.Account, error) {
 					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{}, fmt.Errorf("error")
 				},
 			},
 			args: args{

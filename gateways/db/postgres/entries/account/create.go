@@ -8,8 +8,9 @@ import (
 	"github.com/jackc/pgconn"
 )
 
-var (
-	ErrCpfExists = errors.New("this cpf already exists")
+const (
+	AccountsKeyUnique    = "accounts_pkey"
+	AccountsBalanceCheck = "accounts_balance_check"
 )
 
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
@@ -36,8 +37,11 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 	var pgError *pgconn.PgError
 
 	if errors.As(err, &pgError) {
-		if pgError.SQLState() == "23505" {
+		switch pgError.ConstraintName {
+		case AccountsKeyUnique:
 			return ErrCpfExists
+		case AccountsBalanceCheck:
+			return ErrBalanceInvalid
 		}
 	}
 

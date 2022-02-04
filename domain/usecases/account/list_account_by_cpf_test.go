@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestListOneAccountById(t *testing.T) {
+func TestListAccountByCpf(t *testing.T) {
 	t.Parallel()
 
 	secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
@@ -26,8 +26,8 @@ func TestListOneAccountById(t *testing.T) {
 	}
 
 	type TestCase struct {
-		name       string
-		repository account.AccountRepository
+		Name       string
+		repository account.AccountMock
 		args       string
 		want       account.Account
 		err        error
@@ -35,46 +35,43 @@ func TestListOneAccountById(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should list account by id",
+			Name: "Should list account by cpf sucessfull",
 			repository: account.AccountMock{
-				OnListById: func(accountId string) (account.Account, error) {
+				OnListByCpf: func(cpf string) (account.Account, error) {
 					return person, nil
 				},
 			},
+			args: person.Cpf,
 			want: person,
-			args: person.Id,
 			err:  nil,
 		},
 		{
-			name: "Fail if account id doesnt exists",
+			Name: "Fail if cpf doesn't exist",
 			repository: account.AccountMock{
-				OnListById: func(accountId string) (account.Account, error) {
-					return account.Account{}, ErrIdNotExists
+				OnListByCpf: func(cpf string) (account.Account, error) {
+					return account.Account{}, ErrCpfNotExists
 				},
 			},
-			args: person.Id,
+			args: person.Cpf,
 			want: account.Account{},
-			err:  ErrIdNotExists,
+			err:  ErrCpfNotExists,
 		},
 	}
 
 	for _, tc := range testCases {
 		tt := tc
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
+		t.Run(tt.Name, func(t *testing.T) {
 			uc := NewAccountUsecase(tt.repository)
 
-			got, err := uc.ListAccountById(context.Background(), tt.args)
+			got, err := uc.ListAccountByCpf(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
 			}
 
-			if !reflect.DeepEqual(tt.want, got) {
-				t.Errorf("Expected %v, got %v", tt.want, got)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Expected %v, gto %v", tt.want, got)
 			}
 		})
 	}
-
 }

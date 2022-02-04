@@ -23,23 +23,21 @@ func (a AccountUsecase) ListAllAccounts(ctx context.Context) ([]account.Account,
 }
 
 func (a AccountUsecase) ListAccountById(ctx context.Context, id string) (account.Account, error) {
-	list, _ := a.repo.ListAllAccounts(ctx)
+	acc, err := a.repo.ListAccountById(ctx, id)
 
-	var accRes account.Account
-
-	if len(list) == 0 {
-		return account.Account{}, ErrListAccountEmpty
+	if err != nil {
+		return account.Account{}, err
 	}
 
-	for _, acc := range list {
-		if acc.Id == id {
-			accRes = acc
-		}
+	return acc, nil
+}
+
+func (a AccountUsecase) ListAccountByCpf(ctx context.Context, cpf string) (account.Account, error) {
+	acc, err := a.repo.ListAccountByCpf(ctx, cpf)
+
+	if err != nil {
+		return account.Account{}, err
 	}
 
-	if accRes.Id == "" {
-		return account.Account{}, ErrIdNotExists
-	}
-
-	return accRes, nil
+	return acc, nil
 }

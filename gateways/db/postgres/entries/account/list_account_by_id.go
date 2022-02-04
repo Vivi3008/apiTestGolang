@@ -3,7 +3,6 @@ package account
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
@@ -22,9 +21,9 @@ func (r Repository) ListAccountById(ctx context.Context, id string) (entities.Ac
 
 	switch {
 	case err == sql.ErrNoRows:
-		return entities.Account{}, fmt.Errorf("no account with id %s", id)
+		return entities.Account{}, err
 	case err != nil:
-		return entities.Account{}, fmt.Errorf("query error: %s", err)
+		return entities.Account{}, ErrIdNotExists
 	}
 
 	return account, nil

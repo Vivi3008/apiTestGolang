@@ -43,21 +43,12 @@ func (a AccountUsecase) UpdateAccountBalance(ctx context.Context, accountId stri
 		return account.Account{}, err
 	}
 
-	updateAcc := account.Account{
-		Id:        acc.Id,
-		Name:      acc.Name,
-		Cpf:       acc.Cpf,
-		Balance:   actualBalance,
-		Secret:    acc.Secret,
-		CreatedAt: acc.CreatedAt,
-	}
-	err = a.repo.StoreAccount(ctx, updateAcc)
-
+	updatedAcc, err := a.repo.UpdateAccount(ctx, actualBalance, acc.Id)
 	if err != nil {
 		return account.Account{}, err
 	}
 
-	return updateAcc, nil
+	return updatedAcc, nil
 }
 
 func ModifyBalanceAccount(balance int, value int, method MethodPayment) (int, error) {

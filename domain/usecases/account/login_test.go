@@ -35,8 +35,8 @@ func TestLogin(t *testing.T) {
 		{
 			name: "Should log in successfull",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{person}, nil
+				OnListByCpf: func(cpf string) (account.Account, error) {
+					return person, nil
 				},
 			},
 			args: account.Login{
@@ -49,13 +49,13 @@ func TestLogin(t *testing.T) {
 		{
 			name: "Fail if password is wrong",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{person}, nil
+				OnListByCpf: func(cpf string) (account.Account, error) {
+					return person, nil
 				},
 			},
 			args: account.Login{
 				Cpf:    person.Cpf,
-				Secret: "dafd255",
+				Secret: "wrong",
 			},
 			want: "",
 			err:  ErrInvalidPassword,
@@ -63,8 +63,8 @@ func TestLogin(t *testing.T) {
 		{
 			name: "Fail if cpf doesn't exists",
 			repository: account.AccountMock{
-				OnListAll: func() ([]account.Account, error) {
-					return []account.Account{}, nil
+				OnListByCpf: func(cpf string) (account.Account, error) {
+					return account.Account{}, ErrCpfNotExists
 				},
 			},
 			args: account.Login{
