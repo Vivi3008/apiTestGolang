@@ -8,26 +8,26 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func TestListAllAccounts(t *testing.T) {
 	t.Parallel()
 
-	testDb, tearDown := postgres.GetTestPool()
-	repo := NewRepository(testDb)
-
 	type TestCase struct {
 		Name      string
-		runBefore bool
+		runBefore func(pgx *pgxpool.Pool) error
 		want      []account.Account
 		err       error
 	}
 
 	testCases := []TestCase{
 		{
-			Name:      "Should list all accounts successfull",
-			runBefore: true,
-			want:      accountsTest,
+			Name: "Should list all accounts successfull",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return createAccountTest(pgx)
+			},
+			want: accountsTest,
 		},
 	}
 
@@ -35,10 +35,17 @@ func TestListAllAccounts(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
+
+			testDb, tearDown := postgres.GetTestPool()
+			repo := NewRepository(testDb)
 			t.Cleanup(tearDown)
 
-			if tt.runBefore {
-				_ = createAccountTest(testDb)
+			if tt.runBefore != nil {
+				err := tt.runBefore(testDb)
+
+				if err != nil {
+					t.Fatalf("error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListAllAccounts(context.Background())

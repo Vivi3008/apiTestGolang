@@ -9,44 +9,40 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func TestListAccountById(t *testing.T) {
 	t.Parallel()
 
-	testRepo, tearDown := postgres.GetTestPool()
-	repo := NewRepository(testRepo)
-
 	type TestCase struct {
-		Name       string
-		runBefore  bool
-		cleanTable bool
-		args       string
-		want       account.Account
-		err        error
+		Name      string
+		runBefore func(pgx *pgxpool.Pool) error
+		args      string
+		want      account.Account
+		err       error
 	}
 
 	testCases := []TestCase{
 		{
-			Name:      "Should list acccount by id succesfull",
-			runBefore: true,
-			args:      accountsTest[0].Id,
-			want:      accountsTest[0],
+			Name: "Should list acccount by id succesfull",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return createAccountTest(pgx)
+			},
+			args: accountsTest[0].Id,
+			want: accountsTest[0],
 		},
 		{
-			Name:      "Fail if id doesn't exists",
-			runBefore: false,
-			args:      uuid.NewString(),
-			want:      account.Account{},
-			err:       ErrIdNotExists,
+			Name: "Fail if id doesn't exists",
+			args: uuid.NewString(),
+			want: account.Account{},
+			err:  ErrIdNotExists,
 		},
 		{
-			Name:       "Fail if list account is empty",
-			runBefore:  false,
-			cleanTable: true,
-			args:       uuid.NewString(),
-			want:       account.Account{},
-			err:        ErrIdNotExists,
+			Name: "Fail if list account is empty",
+			args: uuid.NewString(),
+			want: account.Account{},
+			err:  ErrIdNotExists,
 		},
 	}
 
@@ -55,14 +51,17 @@ func TestListAccountById(t *testing.T) {
 
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
+
+			testDb, tearDown := postgres.GetTestPool()
+			repo := NewRepository(testDb)
 			t.Cleanup(tearDown)
 
-			if tt.cleanTable {
-				defer cleanAccountsTable(testRepo)
-			}
+			if tt.runBefore != nil {
+				err := tt.runBefore(testDb)
 
-			if tt.runBefore {
-				_ = createAccountTest(testRepo)
+				if err != nil {
+					t.Fatalf("Error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListAccountById(context.Background(), tt.args)

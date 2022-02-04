@@ -8,17 +8,15 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func TestListAccountByCpf(t *testing.T) {
 	t.Parallel()
 
-	testRepo, tearDown := postgres.GetTestPool()
-	repo := NewRepository(testRepo)
-
 	type TestCase struct {
 		Name      string
-		runBefore bool
+		runBefore func(pgx *pgxpool.Pool) error
 		args      string
 		want      account.Account
 		err       error
@@ -26,18 +24,22 @@ func TestListAccountByCpf(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name:      "Should list account by cpf successfull",
-			runBefore: true,
-			args:      accountsTest[0].Cpf,
-			want:      accountsTest[0],
-			err:       nil,
+			Name: "Should list account by cpf successfull",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return createAccountTest(pgx)
+			},
+			args: accountsTest[0].Cpf,
+			want: accountsTest[0],
+			err:  nil,
 		},
 		{
-			Name:      "Fail if cpf doesn't exist",
-			runBefore: false,
-			args:      "1111111",
-			want:      account.Account{},
-			err:       ErrCpfNotExists,
+			Name: "Fail if cpf doesn't exist",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return createAccountTest(pgx)
+			},
+			args: "1111111",
+			want: account.Account{},
+			err:  ErrCpfNotExists,
 		},
 	}
 
@@ -46,10 +48,17 @@ func TestListAccountByCpf(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
 
+			testDb, tearDown := postgres.GetTestPool()
+			repo := NewRepository(testDb)
+
 			t.Cleanup(tearDown)
 
-			if tt.runBefore {
-				_ = createAccountTest(testRepo)
+			if tt.runBefore != nil {
+				err := tt.runBefore(testDb)
+
+				if err != nil {
+					t.Fatalf("Error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListAccountByCpf(context.Background(), tt.args)
