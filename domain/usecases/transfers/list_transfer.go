@@ -14,7 +14,7 @@ func (s TranfersUsecase) ListTransfer(ctx context.Context, originId string) ([]t
 		return []transfers.Transfer{}, account.ErrIdNotExists
 	}
 
-	list, err := s.repo.ListTransfer(originId)
+	list, err := s.repo.ListTransfer(context.Background(), originId)
 
 	if err != nil {
 		return nil, err

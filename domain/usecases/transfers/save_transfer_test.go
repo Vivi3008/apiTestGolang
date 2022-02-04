@@ -1,6 +1,7 @@
 package transfers
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -66,7 +67,7 @@ func TestSaveTransfer(t *testing.T) {
 
 			uc := NewTransferUsecase(tt.repository, ac)
 
-			err := uc.SaveTransfer(tt.args)
+			err := uc.SaveTransfer(context.Background(), tt.args)
 
 			if !errors.Is(tt.err, err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
