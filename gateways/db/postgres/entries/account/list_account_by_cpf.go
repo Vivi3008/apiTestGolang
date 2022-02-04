@@ -2,13 +2,10 @@ package account
 
 import (
 	"context"
-	"errors"
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/jackc/pgx/v4"
 )
-
-var ErrCpfNotExists = errors.New("this cpf does not exist")
 
 func (r Repository) ListAccountByCpf(ctx context.Context, cpf string) (entities.Account, error) {
 	const statement = `SELECT id,

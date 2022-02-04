@@ -8,11 +8,6 @@ import (
 	"github.com/jackc/pgconn"
 )
 
-var (
-	ErrCpfExists      = errors.New("this cpf already exists")
-	ErrBalanceInvalid = errors.New("balance can't be less than 0")
-)
-
 func (r Repository) StoreAccount(ctx context.Context, account entities.Account) error {
 	const statement = `INSERT INTO 
 	accounts (

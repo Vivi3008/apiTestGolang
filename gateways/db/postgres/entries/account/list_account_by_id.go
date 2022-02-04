@@ -3,12 +3,9 @@ package account
 import (
 	"context"
 	"database/sql"
-	"errors"
 
 	entities "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
-
-var ErrIdNotExists = errors.New("id does not exist")
 
 func (r Repository) ListAccountById(ctx context.Context, id string) (entities.Account, error) {
 	const statement = `SELECT id,
