@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -25,9 +25,9 @@ func TestListAllAccounts(t *testing.T) {
 		{
 			Name: "Should list all accounts successfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
-			want: accountsTest,
+			want: AccountsTest,
 		},
 	}
 

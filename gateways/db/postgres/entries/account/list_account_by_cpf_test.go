@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -26,16 +26,16 @@ func TestListAccountByCpf(t *testing.T) {
 		{
 			Name: "Should list account by cpf successfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
-			args: accountsTest[0].Cpf,
-			want: accountsTest[0],
+			args: AccountsTest[0].Cpf,
+			want: AccountsTest[0],
 			err:  nil,
 		},
 		{
 			Name: "Fail if cpf doesn't exist",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
 			args: "1111111",
 			want: account.Account{},

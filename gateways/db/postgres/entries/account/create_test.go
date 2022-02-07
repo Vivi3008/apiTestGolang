@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -38,8 +38,12 @@ func TestCreateAccount(t *testing.T) {
 		},
 		{
 			Name: "Fail to create account with same cpf",
-			args: acc,
-			err:  ErrCpfExists,
+			args: account.Account{
+				Id:   uuid.NewString(),
+				Name: acc.Name,
+				Cpf:  acc.Cpf,
+			},
+			err: ErrCpfExists,
 		},
 		{
 			Name: "Fail to create account with same id",
@@ -49,7 +53,7 @@ func TestCreateAccount(t *testing.T) {
 				Cpf:    "654656",
 				Secret: "16656",
 			},
-			err: ErrCpfExists,
+			err: ErrIdExists,
 		},
 		{
 			Name: "Fail to create account with negative balance",

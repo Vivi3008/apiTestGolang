@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"

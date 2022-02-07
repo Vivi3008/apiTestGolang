@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -27,10 +27,10 @@ func TestListAccountById(t *testing.T) {
 		{
 			Name: "Should list acccount by id succesfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
-			args: accountsTest[0].Id,
-			want: accountsTest[0],
+			args: AccountsTest[0].Id,
+			want: AccountsTest[0],
 		},
 		{
 			Name: "Fail if id doesn't exists",

@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"github.com/jackc/pgx/v4/pgxpool"
