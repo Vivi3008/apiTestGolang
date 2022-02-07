@@ -2,8 +2,18 @@ package transfers
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/jackc/pgconn"
+)
+
+const (
+	TransfersIdEquals = "transfers_check"
+)
+
+var (
+	ErrIdEquals = errors.New("account destiny id can't be the same account origin id")
 )
 
 func (r Repository) SaveTransfer(ctx context.Context, transfer transfers.Transfer) error {
@@ -26,19 +36,14 @@ func (r Repository) SaveTransfer(ctx context.Context, transfer transfers.Transfe
 		transfer.CreatedAt,
 	).Scan()
 
-	if err != nil {
-		return err
-	}
-	/* 	var pgError *pgconn.PgError
+	var pgError *pgconn.PgError
 
-	   	if errors.As(err, &pgError) {
-	   		switch pgError.ConstraintName {
-	   		case AccountsKeyUnique:
-	   			return ErrCpfExists
-	   		case AccountsBalanceCheck:
-	   			return ErrBalanceInvalid
-	   		}
-	   	} */
+	if errors.As(err, &pgError) {
+		switch pgError.ConstraintName {
+		case TransfersIdEquals:
+			return ErrIdEquals
+		}
+	}
 
 	return nil
 }

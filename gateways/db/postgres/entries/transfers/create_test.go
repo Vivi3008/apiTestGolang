@@ -8,7 +8,6 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
-	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/accountdb"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -28,15 +27,43 @@ func TestSaveTransfer(t *testing.T) {
 		{
 			Name: "Should create a transfer successfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return accountdb.CreateAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
 			args: transfers.Transfer{
 				Id:                   uuid.NewString(),
-				AccountOriginId:      accountdb.accountsTest[0].Id,
-				AccountDestinationId: accountdb.accountsTest[1].Id,
+				AccountOriginId:      AccountsTest[0].Id,
+				AccountDestinationId: AccountsTest[1].Id,
 				Amount:               5000,
 				CreatedAt:            time.Now(),
 			},
+		},
+		{
+			Name: "Fail if account id is equal destiny id",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateAccountTest(pgx)
+			},
+			args: transfers.Transfer{
+				Id:                   uuid.NewString(),
+				AccountOriginId:      AccountsTest[0].Id,
+				AccountDestinationId: AccountsTest[0].Id,
+				Amount:               5000,
+				CreatedAt:            time.Now(),
+			},
+			err: ErrIdEquals,
+		},
+		{
+			Name: "Fail if amount is less than zero",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateAccountTest(pgx)
+			},
+			args: transfers.Transfer{
+				Id:                   uuid.NewString(),
+				AccountOriginId:      AccountsTest[0].Id,
+				AccountDestinationId: AccountsTest[0].Id,
+				Amount:               -56,
+				CreatedAt:            time.Now(),
+			},
+			err: ErrIdEquals,
 		},
 	}
 
