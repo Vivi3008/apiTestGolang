@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 
 const (
 	AccountsKeyUnique    = "accounts_pkey"
+	AccountsCpfUnique    = "accounts_cpf_key"
 	AccountsBalanceCheck = "accounts_balance_check"
 )
 
@@ -39,9 +40,11 @@ func (r Repository) StoreAccount(ctx context.Context, account entities.Account) 
 	if errors.As(err, &pgError) {
 		switch pgError.ConstraintName {
 		case AccountsKeyUnique:
-			return ErrCpfExists
+			return ErrIdExists
 		case AccountsBalanceCheck:
 			return ErrBalanceInvalid
+		case AccountsCpfUnique:
+			return ErrCpfExists
 		}
 	}
 

@@ -1,6 +1,8 @@
 package transfers
 
+import "context"
+
 type TransferRepository interface {
-	ListTransfer(string) ([]Transfer, error)
-	SaveTransfer(Transfer) error
+	ListTransfer(ctx context.Context, originAccId string) ([]Transfer, error)
+	SaveTransfer(ctx context.Context, tr Transfer) error
 }

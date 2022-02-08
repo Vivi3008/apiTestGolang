@@ -20,10 +20,10 @@ func (a AccountUsecase) NewLogin(ctx context.Context, u account.Login) (string, 
 		return "", err
 	}
 
-	err = commom.VerifyPasswordHash(account.Secret, u.Secret)
+	err = commom.VerifyPasswordHash(u.Secret, account.Secret)
 
 	if err != nil {
-		return "", ErrInvalidPassword
+		return "", err
 	}
 
 	return account.Id, nil

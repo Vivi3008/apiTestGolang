@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -32,30 +32,30 @@ func TestUpdateAccount(t *testing.T) {
 		{
 			Name: "Should update account successfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
-			args: args{1000, accountsTest[0].Id},
+			args: args{1000, AccountsTest[0].Id},
 			want: account.Account{
-				Id:        accountsTest[0].Id,
-				Name:      accountsTest[0].Name,
-				Cpf:       accountsTest[0].Cpf,
+				Id:        AccountsTest[0].Id,
+				Name:      AccountsTest[0].Name,
+				Cpf:       AccountsTest[0].Cpf,
 				Balance:   1000,
-				CreatedAt: accountsTest[0].CreatedAt,
+				CreatedAt: AccountsTest[0].CreatedAt,
 			},
 		},
 		{
 			Name: "Fail if amount is invalid",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
-			args: args{-50, accountsTest[0].Id},
+			args: args{-50, AccountsTest[0].Id},
 			want: account.Account{},
 			err:  ErrBalanceInvalid,
 		},
 		{
 			Name: "Fail update balace if id doesn't exists",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return createAccountTest(pgx)
+				return CreateAccountTest(pgx)
 			},
 			args: args{2000, uuid.NewString()},
 			want: account.Account{},

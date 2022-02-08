@@ -1,4 +1,4 @@
-package account
+package accountdb
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var accountsTest = []entities.Account{
+var AccountsTest = []entities.Account{
 	{
 		Id:        uuid.NewString(),
 		Name:      "Teste1",
@@ -35,7 +35,7 @@ var accountsTest = []entities.Account{
 }
 
 //insert list accounts in bacth
-func createAccountTest(pool *pgxpool.Pool) error {
+func CreateAccountTest(pool *pgxpool.Pool) error {
 	const statement = `INSERT INTO 
 	accounts (
 		id,
@@ -49,7 +49,7 @@ func createAccountTest(pool *pgxpool.Pool) error {
 
 	batch := &pgx.Batch{}
 
-	for _, acc := range accountsTest {
+	for _, acc := range AccountsTest {
 		batch.Queue(statement, acc.Id, acc.Name, acc.Cpf, acc.Secret, acc.Balance, acc.CreatedAt)
 	}
 

@@ -51,7 +51,7 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.transfUse.SaveTransfer(transfer)
+	err = h.transfUse.SaveTransfer(r.Context(), transfer)
 
 	if err != nil {
 		log.Printf("Failed to save transfer: %s\n", err.Error())

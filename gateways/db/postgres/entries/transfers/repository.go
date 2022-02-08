@@ -1,15 +1,15 @@
-package accountdb
+package transfers
 
 import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type Repository struct {
-	DB *pgxpool.Pool
+	Db *pgxpool.Pool
 }
 
-func NewRepository(db *pgxpool.Pool) *Repository {
+func NewRepository(pgx *pgxpool.Pool) *Repository {
 	return &Repository{
-		DB: db,
+		Db: pgx,
 	}
 }
