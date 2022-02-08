@@ -8,6 +8,7 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+	accountdb "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -27,12 +28,12 @@ func TestSaveTransfer(t *testing.T) {
 		{
 			Name: "Should create a transfer successfull",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return CreateAccountTest(pgx)
+				return accountdb.CreateAccountTest(pgx)
 			},
 			args: transfers.Transfer{
 				Id:                   uuid.NewString(),
-				AccountOriginId:      AccountsTest[0].Id,
-				AccountDestinationId: AccountsTest[1].Id,
+				AccountOriginId:      accountdb.AccountsTest[0].Id,
+				AccountDestinationId: accountdb.AccountsTest[1].Id,
 				Amount:               5000,
 				CreatedAt:            time.Now(),
 			},
@@ -40,30 +41,58 @@ func TestSaveTransfer(t *testing.T) {
 		{
 			Name: "Fail if account id is equal destiny id",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return CreateAccountTest(pgx)
+				return accountdb.CreateAccountTest(pgx)
 			},
 			args: transfers.Transfer{
 				Id:                   uuid.NewString(),
-				AccountOriginId:      AccountsTest[0].Id,
-				AccountDestinationId: AccountsTest[0].Id,
+				AccountOriginId:      accountdb.AccountsTest[0].Id,
+				AccountDestinationId: accountdb.AccountsTest[0].Id,
 				Amount:               5000,
 				CreatedAt:            time.Now(),
 			},
 			err: ErrIdEquals,
 		},
 		{
-			Name: "Fail if amount is less than zero",
+			Name: "Fail if account origin id dont exists",
 			runBefore: func(pgx *pgxpool.Pool) error {
-				return CreateAccountTest(pgx)
+				return accountdb.CreateAccountTest(pgx)
 			},
 			args: transfers.Transfer{
 				Id:                   uuid.NewString(),
-				AccountOriginId:      AccountsTest[0].Id,
-				AccountDestinationId: AccountsTest[0].Id,
-				Amount:               -56,
+				AccountOriginId:      uuid.NewString(),
+				AccountDestinationId: accountdb.AccountsTest[0].Id,
+				Amount:               400000,
 				CreatedAt:            time.Now(),
 			},
-			err: ErrIdEquals,
+			err: ErrIdOriginNotExist,
+		},
+		{
+			Name: "Fail if account destiny id don't exists",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return accountdb.CreateAccountTest(pgx)
+			},
+			args: transfers.Transfer{
+				Id:                   uuid.NewString(),
+				AccountOriginId:      accountdb.AccountsTest[0].Id,
+				AccountDestinationId: uuid.NewString(),
+				Amount:               400000,
+				CreatedAt:            time.Now(),
+			},
+			err: ErrIdDestinyNotExist,
+		},
+		{
+			Name: "Fail if amount is less than zero",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return accountdb.CreateAccountTest(pgx)
+			},
+			args: transfers.Transfer{
+				Id:                   uuid.NewString(),
+				AccountOriginId:      accountdb.AccountsTest[0].Id,
+				AccountDestinationId: accountdb.AccountsTest[1].Id,
+				Amount:               -23,
+				CreatedAt:            time.Now(),
+			},
+			err: ErrAmountInvalid,
 		},
 	}
 
