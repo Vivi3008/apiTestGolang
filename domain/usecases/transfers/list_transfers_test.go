@@ -76,50 +76,15 @@ func TestTransfers(t *testing.T) {
 					return []transfers.Transfer{trans}, nil
 				},
 			},
-			accRepo: account.AccountMock{
-				OnListById: func(accountId string) (account.Account, error) {
-					return listAccounts[0], nil
-				},
-				OnListAll: func() ([]account.Account, error) {
-					return listAccounts, nil
-				},
-			},
 			args: listAccounts[0].Id,
 			want: []transfers.Transfer{trans},
 			err:  nil,
-		},
-		{
-			name: "Fail to list transfer if id doesnt exists",
-			repository: transfers.TransferMock{
-				OnListAll: func(id string) ([]transfers.Transfer, error) {
-					return []transfers.Transfer{trans}, nil
-				},
-			},
-			accRepo: account.AccountMock{
-				OnListById: func(accountId string) (account.Account, error) {
-					return person, accUse.ErrIdNotExists
-				},
-				OnListAll: func() ([]account.Account, error) {
-					return listAccounts, nil
-				},
-			},
-			args: person.Id,
-			want: []transfers.Transfer{},
-			err:  accUse.ErrIdNotExists,
 		},
 		{
 			name: "Should list empty transfers",
 			repository: transfers.TransferMock{
 				OnListAll: func(id string) ([]transfers.Transfer, error) {
 					return []transfers.Transfer{}, nil
-				},
-			},
-			accRepo: account.AccountMock{
-				OnListById: func(accountId string) (account.Account, error) {
-					return listAccounts[1], accUse.ErrIdNotExists
-				},
-				OnListAll: func() ([]account.Account, error) {
-					return listAccounts, nil
 				},
 			},
 			args: listAccounts[1].Id,
