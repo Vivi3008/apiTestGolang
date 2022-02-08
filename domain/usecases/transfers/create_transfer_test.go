@@ -52,8 +52,25 @@ func TestCreateTransfer(t *testing.T) {
 					}
 					return personTarget, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					if id == person.Id {
+						return account.Account{
+							Id:        person.Id,
+							Name:      person.Name,
+							Cpf:       person.Cpf,
+							Secret:    person.Secret,
+							Balance:   1500,
+							CreatedAt: person.CreatedAt,
+						}, nil
+					}
+					return account.Account{
+						Id:        personTarget.Id,
+						Name:      personTarget.Name,
+						Cpf:       personTarget.Cpf,
+						Secret:    personTarget.Secret,
+						Balance:   4000,
+						CreatedAt: personTarget.CreatedAt,
+					}, nil
 				},
 			},
 			args: transfers.Transfer{
@@ -90,8 +107,8 @@ func TestCreateTransfer(t *testing.T) {
 						CreatedAt: time.Now(),
 					}, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{}, nil
 				},
 			},
 			args: transfers.Transfer{
@@ -124,8 +141,8 @@ func TestCreateTransfer(t *testing.T) {
 						CreatedAt: time.Now(),
 					}, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{}, nil
 				},
 			},
 			args: transfers.Transfer{
