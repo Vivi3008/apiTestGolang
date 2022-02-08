@@ -60,6 +60,5 @@ func (r Repository) SaveTransfer(ctx context.Context, transfer transfers.Transfe
 		}
 		return err
 	}
-
 	return nil
 }
