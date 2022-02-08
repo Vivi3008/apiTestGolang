@@ -1,6 +1,8 @@
 package commom
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 func GenerateHashPassword(secret string) (string, error) {
 	hashSecret, err := bcrypt.GenerateFromPassword([]byte(secret), 14)
@@ -8,12 +10,11 @@ func GenerateHashPassword(secret string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return string(hashSecret), nil
 }
 
 func VerifyPasswordHash(secret string, secretSaved string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(secret), []byte(secretSaved))
+	err := bcrypt.CompareHashAndPassword([]byte(secretSaved), []byte(secret))
 
 	return err
 }

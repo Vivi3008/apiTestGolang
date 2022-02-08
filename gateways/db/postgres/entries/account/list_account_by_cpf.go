@@ -11,13 +11,14 @@ func (r Repository) ListAccountByCpf(ctx context.Context, cpf string) (entities.
 	const statement = `SELECT id,
 	name,
 	cpf,
+	secret,
 	balance,
 	created_at FROM accounts
 	WHERE cpf=$1`
 
 	var account entities.Account
 
-	err := r.DB.QueryRow(ctx, statement, cpf).Scan(&account.Id, &account.Name, &account.Cpf, &account.Balance, &account.CreatedAt)
+	err := r.DB.QueryRow(ctx, statement, cpf).Scan(&account.Id, &account.Name, &account.Cpf, &account.Secret, &account.Balance, &account.CreatedAt)
 
 	switch {
 	case err == pgx.ErrNoRows:
