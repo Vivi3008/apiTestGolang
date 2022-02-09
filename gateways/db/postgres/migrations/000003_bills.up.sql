@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "bills" 
 (
-    "id" UUID PRIMARY KEY,
+    "id" UUID PRIMARY KEY NOT NULL,
     "account_id" UUID NOT NULL REFERENCES accounts (id),
     "description" TEXT NOT NULL,
     "value" INT NOT NULL default 0 CHECK (value > 0),

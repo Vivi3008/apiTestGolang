@@ -20,7 +20,6 @@ func TestCreateBills(t *testing.T) {
 		Name      string
 		runBefore func(pgx *pgxpool.Pool) error
 		args      bills.Bill
-		want      bills.Bill
 		err       error
 	}
 
@@ -40,7 +39,49 @@ func TestCreateBills(t *testing.T) {
 				return accountdb.CreateAccountTest(pgx)
 			},
 			args: billTest,
-			want: billTest,
+		},
+		{
+			Name: "Fail if account id doesn't exist",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return accountdb.CreateAccountTest(pgx)
+			},
+			args: bills.Bill{
+				Id:            uuid.NewString(),
+				AccountId:     uuid.NewString(),
+				Description:   "Fatura cartao",
+				Value:         11000,
+				DueDate:       time.Now().AddDate(0, 0, 3),
+				ScheduledDate: time.Now(),
+			},
+			err: ErrAccountIdNotExist,
+		},
+		{
+			Name: "Fail if bill id is empty",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return accountdb.CreateAccountTest(pgx)
+			},
+			args: bills.Bill{
+				AccountId:     accountdb.AccountsTest[0].Id,
+				Description:   "IPTU",
+				Value:         456,
+				DueDate:       time.Now().AddDate(0, 0, 3),
+				ScheduledDate: time.Now(),
+			},
+			err: ErrBillIdEmpty,
+		},
+		{
+			Name: "Fail if value is less than zero",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return accountdb.CreateAccountTest(pgx)
+			},
+			args: bills.Bill{
+				Id:            uuid.NewString(),
+				AccountId:     accountdb.AccountsTest[0].Id,
+				Value:         -56,
+				DueDate:       time.Now().AddDate(0, 0, 3),
+				ScheduledDate: time.Now(),
+			},
+			err: ErrValueInvalid,
 		},
 	}
 
