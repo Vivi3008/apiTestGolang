@@ -49,7 +49,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		DueDate:     body.DueDate,
 	}
 
-	billOk, err := h.blUse.CreateBill(bill)
+	billOk, err := h.blUse.CreateBill(r.Context(), bill)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
@@ -58,7 +58,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 
 	billOk.StatusBill = bills.Pago
 
-	err = h.blUse.SaveBill(billOk)
+	err = h.blUse.SaveBill(r.Context(), billOk)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
