@@ -8,14 +8,14 @@ import (
 )
 
 //cria o pagamento e atualiza a conta
-func (b BillUsecase) CreateBill(bill bills.Bill) (bills.Bill, error) {
+func (b BillUsecase) CreateBill(ctx context.Context, bill bills.Bill) (bills.Bill, error) {
 	pay, err := bills.NewBill(bill)
 
 	if err != nil {
 		return bills.Bill{}, err
 	}
 
-	_, err = b.acRepo.UpdateAccountBalance(context.Background(), bill.AccountId, bill.Value, account.Debit)
+	_, err = b.acRepo.UpdateAccountBalance(ctx, bill.AccountId, bill.Value, account.Debit)
 
 	if err != nil {
 		return bills.Bill{}, err

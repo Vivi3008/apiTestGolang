@@ -1,6 +1,8 @@
 package bills
 
+import "context"
+
 type BillRepository interface {
-	ListBills(string) ([]Bill, error)
-	StoreBill(Bill) error
+	ListBills(ctx context.Context, accountId string) ([]Bill, error)
+	StoreBill(ctx context.Context, bill Bill) error
 }

@@ -13,7 +13,7 @@ func (b BillUsecase) ListAllBills(ctx context.Context, accountId string) ([]bill
 		return []bills.Bill{}, err
 	}
 
-	list, err := b.blRepo.ListBills(accountId)
+	list, err := b.blRepo.ListBills(ctx, accountId)
 
 	if err != nil {
 		return []bills.Bill{}, err

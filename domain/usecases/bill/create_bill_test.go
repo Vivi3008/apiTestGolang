@@ -1,6 +1,7 @@
 package bill
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -48,8 +49,14 @@ func TestCreateBill(t *testing.T) {
 				OnListById: func(accountId string) (account.Account, error) {
 					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{
+						Id:      uuid.New().String(),
+						Name:    "Dfadfsa",
+						Cpf:     "55566689545",
+						Secret:  "dafd33255",
+						Balance: 19700,
+					}, nil
 				},
 			},
 			args: payment,
@@ -61,16 +68,10 @@ func TestCreateBill(t *testing.T) {
 			repository: bills.BillMock{},
 			accRepo: account.AccountMock{
 				OnListById: func(accountId string) (account.Account, error) {
-					return account.Account{
-						Id:      uuid.New().String(),
-						Name:    "Dfadfsa",
-						Cpf:     "55566689545",
-						Secret:  "dafd33255",
-						Balance: 1500,
-					}, nil
+					return person, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
+				OnUpdade: func(balance int, id string) (account.Account, error) {
+					return account.Account{}, accUse.ErrInsufficientLimit
 				},
 			},
 			args: payment,
@@ -82,16 +83,16 @@ func TestCreateBill(t *testing.T) {
 			repository: bills.BillMock{},
 			accRepo: account.AccountMock{
 				OnListById: func(accountId string) (account.Account, error) {
+					return person, nil
+				},
+				OnUpdade: func(balance int, id string) (account.Account, error) {
 					return account.Account{
-						Id:      uuid.New().String(),
+						Id:      person.Id,
 						Name:    "Dfadfsa",
 						Cpf:     "55566689545",
 						Secret:  "dafd33255",
 						Balance: 50000,
 					}, nil
-				},
-				OnStoreAccount: func(account account.Account) error {
-					return nil
 				},
 			},
 			args: bills.Bill{
@@ -120,7 +121,7 @@ func TestCreateBill(t *testing.T) {
 			ac := accUse.NewAccountUsecase(tt.accRepo)
 			uc := NewBillUseCase(tt.repository, ac)
 
-			got, err := uc.CreateBill(tt.args)
+			got, err := uc.CreateBill(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
