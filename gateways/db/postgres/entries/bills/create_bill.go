@@ -3,9 +3,11 @@ package bills
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 )
 
 const (
@@ -41,7 +43,7 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 		bill.ScheduledDate,
 		bill.StatusBill)
 
-	if cmdTag.RowsAffected() != 1 {
+	if err != pgx.ErrNoRows {
 		var pgError *pgconn.PgError
 		if errors.As(err, &pgError) {
 			switch {
@@ -55,6 +57,10 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 				return err
 			}
 		}
+	}
+
+	if cmdTag.RowsAffected() != 1 {
+		return fmt.Errorf("%s: %s", ErrInsert, err)
 	}
 	return nil
 }
