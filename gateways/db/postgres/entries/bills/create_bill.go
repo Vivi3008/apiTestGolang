@@ -6,7 +6,6 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
 )
 
 const (
@@ -18,6 +17,7 @@ var (
 	ErrAccountIdNotExist = errors.New("account id don't exist")
 	ErrBillIdEmpty       = errors.New("bill id can't be empty")
 	ErrValueInvalid      = errors.New("value can't be less than zero")
+	ErrInsert            = errors.New("could not insert")
 )
 
 func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
@@ -31,7 +31,7 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 		status) 
 		VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
-	err := r.Db.QueryRow(ctx,
+	cmdTag, err := r.Db.Exec(ctx,
 		statement,
 		bill.Id,
 		bill.AccountId,
@@ -39,9 +39,9 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 		bill.Value,
 		bill.DueDate,
 		bill.ScheduledDate,
-		bill.StatusBill).Scan()
+		bill.StatusBill)
 
-	if err != pgx.ErrNoRows {
+	if cmdTag.RowsAffected() != 1 {
 		var pgError *pgconn.PgError
 		if errors.As(err, &pgError) {
 			switch {
