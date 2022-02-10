@@ -17,13 +17,17 @@ func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activ
 		return []activities.AccountActivity{}, err
 	}
 
-	var listActivities []activities.AccountActivity
+	var listActivities = make([]activities.AccountActivity, 0)
 
-	for i := 0; i < len(listBills); i++ {
-		listActivities[i].Type = activities.Bill
-		listActivities[i].Amount = listBills[i].Value
-		listActivities[i].CreatedAt = listBills[i].ScheduledDate
-		listActivities[i].Details = listBills[i].Description
+	if len(listBills) != 0 {
+		var actBl activities.AccountActivity
+		for i := 0; i < len(listBills); i++ {
+			actBl.Type = activities.Bill
+			actBl.Amount = listBills[i].Value
+			actBl.CreatedAt = listBills[i].ScheduledDate
+			actBl.Details = listBills[i].Description
+		}
+		listActivities = append(listActivities, actBl)
 	}
 
 	trRepo := repoTr.NewRepository(r.DB)
@@ -34,11 +38,15 @@ func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activ
 		return []activities.AccountActivity{}, err
 	}
 
-	for i := 0; i < len(listTransfers); i++ {
-		listActivities[i].Type = activities.Transfer
-		listActivities[i].Amount = listTransfers[i].Amount
-		listActivities[i].CreatedAt = listTransfers[i].CreatedAt
-		listActivities[i].Details = listTransfers[i].AccountOriginId
+	if len(listTransfers) != 0 {
+		var actTr activities.AccountActivity
+		for i := 0; i < len(listTransfers); i++ {
+			actTr.Type = activities.Transfer
+			actTr.Amount = listTransfers[i].Amount
+			actTr.CreatedAt = listTransfers[i].CreatedAt
+			actTr.Details = listTransfers[i].AccountOriginId
+		}
+		listActivities = append(listActivities, actTr)
 	}
 
 	return listActivities, nil
