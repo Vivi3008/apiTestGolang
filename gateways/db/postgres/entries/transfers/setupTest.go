@@ -21,14 +21,14 @@ var TransfersTest = []transfers.Transfer{
 	},
 	{
 		Id:                   uuid.NewString(),
-		AccountOriginId:      accountdb.AccountsTest[1].Id,
+		AccountOriginId:      accountdb.AccountsTest[0].Id,
 		AccountDestinationId: accountdb.AccountsTest[2].Id,
 		Amount:               200000,
 		CreatedAt:            time.Now(),
 	},
 	{
 		Id:                   uuid.NewString(),
-		AccountOriginId:      accountdb.AccountsTest[2].Id,
+		AccountOriginId:      accountdb.AccountsTest[0].Id,
 		AccountDestinationId: accountdb.AccountsTest[0].Id,
 		Amount:               300000,
 		CreatedAt:            time.Now(),
