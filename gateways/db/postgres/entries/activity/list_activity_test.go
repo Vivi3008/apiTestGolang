@@ -3,7 +3,6 @@ package activity
 import (
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -12,6 +11,7 @@ import (
 	accountdb "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
 	billdb "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
 	transferdb "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/transfers"
+	"github.com/google/uuid"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -87,6 +87,22 @@ func TestListActitivies(t *testing.T) {
 			},
 			want: wantActitivies,
 		},
+		{
+			Name: "List empty if account id doesnt exist",
+			args: uuid.NewString(),
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateDbTest(pgx)
+			},
+			want: []activities.AccountActivity{},
+		},
+		{
+			Name: "Empty list for accounts that have no outputs",
+			args: accountdb.AccountsTest[2].Id,
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateDbTest(pgx)
+			},
+			want: []activities.AccountActivity{},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -110,8 +126,6 @@ func TestListActitivies(t *testing.T) {
 
 			for i := 0; i < len(got); i++ {
 				tt.want[i].CreatedAt = got[i].CreatedAt
-				fmt.Printf("Expected %v\n", got[i])
-				fmt.Printf("Want %v\n", tt.want[i])
 			}
 
 			if !reflect.DeepEqual(tt.want, got) {
