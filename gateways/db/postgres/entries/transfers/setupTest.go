@@ -29,7 +29,7 @@ var TransfersTest = []transfers.Transfer{
 	{
 		Id:                   uuid.NewString(),
 		AccountOriginId:      accountdb.AccountsTest[0].Id,
-		AccountDestinationId: accountdb.AccountsTest[0].Id,
+		AccountDestinationId: accountdb.AccountsTest[1].Id,
 		Amount:               300000,
 		CreatedAt:            time.Now(),
 	},
