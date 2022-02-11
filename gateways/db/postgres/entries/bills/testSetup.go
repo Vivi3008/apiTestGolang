@@ -11,13 +11,14 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var bls = []bills.Bill{
+var Bls = []bills.Bill{
 	{
 		Id:            uuid.NewString(),
 		AccountId:     accountdb.AccountsTest[0].Id,
 		Description:   "Academia",
 		Value:         11000,
 		DueDate:       time.Now().AddDate(0, 0, 5),
+		StatusBill:    bills.Pago,
 		ScheduledDate: time.Now(),
 	},
 	{
@@ -26,6 +27,7 @@ var bls = []bills.Bill{
 		Description:   "Fatura Cartão",
 		Value:         50000,
 		DueDate:       time.Now().AddDate(0, 0, 4),
+		StatusBill:    bills.Negado,
 		ScheduledDate: time.Now(),
 	},
 	{
@@ -34,6 +36,7 @@ var bls = []bills.Bill{
 		Description:   "IPTU",
 		Value:         100000,
 		DueDate:       time.Now().AddDate(0, 0, 3),
+		StatusBill:    bills.Pago,
 		ScheduledDate: time.Now(),
 	},
 	{
@@ -42,6 +45,7 @@ var bls = []bills.Bill{
 		Description:   "Material escolar",
 		Value:         200000,
 		DueDate:       time.Now().AddDate(0, 0, 3),
+		StatusBill:    bills.Pago,
 		ScheduledDate: time.Now(),
 	},
 }
@@ -59,7 +63,7 @@ func CreateBillsTest(pool *pgxpool.Pool) error {
 
 	batch := &pgx.Batch{}
 
-	for _, bl := range bls {
+	for _, bl := range Bls {
 		batch.Queue(statement, bl.Id, bl.AccountId, bl.Description, bl.Value, bl.DueDate, bl.ScheduledDate, bl.StatusBill)
 	}
 
