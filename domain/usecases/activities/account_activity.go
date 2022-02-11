@@ -2,10 +2,6 @@ package activities
 
 import (
 	"time"
-
-	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
-	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
-	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 )
 
 type TypeActivity string
@@ -23,11 +19,9 @@ type AccountActivity struct {
 }
 
 type ActivityUsecase struct {
-	accRepo account.AccountUsecase
-	trRepo  transfers.TranfersUsecase
-	blRepo  bill.BillUsecase
+	actRepo AccountActivityRepository
 }
 
-func NewAccountAcitivyUsecase(acc account.AccountUsecase, tr transfers.TranfersUsecase, bl bill.BillUsecase) ActivityUsecase {
-	return ActivityUsecase{acc, tr, bl}
+func NewAccountActivityUsecase(act AccountActivityRepository) ActivityUsecase {
+	return ActivityUsecase{actRepo: act}
 }

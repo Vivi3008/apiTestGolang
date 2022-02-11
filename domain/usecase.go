@@ -1,9 +1,12 @@
 package domain
 
 import (
+	"context"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
 )
 
 type Usecase interface {
@@ -17,4 +20,5 @@ type Usecase interface {
 	CreateBill(bills.Bill) (bills.Bill, error)
 	SaveBill(bills.Bill) error
 	ListAllBills(string) ([]bills.Bill, error)
+	ListActivity(ctx context.Context, accountId string) ([]activities.AccountActivity, error)
 }

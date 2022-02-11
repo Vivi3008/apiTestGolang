@@ -8,12 +8,15 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/commom/config"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
+	activities_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/activity"
 	bills_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
 	transfers_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/transfers"
+
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -42,12 +45,14 @@ func main() {
 	accountStore := account_postgres.NewRepository(db)
 	transStore := transfers_postgres.NewRepository(db)
 	billStore := bills_postgres.NewRepository(db)
+	activitiesDb := activities_postgres.NewRepository(db)
 
 	accUsecase := account.NewAccountUsecase(accountStore)
 	transferStore := transfers.NewTransferUsecase(transStore, accUsecase)
 	blStore := bill.NewBillUseCase(billStore, accUsecase)
+	activityStore := activities.NewAccountActivityUsecase(activitiesDb)
 
-	server := api.NewServer(accUsecase, transferStore, blStore)
+	server := api.NewServer(accUsecase, transferStore, blStore, activityStore)
 
 	log.Printf("Starting server on %s\n", cfg.API.Port)
 	log.Fatal(http.ListenAndServe(cfg.API.Port, server))
