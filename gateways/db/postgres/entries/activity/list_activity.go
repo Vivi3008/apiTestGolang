@@ -29,18 +29,17 @@ func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activ
 
 	var listActivities = make([]activities.AccountActivity, 0)
 
-	if len(listBills) != 0 {
-		var actBl activities.AccountActivity
-		for i := 0; i < len(listBills); i++ {
-			actBl.Type = activities.Bill
-			actBl.Amount = listBills[i].Value
-			actBl.CreatedAt = listBills[i].ScheduledDate
-			actBl.Details = DescriptionPayment{
-				Description: listBills[i].Description,
-				Status:      listBills[i].StatusBill,
-			}
-			listActivities = append(listActivities, actBl)
+	var activity activities.AccountActivity
+
+	for i := range listBills {
+		activity.Type = activities.Bill
+		activity.Amount = listBills[i].Value
+		activity.CreatedAt = listBills[i].CreatedAt
+		activity.Details = DescriptionPayment{
+			Description: listBills[i].Description,
+			Status:      listBills[i].StatusBill,
 		}
+		listActivities = append(listActivities, activity)
 	}
 
 	listTransfersAcitivy, err := r.ListTransfersAccount(ctx, accountId)
@@ -57,13 +56,14 @@ func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activ
 func (r Repository) ListTransfersAccount(ctx context.Context, accountId string) ([]activities.AccountActivity, error) {
 	const statement = `SELECT 
 		name, 
+		tr.id,
 		tr.account_destination_id,
 		tr.amount,
 		tr.created_at
 	FROM accounts AS a JOIN transfers AS tr 
 	ON a.id=tr.account_destination_id 
 	WHERE tr.account_origin_id=$1
-	ORDER BY tr.created_at ASC`
+	ORDER BY tr.created_at DESC`
 
 	var listActivities = make([]activities.AccountActivity, 0)
 
@@ -72,18 +72,25 @@ func (r Repository) ListTransfersAccount(ctx context.Context, accountId string) 
 	if err != nil {
 		return []activities.AccountActivity{}, err
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var details DestinyAccount
 		var activity activities.AccountActivity
 		err = rows.Scan(&details.Name, &details.AccountDestinationId, &activity.Amount, &activity.CreatedAt)
-		activity.Details = details
-		activity.Type = activities.Transfer
 
 		if err != nil {
 			return []activities.AccountActivity{}, err
 		}
+
+		activity.Details = details
+		activity.Type = activities.Transfer
 		listActivities = append(listActivities, activity)
 	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return listActivities, nil
 }

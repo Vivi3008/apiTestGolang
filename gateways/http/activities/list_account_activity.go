@@ -16,7 +16,7 @@ var ErrGetTokenId = errors.New("error to get id from token")
 type ActivitiesResponse struct {
 	Type      activities.TypeActivity `json:"type"`
 	Amount    int                     `json:"amount"`
-	CreatedAt time.Time               `json:"createdAt"`
+	CreatedAt time.Time               `json:"created_at"`
 	Details   interface{}             `json:"details"`
 }
 

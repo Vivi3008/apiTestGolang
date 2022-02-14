@@ -47,12 +47,12 @@ func main() {
 	billStore := bills_postgres.NewRepository(db)
 	activitiesDb := activities_postgres.NewRepository(db)
 
-	accUsecase := account.NewAccountUsecase(accountStore)
-	transferStore := transfers.NewTransferUsecase(transStore, accUsecase)
-	blStore := bill.NewBillUseCase(billStore, accUsecase)
-	activityStore := activities.NewAccountActivityUsecase(activitiesDb)
+	accountUsecase := account.NewAccountUsecase(accountStore)
+	transferUsecase := transfers.NewTransferUsecase(transStore, accountUsecase)
+	billsUsecase := bill.NewBillUseCase(billStore, accountUsecase)
+	activityUsecase := activities.NewAccountActivityUsecase(activitiesDb)
 
-	server := api.NewServer(accUsecase, transferStore, blStore, activityStore)
+	server := api.NewServer(accountUsecase, transferUsecase, billsUsecase, activityUsecase)
 
 	log.Printf("Starting server on %s\n", cfg.API.Port)
 	log.Fatal(http.ListenAndServe(cfg.API.Port, server))
