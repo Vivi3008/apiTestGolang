@@ -15,6 +15,7 @@ type Bill struct {
 	DueDate       time.Time
 	ScheduledDate time.Time
 	StatusBill    Status
+	CreatedAt     time.Time
 }
 
 type Status string
@@ -50,6 +51,7 @@ func NewBill(bill Bill) (Bill, error) {
 		DueDate:       bill.DueDate,
 		ScheduledDate: scheduled,
 		StatusBill:    Agendado,
+		CreatedAt:     time.Now(),
 	}, nil
 }
 

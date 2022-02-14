@@ -95,6 +95,7 @@ func TestListBills(t *testing.T) {
 			for i := 0; i < len(tt.want); i++ {
 				tt.want[i].DueDate = got[i].DueDate
 				tt.want[i].ScheduledDate = got[i].ScheduledDate
+				tt.want[i].CreatedAt = got[i].CreatedAt
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {

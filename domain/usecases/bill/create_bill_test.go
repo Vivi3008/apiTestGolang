@@ -131,6 +131,7 @@ func TestCreateBill(t *testing.T) {
 			tt.want.ScheduledDate = got.ScheduledDate
 			tt.want.DueDate = got.DueDate
 			tt.want.StatusBill = got.StatusBill
+			tt.want.CreatedAt = got.CreatedAt
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Expected %v, got %v", tt.want, got)
