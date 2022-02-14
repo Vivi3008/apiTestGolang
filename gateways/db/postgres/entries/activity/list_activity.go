@@ -3,71 +3,78 @@ package activity
 import (
 	"context"
 
-	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
-	repoBil "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
 )
 
 type DestinyAccount struct {
-	AccountDestinationId string
-	Name                 string
+	AccountDestinationId interface{}
+	Name                 interface{}
 }
 
 type DescriptionPayment struct {
-	Description string
-	Status      bills.Status
+	Description interface{}
+	Status      interface{}
 }
 
 func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activities.AccountActivity, error) {
-	blRepo := repoBil.NewRepository(r.DB)
+	/* 	blRepo := repoBil.NewRepository(r.DB)
 
-	listBills, err := blRepo.ListBills(ctx, accountId)
+	   	listBills, err := blRepo.ListBills(ctx, accountId)
+
+	   	if err != nil {
+	   		return []activities.AccountActivity{}, err
+	   	}
+
+	   	var listActivities = make([]activities.AccountActivity, 0)
+
+	   	var activity activities.AccountActivity
+
+	   	for i := range listBills {
+	   		activity.Type = activities.Bill
+	   		activity.Amount = listBills[i].Value
+	   		activity.CreatedAt = listBills[i].CreatedAt
+	   		activity.Details = DescriptionPayment{
+	   			Description: listBills[i].Description,
+	   			Status:      listBills[i].StatusBill,
+	   		}
+	   		listActivities = append(listActivities, activity)
+	   	} */
+
+	listActivities, err := r.ListTransfersAccount(ctx, accountId)
 
 	if err != nil {
 		return []activities.AccountActivity{}, err
 	}
-
-	var listActivities = make([]activities.AccountActivity, 0)
-
-	var activity activities.AccountActivity
-
-	for i := range listBills {
-		activity.Type = activities.Bill
-		activity.Amount = listBills[i].Value
-		activity.CreatedAt = listBills[i].CreatedAt
-		activity.Details = DescriptionPayment{
-			Description: listBills[i].Description,
-			Status:      listBills[i].StatusBill,
-		}
-		listActivities = append(listActivities, activity)
-	}
-
-	listTransfersAcitivy, err := r.ListTransfersAccount(ctx, accountId)
-
-	if err != nil {
-		return []activities.AccountActivity{}, err
-	}
-
-	listActivities = append(listActivities, listTransfersAcitivy...)
 
 	return listActivities, nil
 }
 
 func (r Repository) ListTransfersAccount(ctx context.Context, accountId string) ([]activities.AccountActivity, error) {
 	const statement = `SELECT 
-		name, 
-		tr.id,
-		tr.account_destination_id,
-		tr.amount,
-		tr.created_at
-	FROM accounts AS a JOIN transfers AS tr 
-	ON a.id=tr.account_destination_id 
-	WHERE tr.account_origin_id=$1
-	ORDER BY tr.created_at DESC`
+	name, 
+	tr.account_destination_id, 
+	tr.amount,tr.created_at, 
+	null as description, 
+	null as status
+FROM accounts AS a JOIN transfers AS tr 
+ON a.id=tr.account_destination_id 	
+WHERE tr.account_origin_id=$1
+UNION ALL
+SELECT 
+	null as name, 
+	tr.account_destination_id, 
+	value as amount, 
+	b.created_at, 
+	description, 
+	status 
+FROM bills AS b 
+JOIN transfers AS tr on b.account_id=tr.account_origin_id
+WHERE tr.account_origin_id=$2
+ORDER BY created_at DESC`
 
 	var listActivities = make([]activities.AccountActivity, 0)
 
-	rows, err := r.DB.Query(ctx, statement, accountId)
+	rows, err := r.DB.Query(ctx, statement, accountId, accountId)
 
 	if err != nil {
 		return []activities.AccountActivity{}, err
@@ -75,16 +82,28 @@ func (r Repository) ListTransfersAccount(ctx context.Context, accountId string) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var details DestinyAccount
+		var detailsTransfers DestinyAccount
+		var detailsBills DescriptionPayment
 		var activity activities.AccountActivity
-		err = rows.Scan(&details.Name, &details.AccountDestinationId, &activity.Amount, &activity.CreatedAt)
+		err = rows.Scan(&detailsTransfers.Name,
+			&detailsTransfers.AccountDestinationId,
+			&activity.Amount,
+			&activity.CreatedAt,
+			&detailsBills.Description,
+			&detailsBills.Status)
 
 		if err != nil {
 			return []activities.AccountActivity{}, err
 		}
 
-		activity.Details = details
-		activity.Type = activities.Transfer
+		if detailsBills.Status == nil && detailsBills.Description == nil {
+			activity.Type = activities.Transfer
+			activity.Details = detailsTransfers
+		} else {
+			activity.Type = activities.Bill
+			activity.Details = detailsBills
+		}
+
 		listActivities = append(listActivities, activity)
 	}
 

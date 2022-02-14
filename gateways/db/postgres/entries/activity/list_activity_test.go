@@ -3,6 +3,7 @@ package activity
 import (
 	"context"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -121,12 +122,14 @@ func TestListActitivies(t *testing.T) {
 			got, err := repo.ListActivity(context.Background(), tt.args)
 
 			if !errors.Is(tt.err, err) {
-				t.Errorf("Expected %s, got %s", err, tt.err)
+				t.Errorf("Expected %s, got %s", tt.err, err)
 			}
 
-			for i := 0; i < len(got); i++ {
+			fmt.Printf("lista %v:", got)
+
+			/* 	for i := 0; i < len(got); i++ {
 				tt.want[i].CreatedAt = got[i].CreatedAt
-			}
+			} */
 
 			if !reflect.DeepEqual(tt.want, got) {
 				t.Errorf("Expected %v, got %v", tt.want, got)
