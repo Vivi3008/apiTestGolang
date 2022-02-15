@@ -1,11 +1,8 @@
-name: Go
+name: main
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  - push
+  - pull_request
 jobs:
 
   build:
@@ -16,13 +13,31 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.16
+    
+    - name: go mod tidy
+      run: go mod tidy
 
     - name: Build
       run: go build -v ./...
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: go mod tidy
+      run: go mod tidy
+
+    - name: install richgo
+      run: go install github.com/kyoh86/richgo@latest
+
     - name: Test
-      run: go test -v ./...
-      
-    - name: Coverage
-      run: go test -cover ./...
+      run: richgo test ./...
+
+  
