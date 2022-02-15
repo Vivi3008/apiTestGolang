@@ -20,7 +20,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 	t.Run("Should return all accounts successfully", func(t *testing.T) {
 		person := account.Account{
 			Name:    "Vanny",
-			Cpf:     "13323332555",
+			Cpf:     "13313332555",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
@@ -35,25 +35,25 @@ func TestAccountStore_ListAll(t *testing.T) {
 		acc1, err := account.NewAccount(person)
 
 		if err != nil {
-			t.Fatal("Account should have been created successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		err = store.StoreAccount(context.Background(), acc1)
 
 		if err != nil {
-			t.Fatal("Account should have been stored successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		acc2, err2 := account.NewAccount(person2)
 
 		if err2 != nil {
-			t.Fatal("Account should have been created successfully")
+			t.Errorf("Error %s", err2)
 		}
 
 		err2 = store.StoreAccount(context.Background(), acc2)
 
 		if err2 != nil {
-			t.Fatal("Account should have been stored successfully")
+			t.Errorf("Error %s", err2)
 		}
 
 		accounts, err := store.ListAllAccounts()
@@ -86,7 +86,7 @@ func TestAccountStore_ListAll(t *testing.T) {
 	t.Run("Should return all transfers from autenticated user", func(t *testing.T) {
 		person := account.Account{
 			Name:    "Vanny",
-			Cpf:     "13323332555",
+			Cpf:     "13323332535",
 			Secret:  "dafd33255",
 			Balance: 250000,
 		}
@@ -114,25 +114,25 @@ func TestAccountStore_ListAll(t *testing.T) {
 		err = store.StoreAccount(context.Background(), acc1)
 
 		if err != nil {
-			t.Fatal("Account should have been stored successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		err = storeTr.SaveTransfer(tr1)
 
 		if err != nil {
-			t.Fatal("Account should have been stored successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		tr2, err := transfers.NewTransfer(transaction2)
 
 		if err != nil {
-			t.Fatal("Account should have been created successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		err2 := storeTr.SaveTransfer(tr2)
 
 		if err2 != nil {
-			t.Fatal("Account should have been stored successfully")
+			t.Errorf("Error %s", err)
 		}
 
 		transfers, err3 := storeTr.ListTransfer(acc1.Id)

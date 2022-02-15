@@ -19,6 +19,7 @@ type BillReqRes struct {
 	DueDate       time.Time    `json:"due_date"`
 	ScheduledDate time.Time    `json:"scheduled_date"`
 	StatusBill    bills.Status `json:"status"`
+	CreatedAt     time.Time    `json:"created_at"`
 }
 
 var (
@@ -72,6 +73,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		DueDate:       billOk.DueDate,
 		ScheduledDate: billOk.ScheduledDate,
 		StatusBill:    billOk.StatusBill,
+		CreatedAt:     billOk.CreatedAt,
 	}
 
 	response.Send(w, billResponse, http.StatusOK)

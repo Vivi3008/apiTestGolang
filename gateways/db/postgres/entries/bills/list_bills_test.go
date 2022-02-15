@@ -35,7 +35,7 @@ func TestListBills(t *testing.T) {
 			runBeforeBl: func(pgx *pgxpool.Pool) error {
 				return CreateBillsTest(pgx)
 			},
-			want: []bills.Bill{bls[2], bls[1], bls[0]},
+			want: []bills.Bill{Bls[2], Bls[1], Bls[0]},
 		},
 		{
 			Name: "Shoul list empty if account id doen's exist",
@@ -65,7 +65,7 @@ func TestListBills(t *testing.T) {
 			runBeforeBl: func(pgx *pgxpool.Pool) error {
 				return CreateBillsTest(pgx)
 			},
-			want: []bills.Bill{bls[2], bls[1], bls[0]},
+			want: []bills.Bill{Bls[2], Bls[1], Bls[0]},
 		},
 	}
 
@@ -95,6 +95,7 @@ func TestListBills(t *testing.T) {
 			for i := 0; i < len(tt.want); i++ {
 				tt.want[i].DueDate = got[i].DueDate
 				tt.want[i].ScheduledDate = got[i].ScheduledDate
+				tt.want[i].CreatedAt = got[i].CreatedAt
 			}
 
 			if !reflect.DeepEqual(got, tt.want) {

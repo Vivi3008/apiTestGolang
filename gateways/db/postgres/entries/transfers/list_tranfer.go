@@ -22,6 +22,7 @@ func (r Repository) ListTransfer(ctx context.Context, originAccId string) ([]tra
 	if err != nil {
 		return []transfers.Transfer{}, err
 	}
+	defer rows.Close()
 
 	var transfer transfers.Transfer
 

@@ -35,7 +35,7 @@ func TestListTransfers(t *testing.T) {
 				return CreateTransfersTest(pgx)
 			},
 			args: accountdb.AccountsTest[1].Id,
-			want: []transfers.Transfer{TransfersTest[0], TransfersTest[1]},
+			want: []transfers.Transfer{TransfersTest[0]},
 		},
 		{
 			Name: "List transfer empty if account origin id doesn't exist",

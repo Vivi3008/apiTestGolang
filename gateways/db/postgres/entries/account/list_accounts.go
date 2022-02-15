@@ -21,6 +21,7 @@ func (r Repository) ListAllAccounts(ctx context.Context) ([]entities.Account, er
 	if err != nil {
 		return []entities.Account{}, err
 	}
+	defer rows.Close()
 
 	var account entities.Account
 

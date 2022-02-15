@@ -30,8 +30,9 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 		value,
 		due_date,
 		scheduled_date,
-		status) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`
+		status,
+		created_at) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
 	cmdTag, err := r.Db.Exec(ctx,
 		statement,
@@ -41,7 +42,8 @@ func (r Repository) StoreBill(ctx context.Context, bill bills.Bill) error {
 		bill.Value,
 		bill.DueDate,
 		bill.ScheduledDate,
-		bill.StatusBill)
+		bill.StatusBill,
+		bill.CreatedAt)
 
 	if err != pgx.ErrNoRows {
 		var pgError *pgconn.PgError

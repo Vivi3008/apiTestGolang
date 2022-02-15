@@ -107,10 +107,15 @@ func TestNewBill(t *testing.T) {
 				t.Errorf("got error %v, expected error %v", err, tt.err)
 			}
 
+			if tt.err == nil && got.CreatedAt.IsZero() {
+				t.Errorf("Expected created at not be zero")
+			}
+
 			tt.want.Id = got.Id
 			got.ScheduledDate = got.ScheduledDate.UTC().Truncate(24 * time.Hour)
 			got.DueDate = got.DueDate.UTC().Truncate(24 * time.Hour)
 			tt.want.StatusBill = got.StatusBill
+			tt.want.CreatedAt = got.CreatedAt
 
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("got %v expected %v", got, tt.want)

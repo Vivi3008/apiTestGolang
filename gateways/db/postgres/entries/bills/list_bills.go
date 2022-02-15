@@ -14,8 +14,9 @@ func (r Repository) ListBills(ctx context.Context, accountId string) ([]bills.Bi
 		value,
 		due_date,
 		scheduled_date,
-		status FROM bills WHERE account_id=$1
-		ORDER BY due_date asc`
+		status,
+		created_at FROM bills WHERE account_id=$1
+		ORDER BY created_at asc`
 
 	var listBills = make([]bills.Bill, 0)
 
@@ -24,6 +25,7 @@ func (r Repository) ListBills(ctx context.Context, accountId string) ([]bills.Bi
 	if err != nil {
 		return []bills.Bill{}, err
 	}
+	defer rows.Close()
 
 	var bill bills.Bill
 
@@ -36,6 +38,7 @@ func (r Repository) ListBills(ctx context.Context, accountId string) ([]bills.Bi
 			&bill.DueDate,
 			&bill.ScheduledDate,
 			&bill.StatusBill,
+			&bill.CreatedAt,
 		)
 		if err != nil {
 			return []bills.Bill{}, err

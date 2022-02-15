@@ -32,6 +32,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 		payments[i].DueDate = bill.DueDate
 		payments[i].ScheduledDate = bill.ScheduledDate
 		payments[i].StatusBill = bill.StatusBill
+		payments[i].CreatedAt = bill.CreatedAt
 	}
 
 	response.Send(w, payments, http.StatusOK)

@@ -19,7 +19,7 @@ func NewHandler(router *mux.Router, usecase transfers.TranfersUsecase, accUsecas
 		accUse:    accUsecase,
 	}
 
-	router.HandleFunc("/transfers", h.CreateTransfer).Methods((http.MethodPost))
+	router.HandleFunc("/transfers", h.CreateTransfer).Methods(http.MethodPost)
 	router.HandleFunc("/transfers", h.ListTransfer).Methods(http.MethodGet)
 	return h
 }

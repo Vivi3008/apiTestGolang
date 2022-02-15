@@ -36,5 +36,4 @@ func NewTransfer(tr Transfer) (Transfer, error) {
 		Amount:               tr.Amount,
 		CreatedAt:            time.Now(),
 	}, nil
-
 }
