@@ -19,14 +19,6 @@ import (
 func TestListActitivies(t *testing.T) {
 	t.Parallel()
 
-	type TestCase struct {
-		Name      string
-		args      string
-		runBefore func(pgx *pgxpool.Pool) error
-		want      []activities.AccountActivity
-		err       error
-	}
-
 	bl := billdb.Bls
 	tr := transferdb.TransfersTest
 
@@ -76,6 +68,14 @@ func TestListActitivies(t *testing.T) {
 				AccountDestinationId: tr[2].AccountDestinationId,
 			},
 		},
+	}
+
+	type TestCase struct {
+		Name      string
+		args      string
+		runBefore func(pgx *pgxpool.Pool) error
+		want      []activities.AccountActivity
+		err       error
 	}
 
 	testCases := []TestCase{

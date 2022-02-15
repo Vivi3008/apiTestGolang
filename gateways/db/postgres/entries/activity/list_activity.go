@@ -19,7 +19,35 @@ type DescriptionPayment struct {
 	Status      bills.Status
 }
 
+func OrderListActivityByDate(list []activities.AccountActivity) []activities.AccountActivity {
+	sort.Slice(list, func(i, j int) bool {
+		return list[i].CreatedAt.After(list[j].CreatedAt)
+	})
+
+	return list
+}
+
 func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activities.AccountActivity, error) {
+	listActivities, err := r.ListBillsAccount(ctx, accountId)
+
+	if err != nil {
+		return []activities.AccountActivity{}, err
+	}
+
+	listTransfers, err := r.ListTransfersAccount(ctx, accountId)
+
+	if err != nil {
+		return []activities.AccountActivity{}, err
+	}
+
+	listActivities = append(listActivities, listTransfers...)
+
+	list := OrderListActivityByDate(listActivities)
+
+	return list, nil
+}
+
+func (r Repository) ListBillsAccount(ctx context.Context, accountId string) ([]activities.AccountActivity, error) {
 	blRepo := repoBil.NewRepository(r.DB)
 
 	listBills, err := blRepo.ListBills(ctx, accountId)
@@ -42,19 +70,6 @@ func (r Repository) ListActivity(ctx context.Context, accountId string) ([]activ
 		}
 		listActivities = append(listActivities, activity)
 	}
-
-	listTransfers, err := r.ListTransfersAccount(ctx, accountId)
-
-	if err != nil {
-		return []activities.AccountActivity{}, err
-	}
-
-	listActivities = append(listActivities, listTransfers...)
-
-	sort.Slice(listActivities, func(i, j int) bool {
-		return listActivities[i].CreatedAt.After(listActivities[j].CreatedAt)
-	})
-
 	return listActivities, nil
 }
 
