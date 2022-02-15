@@ -3,7 +3,6 @@ package activity
 import (
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -34,11 +33,11 @@ func TestListActitivies(t *testing.T) {
 	wantActitivies := []activities.AccountActivity{
 		{
 			Type:      activities.Bill,
-			Amount:    bl[2].Value,
-			CreatedAt: bl[2].ScheduledDate,
+			Amount:    bl[0].Value,
+			CreatedAt: bl[0].ScheduledDate,
 			Details: DescriptionPayment{
-				Description: bl[2].Description,
-				Status:      bl[2].StatusBill,
+				Description: bl[0].Description,
+				Status:      bl[0].StatusBill,
 			},
 		},
 		{
@@ -52,11 +51,11 @@ func TestListActitivies(t *testing.T) {
 		},
 		{
 			Type:      activities.Bill,
-			Amount:    bl[0].Value,
-			CreatedAt: bl[0].ScheduledDate,
+			Amount:    bl[2].Value,
+			CreatedAt: bl[2].ScheduledDate,
 			Details: DescriptionPayment{
-				Description: bl[0].Description,
-				Status:      bl[0].StatusBill,
+				Description: bl[2].Description,
+				Status:      bl[2].StatusBill,
 			},
 		},
 		{
@@ -81,7 +80,7 @@ func TestListActitivies(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list activities successfull",
+			Name: "Should list activities successfull in order by created_at",
 			args: accountdb.AccountsTest[0].Id,
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateDbTest(pgx)
@@ -125,11 +124,9 @@ func TestListActitivies(t *testing.T) {
 				t.Errorf("Expected %s, got %s", tt.err, err)
 			}
 
-			fmt.Printf("lista %v:", got)
-
-			/* 	for i := 0; i < len(got); i++ {
+			for i := 0; i < len(got); i++ {
 				tt.want[i].CreatedAt = got[i].CreatedAt
-			} */
+			}
 
 			if !reflect.DeepEqual(tt.want, got) {
 				t.Errorf("Expected %v, got %v", tt.want, got)

@@ -16,7 +16,7 @@ func (r Repository) ListBills(ctx context.Context, accountId string) ([]bills.Bi
 		scheduled_date,
 		status,
 		created_at FROM bills WHERE account_id=$1
-		ORDER BY due_date asc`
+		ORDER BY created_at asc`
 
 	var listBills = make([]bills.Bill, 0)
 
