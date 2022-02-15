@@ -25,6 +25,7 @@ func (r Repository) ListBills(ctx context.Context, accountId string) ([]bills.Bi
 	if err != nil {
 		return []bills.Bill{}, err
 	}
+	defer rows.Close()
 
 	var bill bills.Bill
 
