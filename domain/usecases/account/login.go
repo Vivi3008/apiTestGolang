@@ -23,7 +23,7 @@ func (a AccountUsecase) NewLogin(ctx context.Context, u account.Login) (string, 
 	err = commom.VerifyPasswordHash(u.Secret, account.Secret)
 
 	if err != nil {
-		return "", err
+		return "", ErrInvalidPassword
 	}
 
 	return account.Id, nil
