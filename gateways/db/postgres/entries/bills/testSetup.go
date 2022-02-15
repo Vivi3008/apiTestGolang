@@ -20,7 +20,8 @@ var Bls = []bills.Bill{
 		DueDate:       time.Now().AddDate(0, 0, 5),
 		StatusBill:    bills.Pago,
 		ScheduledDate: time.Now(),
-		CreatedAt:     time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			13, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:            uuid.NewString(),
@@ -30,7 +31,8 @@ var Bls = []bills.Bill{
 		DueDate:       time.Now().AddDate(0, 0, 4),
 		StatusBill:    bills.Negado,
 		ScheduledDate: time.Now(),
-		CreatedAt:     time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			12, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:            uuid.NewString(),
@@ -40,7 +42,8 @@ var Bls = []bills.Bill{
 		DueDate:       time.Now().AddDate(0, 0, 3),
 		StatusBill:    bills.Pago,
 		ScheduledDate: time.Now(),
-		CreatedAt:     time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			11, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:            uuid.NewString(),
