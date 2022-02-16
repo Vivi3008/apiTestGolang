@@ -8,23 +8,22 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func TestCreateAccount(t *testing.T) {
 	t.Parallel()
 
-	testPool, tearDown := postgres.GetTestPool()
-	repository := NewRepository(testPool)
-
 	type TestCase struct {
-		Name string
-		args account.Account
-		err  error
+		Name      string
+		args      account.Account
+		runBefore func(pgx *pgxpool.Pool) error
+		err       error
 	}
 
 	person := account.Account{
 		Name:   "Teste",
-		Cpf:    "13256589412",
+		Cpf:    "113219412",
 		Secret: "fasfdsa",
 	}
 
@@ -34,21 +33,31 @@ func TestCreateAccount(t *testing.T) {
 		{
 			Name: "Should create account successfull",
 			args: acc,
-			err:  nil,
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateAccountTest(pgx)
+			},
+			err: nil,
 		},
 		{
 			Name: "Fail to create account with same cpf",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateAccountTest(pgx)
+			},
 			args: account.Account{
-				Id:   uuid.NewString(),
-				Name: acc.Name,
-				Cpf:  acc.Cpf,
+				Id:     uuid.NewString(),
+				Name:   "teste3",
+				Cpf:    AccountsTest[0].Cpf,
+				Secret: "16656",
 			},
 			err: ErrCpfExists,
 		},
 		{
 			Name: "Fail to create account with same id",
+			runBefore: func(pgx *pgxpool.Pool) error {
+				return CreateAccountTest(pgx)
+			},
 			args: account.Account{
-				Id:     acc.Id,
+				Id:     AccountsTest[0].Id,
 				Name:   "teste3",
 				Cpf:    "654656",
 				Secret: "16656",
@@ -73,7 +82,13 @@ func TestCreateAccount(t *testing.T) {
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Parallel()
 
+			testPool, tearDown := postgres.GetTestPool()
+			repository := NewRepository(testPool)
 			t.Cleanup(tearDown)
+
+			if tt.runBefore != nil {
+				tt.runBefore(testPool)
+			}
 
 			err := repository.StoreAccount(context.Background(), tt.args)
 
