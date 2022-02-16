@@ -2,6 +2,8 @@ package activities
 
 import (
 	"time"
+
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
 type TypeActivity string
@@ -16,4 +18,14 @@ type AccountActivity struct {
 	Amount    int
 	CreatedAt time.Time
 	Details   interface{}
+}
+
+type DestinyAccount struct {
+	AccountDestinationId string
+	Name                 string
+}
+
+type DescriptionPayment struct {
+	Description string
+	Status      bills.Status
 }
