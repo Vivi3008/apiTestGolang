@@ -17,11 +17,3 @@ type AccountActivity struct {
 	CreatedAt time.Time
 	Details   interface{}
 }
-
-type ActivityUsecase struct {
-	actRepo AccountActivityRepository
-}
-
-func NewAccountActivityUsecase(act AccountActivityRepository) ActivityUsecase {
-	return ActivityUsecase{actRepo: act}
-}

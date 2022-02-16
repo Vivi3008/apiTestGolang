@@ -7,10 +7,6 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 )
 
-type AccountUsecase struct {
-	repo account.AccountRepository
-}
-
 var (
 	ErrInsufficientLimit = errors.New("insufficient Limit")
 	ErrValueEmpty        = errors.New("value is empty")
@@ -22,12 +18,6 @@ const (
 	Debit  MethodPayment = "Débito"
 	Credit MethodPayment = "Crédito"
 )
-
-func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {
-	return AccountUsecase{
-		repo: acc,
-	}
-}
 
 func (a AccountUsecase) UpdateAccountBalance(ctx context.Context, accountId string, value int, method MethodPayment) (account.Account, error) {
 	acc, err := a.repo.ListAccountById(ctx, accountId)
