@@ -9,9 +9,10 @@ type AccountMock struct {
 	OnListById     func(accountId string) (Account, error)
 	OnListByCpf    func(cpf string) (Account, error)
 	OnUpdade       func(balance int, id string) (Account, error)
+	OnLogin        func(u Login) (string, error)
 }
 
-func (m AccountMock) CreateAccount(acc Account) (Account, error) {
+func (m AccountMock) CreateAccount(ctx context.Context, acc Account) (Account, error) {
 	return m.OnCreate(acc)
 }
 
@@ -33,4 +34,8 @@ func (m AccountMock) ListAccountByCpf(ctx context.Context, cpf string) (Account,
 
 func (m AccountMock) UpdateAccount(ctx context.Context, balance int, id string) (Account, error) {
 	return m.OnUpdade(balance, id)
+}
+
+func (m AccountMock) NewLogin(ctx context.Context, login Login) (string, error) {
+	return m.OnLogin(login)
 }
