@@ -17,7 +17,7 @@ var (
 	ErrListBills = errors.New("error to list bills")
 )
 
-func TestBills(t *testing.T) {
+func TestListBills(t *testing.T) {
 	t.Parallel()
 
 	person := account.Account{

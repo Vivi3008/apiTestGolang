@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestAccountUsecase(t *testing.T) {
+func TestUpdateAccountUsecase(t *testing.T) {
 	t.Parallel()
 
 	secretHash, _ := commom.GenerateHashPassword("16d5fs6a5f6")
