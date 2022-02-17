@@ -27,7 +27,7 @@ func TestListActitivies(t *testing.T) {
 			Type:      activities.Bill,
 			Amount:    bl[0].Value,
 			CreatedAt: bl[0].ScheduledDate,
-			Details: DescriptionPayment{
+			Details: activities.DescriptionPayment{
 				Description: bl[0].Description,
 				Status:      bl[0].StatusBill,
 			},
@@ -36,7 +36,7 @@ func TestListActitivies(t *testing.T) {
 			Type:      activities.Bill,
 			Amount:    bl[1].Value,
 			CreatedAt: bl[1].ScheduledDate,
-			Details: DescriptionPayment{
+			Details: activities.DescriptionPayment{
 				Description: bl[1].Description,
 				Status:      bl[1].StatusBill,
 			},
@@ -45,7 +45,7 @@ func TestListActitivies(t *testing.T) {
 			Type:      activities.Bill,
 			Amount:    bl[2].Value,
 			CreatedAt: bl[2].ScheduledDate,
-			Details: DescriptionPayment{
+			Details: activities.DescriptionPayment{
 				Description: bl[2].Description,
 				Status:      bl[2].StatusBill,
 			},
@@ -54,7 +54,7 @@ func TestListActitivies(t *testing.T) {
 			Type:      activities.Transfer,
 			Amount:    tr[1].Amount,
 			CreatedAt: tr[1].CreatedAt,
-			Details: DestinyAccount{
+			Details: activities.DestinyAccount{
 				Name:                 accountdb.AccountsTest[2].Name,
 				AccountDestinationId: tr[1].AccountDestinationId,
 			},
@@ -63,7 +63,7 @@ func TestListActitivies(t *testing.T) {
 			Type:      activities.Transfer,
 			Amount:    tr[2].Amount,
 			CreatedAt: tr[2].CreatedAt,
-			Details: DestinyAccount{
+			Details: activities.DestinyAccount{
 				Name:                 accountdb.AccountsTest[1].Name,
 				AccountDestinationId: tr[2].AccountDestinationId,
 			},

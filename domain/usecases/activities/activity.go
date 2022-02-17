@@ -2,6 +2,8 @@ package activities
 
 import (
 	"time"
+
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
 type TypeActivity string
@@ -18,10 +20,12 @@ type AccountActivity struct {
 	Details   interface{}
 }
 
-type ActivityUsecase struct {
-	actRepo AccountActivityRepository
+type DestinyAccount struct {
+	AccountDestinationId string
+	Name                 string
 }
 
-func NewAccountActivityUsecase(act AccountActivityRepository) ActivityUsecase {
-	return ActivityUsecase{actRepo: act}
+type DescriptionPayment struct {
+	Description string
+	Status      bills.Status
 }

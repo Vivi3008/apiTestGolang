@@ -4,20 +4,9 @@ import (
 	"context"
 	"sort"
 
-	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
 	repoBil "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
 )
-
-type DestinyAccount struct {
-	AccountDestinationId string
-	Name                 string
-}
-
-type DescriptionPayment struct {
-	Description string
-	Status      bills.Status
-}
 
 func OrderListActivityByDate(list []activities.AccountActivity) []activities.AccountActivity {
 	sort.Slice(list, func(i, j int) bool {
@@ -64,7 +53,7 @@ func (r Repository) ListBillsAccount(ctx context.Context, accountId string) ([]a
 		activity.Type = activities.Bill
 		activity.Amount = listBills[i].Value
 		activity.CreatedAt = listBills[i].CreatedAt
-		activity.Details = DescriptionPayment{
+		activity.Details = activities.DescriptionPayment{
 			Description: listBills[i].Description,
 			Status:      listBills[i].StatusBill,
 		}
@@ -94,7 +83,7 @@ func (r Repository) ListTransfersAccount(ctx context.Context, accountId string) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var details DestinyAccount
+		var details activities.DestinyAccount
 		var activity activities.AccountActivity
 
 		err = rows.Scan(&details.Name,
