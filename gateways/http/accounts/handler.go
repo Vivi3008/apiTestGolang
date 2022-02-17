@@ -3,15 +3,15 @@ package accounts
 import (
 	"net/http"
 
-	usecase "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
 	"github.com/gorilla/mux"
 )
 
 type Handler struct {
-	acc usecase.AccountUsecase
+	acc account.Usecase
 }
 
-func NewHandler(router *mux.Router, accUse usecase.AccountUsecase) *Handler {
+func NewHandler(router *mux.Router, accUse account.Usecase) *Handler {
 	h := &Handler{acc: accUse}
 
 	router.HandleFunc("/accounts", h.CreateAccount).Methods(http.MethodPost)

@@ -8,8 +8,8 @@ import (
 )
 
 type Usecase interface {
-	ListTransfer(ctx context.Context, accountId string) (transfers.Transfer, error)
-	SaveTransfer(ctx context.Context, transfer transfers.Transfer) (transfers.Transfer, error)
+	ListTransfer(ctx context.Context, accountId string) ([]transfers.Transfer, error)
+	SaveTransfer(ctx context.Context, transfer transfers.Transfer) error
 	CreateTransfer(ctx context.Context, transfer transfers.Transfer) (transfers.Transfer, error)
 }
 

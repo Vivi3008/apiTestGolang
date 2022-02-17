@@ -8,10 +8,10 @@ import (
 )
 
 type Handler struct {
-	accUse account.AccountUsecase
+	accUse account.Usecase
 }
 
-func NewHandler(router *mux.Router, usecase account.AccountUsecase) *Handler {
+func NewHandler(router *mux.Router, usecase account.Usecase) *Handler {
 	h := &Handler{accUse: usecase}
 
 	router.HandleFunc("/login", h.Login).Methods((http.MethodPost))
