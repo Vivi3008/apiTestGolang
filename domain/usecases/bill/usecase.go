@@ -9,8 +9,8 @@ import (
 
 type Usecase interface {
 	CreateBill(ctx context.Context, bill bills.Bill) (bills.Bill, error)
-	SaveBill(ctx context.Context, bill bills.Bill) error
-	ListAllBills(ctx context.Context, accountId string) ([]bills.Bill, error)
+	StoreBill(ctx context.Context, bill bills.Bill) error
+	ListBills(ctx context.Context, accountId string) ([]bills.Bill, error)
 }
 
 type BillUsecase struct {

@@ -13,17 +13,19 @@ import (
 )
 
 type BillReqRes struct {
+	Id            string       `json:"id"`
 	AccountId     string       `json:"account_id"`
 	Description   string       `json:"description"`
 	Value         int          `json:"value"`
 	DueDate       time.Time    `json:"due_date"`
 	ScheduledDate time.Time    `json:"scheduled_date"`
 	StatusBill    bills.Status `json:"status"`
-	CreatedAt     time.Time    `json:"created_at"`
+	CreatedAt     string       `json:"created_at"`
 }
 
 var (
-	ErrGetTokenId = errors.New("error to get id from token")
+	ErrGetTokenId         = errors.New("error to get id from token")
+	ErrInvalidBillPayload = errors.New("invalid bill payload")
 )
 
 func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +41,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, ErrInvalidBillPayload, http.StatusBadRequest)
 		return
 	}
 
@@ -59,23 +61,24 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 
 	billOk.StatusBill = bills.Pago
 
-	err = h.blUse.SaveBill(r.Context(), billOk)
+	err = h.blUse.StoreBill(r.Context(), billOk)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	billResponse := BillReqRes{
+		Id:            billOk.Id,
 		AccountId:     billOk.AccountId,
 		Description:   billOk.Description,
 		Value:         billOk.Value,
 		DueDate:       billOk.DueDate,
 		ScheduledDate: billOk.ScheduledDate,
 		StatusBill:    billOk.StatusBill,
-		CreatedAt:     billOk.CreatedAt,
+		CreatedAt:     billOk.CreatedAt.Format(response.DateLayout),
 	}
 
 	response.Send(w, billResponse, http.StatusOK)
-	log.Printf("sent successful response for transfer %s\n", billOk.Id)
+	log.Printf("sent successful response for bill %s\n", billOk.Id)
 }

@@ -16,7 +16,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	list, err := h.blUse.ListAllBills(r.Context(), accountId)
+	list, err := h.blUse.ListBills(r.Context(), accountId)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusBadRequest)
@@ -32,7 +32,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 		payments[i].DueDate = bill.DueDate
 		payments[i].ScheduledDate = bill.ScheduledDate
 		payments[i].StatusBill = bill.StatusBill
-		payments[i].CreatedAt = bill.CreatedAt
+		payments[i].CreatedAt = bill.CreatedAt.Format(response.DateLayout)
 	}
 
 	response.Send(w, payments, http.StatusOK)
