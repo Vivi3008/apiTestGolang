@@ -74,7 +74,7 @@ func TestCreateAccount(t *testing.T) {
 			},
 			bodyArgs:           AccountRequest{},
 			wantHttpStatusCode: 400,
-			wantHeader:         "application/json",
+			wantHeader:         response.JSONContentType,
 			want: response.Error{
 				Reason: "invalid body",
 			},

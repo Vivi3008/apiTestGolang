@@ -31,7 +31,7 @@ func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
 	listActivities, err := h.actUse.ListActivity(r.Context(), accountId)
 	if err != nil {
 		log.Printf("Failed to list activities: %s\n", err.Error())
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
