@@ -29,7 +29,7 @@ func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list accounts: %s\n", err.Error())
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
@@ -47,7 +47,7 @@ func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Sent all accounts. Total: %d", len(accounts))
 }
 
-func (h Handler) ListOne(w http.ResponseWriter, r *http.Request) {
+func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	personId := vars["account_id"]

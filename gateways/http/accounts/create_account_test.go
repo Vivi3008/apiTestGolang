@@ -6,12 +6,12 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
+	"gotest.tools/v3/assert"
 )
 
 func TestCreateAccount(t *testing.T) {
@@ -98,15 +98,9 @@ func TestCreateAccount(t *testing.T) {
 
 			http.HandlerFunc(handler.CreateAccount).ServeHTTP(response, request)
 
-			if !reflect.DeepEqual(string(wantBody), strings.TrimSpace(response.Body.String())) {
-				t.Errorf("Expected %v\n got %v", string(wantBody), response.Body.String())
-			}
-			if !reflect.DeepEqual(tt.wantHeader, response.Header().Get("Content-Type")) {
-				t.Errorf("Expected %v\n got %v", tt.wantHeader, response.Header().Get("Content-Type"))
-			}
-			if !reflect.DeepEqual(tt.wantHttpStatusCode, response.Code) {
-				t.Errorf("Expected %v\n got %v", tt.wantHttpStatusCode, response.Code)
-			}
+			assert.Equal(t, string(wantBody), strings.TrimSpace(response.Body.String()))
+			assert.Equal(t, tt.wantHeader, response.Header().Get("Content-Type"))
+			assert.Equal(t, tt.wantHttpStatusCode, response.Code)
 		})
 	}
 }

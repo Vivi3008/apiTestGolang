@@ -16,6 +16,6 @@ func NewHandler(router *mux.Router, accUse account.Usecase) *Handler {
 
 	router.HandleFunc("/accounts", h.CreateAccount).Methods(http.MethodPost)
 	router.HandleFunc("/accounts", h.ListAll).Methods(http.MethodGet)
-	router.HandleFunc("/accounts/{account_id}/balance", h.ListOne).Methods(http.MethodGet)
+	router.HandleFunc("/accounts/{account_id}/balance", h.GetBalance).Methods(http.MethodGet)
 	return h
 }
