@@ -8,6 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	usecase "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"gotest.tools/v3/assert"
@@ -18,7 +20,7 @@ func TestGetBalance(t *testing.T) {
 
 	type TestCase struct {
 		Name               string
-		accountMock        account.AccountMock
+		accountMock        usecase.UsecaseMock
 		args               interface{}
 		wantBody           interface{}
 		wantHttpStatusCode int
@@ -28,7 +30,7 @@ func TestGetBalance(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should sent balance succesfull",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnListById: func(accountId string) (account.Account, error) {
 					return ListAccounts[0], nil
 				},
@@ -42,7 +44,7 @@ func TestGetBalance(t *testing.T) {
 		},
 		{
 			Name: "Return 500 if error in usecase",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnListById: func(accountId string) (account.Account, error) {
 					return account.Account{}, fmt.Errorf("id doesn't exist")
 				},

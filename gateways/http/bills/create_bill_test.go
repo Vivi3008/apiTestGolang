@@ -13,6 +13,9 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	usecase "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+	billUsecase "github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
+
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"github.com/google/uuid"
@@ -25,8 +28,8 @@ func TestCreateBill(t *testing.T) {
 	type TestCase struct {
 		Name               string
 		bodyArgs           interface{}
-		accountMock        account.AccountMock
-		billMock           bills.BillMock
+		accountMock        usecase.UsecaseMock
+		billMock           billUsecase.UsecaseMock
 		wantHttpStatusCode int
 		wantHeader         string
 		want               interface{}
@@ -52,12 +55,12 @@ func TestCreateBill(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should create a bill succesfull and return 200",
-			accountMock: account.AccountMock{
-				OnUpdade: func(balance int, id string) (account.Account, error) {
+			accountMock: usecase.UsecaseMock{
+				OnUpdade: func(accountId string, value int, method usecase.MethodPayment) (account.Account, error) {
 					return personAccount, nil
 				},
 			},
-			billMock: bills.BillMock{
+			billMock: billUsecase.UsecaseMock{
 				OnCreate: func(b bills.Bill) (bills.Bill, error) {
 					return bill, nil
 				},
@@ -86,12 +89,12 @@ func TestCreateBill(t *testing.T) {
 		},
 		{
 			Name: "Return 500 if error in database",
-			accountMock: account.AccountMock{
-				OnUpdade: func(balance int, id string) (account.Account, error) {
+			accountMock: usecase.UsecaseMock{
+				OnUpdade: func(accountId string, value int, method usecase.MethodPayment) (account.Account, error) {
 					return personAccount, nil
 				},
 			},
-			billMock: bills.BillMock{
+			billMock: billUsecase.UsecaseMock{
 				OnCreate: func(b bills.Bill) (bills.Bill, error) {
 					return bill, nil
 				},
@@ -113,12 +116,12 @@ func TestCreateBill(t *testing.T) {
 		},
 		{
 			Name: "Return 400 if error in usecase",
-			accountMock: account.AccountMock{
-				OnUpdade: func(balance int, id string) (account.Account, error) {
+			accountMock: usecase.UsecaseMock{
+				OnUpdade: func(accountId string, value int, method usecase.MethodPayment) (account.Account, error) {
 					return account.Account{}, fmt.Errorf("insuficient limit")
 				},
 			},
-			billMock: bills.BillMock{
+			billMock: billUsecase.UsecaseMock{
 				OnCreate: func(b bills.Bill) (bills.Bill, error) {
 					return bills.Bill{}, fmt.Errorf("insuficient limit")
 				},
@@ -140,12 +143,12 @@ func TestCreateBill(t *testing.T) {
 		},
 		{
 			Name: "Return 400 if invalid body in request",
-			accountMock: account.AccountMock{
-				OnUpdade: func(balance int, id string) (account.Account, error) {
+			accountMock: usecase.UsecaseMock{
+				OnUpdade: func(accountId string, value int, method usecase.MethodPayment) (account.Account, error) {
 					return personAccount, nil
 				},
 			},
-			billMock: bills.BillMock{
+			billMock: billUsecase.UsecaseMock{
 				OnCreate: func(b bills.Bill) (bills.Bill, error) {
 					return bill, nil
 				},

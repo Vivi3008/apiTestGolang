@@ -8,7 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	entitie_acc "github.com/Vivi3008/apiTestGolang/domain/entities/account"
+
+	"github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"gotest.tools/v3/assert"
 )
@@ -19,29 +22,29 @@ func TestCreateAccount(t *testing.T) {
 	type TestCase struct {
 		Name               string
 		bodyArgs           interface{}
-		accountMock        account.AccountMock
+		accountMock        account.UsecaseMock
 		wantHttpStatusCode int
 		wantHeader         string
 		want               interface{}
 	}
 
-	customer := account.Account{
+	customer := entitie_acc.Account{
 		Name:    "Testando",
 		Cpf:     "13265478951",
 		Secret:  "123456",
 		Balance: 5000000,
 	}
 
-	personAccount, _ := account.NewAccount(customer)
+	personAccount, _ := entitie_acc.NewAccount(customer)
 
 	testCases := []TestCase{
 		{
 			Name: "Should create account successfull send 200",
-			accountMock: account.AccountMock{
-				OnCreate: func(acc account.Account) (account.Account, error) {
+			accountMock: account.UsecaseMock{
+				OnCreate: func(acc entitie_acc.Account) (entitie_acc.Account, error) {
 					return personAccount, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
+				OnStoreAccount: func(account entitie_acc.Account) error {
 					return nil
 				},
 			},
@@ -63,11 +66,11 @@ func TestCreateAccount(t *testing.T) {
 		},
 		{
 			Name: "Fail if body is invalid and return 400",
-			accountMock: account.AccountMock{
-				OnCreate: func(acc account.Account) (account.Account, error) {
+			accountMock: account.UsecaseMock{
+				OnCreate: func(acc entitie_acc.Account) (entitie_acc.Account, error) {
 					return personAccount, nil
 				},
-				OnStoreAccount: func(account account.Account) error {
+				OnStoreAccount: func(account entitie_acc.Account) error {
 					return nil
 				},
 			},

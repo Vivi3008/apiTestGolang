@@ -15,6 +15,7 @@ type Usecase interface {
 	ListAllAccounts(ctx context.Context) ([]account.Account, error)
 	ListAccountById(ctx context.Context, accountId string) (account.Account, error)
 	NewLogin(ctx context.Context, login account.Login) (string, error)
+	UpdateAccountBalance(ctx context.Context, accountId string, value int, method MethodPayment) (account.Account, error)
 }
 
 func NewAccountUsecase(acc account.AccountRepository) AccountUsecase {

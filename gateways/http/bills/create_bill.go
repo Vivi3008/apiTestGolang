@@ -61,7 +61,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 
 	billOk.StatusBill = bills.Pago
 
-	err = h.blUse.StoreBill(r.Context(), billOk)
+	err = h.blUse.SaveBill(r.Context(), billOk)
 
 	if err != nil {
 		response.SendError(w, err, http.StatusInternalServerError)

@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/commom"
+	usecase "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"github.com/google/uuid"
@@ -21,7 +23,7 @@ func TestLogin(t *testing.T) {
 
 	type TestCase struct {
 		Name               string
-		accountMock        account.AccountMock
+		accountMock        usecase.UsecaseMock
 		args               interface{}
 		wantHttpStatusCode int
 		wantHeader         string
@@ -38,7 +40,7 @@ func TestLogin(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should log in successfull return 200",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return id, nil
 				},
@@ -55,7 +57,7 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			Name: "Return 400 if credentials is invalid, error in usecase",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return "", fmt.Errorf("invalid password")
 				},
@@ -72,7 +74,7 @@ func TestLogin(t *testing.T) {
 		},
 		{
 			Name: "Return 400 if invalid body in request",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return uuid.NewString(), nil
 				},

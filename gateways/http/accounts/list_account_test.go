@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	usecase "github.com/Vivi3008/apiTestGolang/domain/usecases/account"
+
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"github.com/google/uuid"
@@ -47,7 +49,7 @@ func TestListAccounts(t *testing.T) {
 
 	type TestCase struct {
 		Name               string
-		accountMock        account.AccountMock
+		accountMock        usecase.UsecaseMock
 		wantHttpStatusCode int
 		wantHeader         string
 		wantBody           interface{}
@@ -56,7 +58,7 @@ func TestListAccounts(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should list accounts succesfull",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnListAll: func() ([]account.Account, error) {
 					return ListAccounts, nil
 				},
@@ -89,7 +91,7 @@ func TestListAccounts(t *testing.T) {
 		},
 		{
 			Name: "Fail in list accounts whit internal server error",
-			accountMock: account.AccountMock{
+			accountMock: usecase.UsecaseMock{
 				OnListAll: func() ([]account.Account, error) {
 					return []account.Account{}, fmt.Errorf("error in connection database")
 				},
