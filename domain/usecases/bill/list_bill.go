@@ -6,7 +6,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
-func (b BillUsecase) ListAllBills(ctx context.Context, accountId string) ([]bills.Bill, error) {
+func (b BillUsecase) ListBills(ctx context.Context, accountId string) ([]bills.Bill, error) {
 	_, err := b.acRepo.ListAccountById(ctx, accountId)
 
 	if err != nil {

@@ -19,8 +19,8 @@ func NewHandler(router *mux.Router, blUsecase bill.Usecase, acUsecase account.Us
 		blUse:  blUsecase,
 	}
 
-	router.HandleFunc("/bills", h.CreateBill).Methods((http.MethodPost))
-	router.HandleFunc("/bills", h.ListBills).Methods((http.MethodGet))
+	router.HandleFunc("/bills", h.CreateBill).Methods(http.MethodPost)
+	router.HandleFunc("/bills", h.ListBills).Methods(http.MethodGet)
 
 	return h
 }
