@@ -19,13 +19,14 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 	list, err := h.blUse.ListBills(r.Context(), accountId)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
 	payments := make([]BillReqRes, len(list))
 
 	for i, bill := range list {
+		payments[i].Id = bill.Id
 		payments[i].AccountId = bill.AccountId
 		payments[i].Description = bill.Description
 		payments[i].Value = bill.Value
