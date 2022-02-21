@@ -37,7 +37,7 @@ func TestLogin(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should log in successfull",
+			Name: "Should log in successfull return 200",
 			accountMock: account.AccountMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return id, nil
@@ -54,7 +54,7 @@ func TestLogin(t *testing.T) {
 			},
 		},
 		{
-			Name: "Fail if credentials is invalid",
+			Name: "Return 400 if credentials is invalid, error in usecase",
 			accountMock: account.AccountMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return "", fmt.Errorf("invalid password")
@@ -71,10 +71,10 @@ func TestLogin(t *testing.T) {
 			},
 		},
 		{
-			Name: "Fail if empty body",
+			Name: "Return 400 if invalid body in request",
 			accountMock: account.AccountMock{
 				OnLogin: func(u account.Login) (string, error) {
-					return "", fmt.Errorf("invalid password")
+					return uuid.NewString(), nil
 				},
 			},
 			args:               "not valid body",

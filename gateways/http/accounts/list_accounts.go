@@ -1,6 +1,7 @@
 package accounts
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -23,6 +24,8 @@ type BalanceAccountResponse struct {
 type AccountIdRequest struct {
 	Id string `json:"id"`
 }
+
+var ErrInvalidParam = errors.New("invalid id params")
 
 func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 	list, err := h.acc.ListAllAccounts(r.Context())
@@ -56,7 +59,7 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list account: %s", err.Error())
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 

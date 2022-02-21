@@ -88,7 +88,7 @@ func TestListAcitivities(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should sent activities successfull",
+			Name: "Should sent activities successfull return 200",
 			activitiesMock: activities.AcitivitiesMock{
 				OnListActivities: func(accountId string) ([]activities.AccountActivity, error) {
 					return listActivities, nil
@@ -132,7 +132,7 @@ func TestListAcitivities(t *testing.T) {
 			},
 		},
 		{
-			Name: "Fail if token is invalid",
+			Name: "Return 401 if token is invalid",
 			activitiesMock: activities.AcitivitiesMock{
 				OnListActivities: func(accountId string) ([]activities.AccountActivity, error) {
 					return listActivities, nil
@@ -160,7 +160,7 @@ func TestListAcitivities(t *testing.T) {
 			want:               []activities.AccountActivity{},
 		},
 		{
-			Name: "Sent internal server error if unknown error",
+			Name: "Sent internal server error if error in database",
 			activitiesMock: activities.AcitivitiesMock{
 				OnListActivities: func(accountId string) ([]activities.AccountActivity, error) {
 					return []activities.AccountActivity{}, fmt.Errorf("error in database connection")

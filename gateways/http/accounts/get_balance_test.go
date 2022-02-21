@@ -19,7 +19,7 @@ func TestGetBalance(t *testing.T) {
 	type TestCase struct {
 		Name               string
 		accountMock        account.AccountMock
-		args               AccountIdRequest
+		args               interface{}
 		wantBody           interface{}
 		wantHttpStatusCode int
 		wantHeader         string
@@ -41,7 +41,7 @@ func TestGetBalance(t *testing.T) {
 			wantHeader:         response.JSONContentType,
 		},
 		{
-			Name: "Fail if id doesnt exists",
+			Name: "Return 500 if error in usecase",
 			accountMock: account.AccountMock{
 				OnListById: func(accountId string) (account.Account, error) {
 					return account.Account{}, fmt.Errorf("id doesn't exist")
@@ -51,7 +51,7 @@ func TestGetBalance(t *testing.T) {
 			wantBody: response.Error{
 				Reason: "id doesn't exist",
 			},
-			wantHttpStatusCode: 400,
+			wantHttpStatusCode: 500,
 			wantHeader:         response.JSONContentType,
 		},
 	}
@@ -62,7 +62,7 @@ func TestGetBalance(t *testing.T) {
 			t.Parallel()
 
 			handler := &Handler{acc: tt.accountMock}
-			path := fmt.Sprintf("/accounts/{%s}/balance", tt.args.Id)
+			path := fmt.Sprintf("/accounts/{%s}/balance", tt.args)
 
 			request := httptest.NewRequest(http.MethodGet, path, nil)
 			response := httptest.NewRecorder()

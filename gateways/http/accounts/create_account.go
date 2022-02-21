@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
@@ -24,13 +25,15 @@ type AccountResponse struct {
 	CreatedAt string `json:"createdAt"`
 }
 
+var ErrInvalidPayloadAccount = errors.New("invalid account payload")
+
 func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	var body AccountRequest
 
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, ErrInvalidPayloadAccount, http.StatusBadRequest)
 		return
 	}
 

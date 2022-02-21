@@ -51,7 +51,7 @@ func TestCreateBill(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create a bill succesfull",
+			Name: "Should create a bill succesfull and return 200",
 			accountMock: account.AccountMock{
 				OnUpdade: func(balance int, id string) (account.Account, error) {
 					return personAccount, nil
@@ -85,7 +85,7 @@ func TestCreateBill(t *testing.T) {
 			wantHeader:         response.JSONContentType,
 		},
 		{
-			Name: "Fail if error in database",
+			Name: "Return 500 if error in database",
 			accountMock: account.AccountMock{
 				OnUpdade: func(balance int, id string) (account.Account, error) {
 					return personAccount, nil
@@ -112,7 +112,7 @@ func TestCreateBill(t *testing.T) {
 			wantHeader:         response.JSONContentType,
 		},
 		{
-			Name: "Fail if account has insuficient limit",
+			Name: "Return 400 if error in usecase",
 			accountMock: account.AccountMock{
 				OnUpdade: func(balance int, id string) (account.Account, error) {
 					return account.Account{}, fmt.Errorf("insuficient limit")
@@ -139,7 +139,7 @@ func TestCreateBill(t *testing.T) {
 			wantHeader:         response.JSONContentType,
 		},
 		{
-			Name: "Fail if body is empty",
+			Name: "Return 400 if invalid body in request",
 			accountMock: account.AccountMock{
 				OnUpdade: func(balance int, id string) (account.Account, error) {
 					return personAccount, nil

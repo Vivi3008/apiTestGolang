@@ -3,7 +3,6 @@ package accounts
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -19,7 +18,7 @@ func TestCreateAccount(t *testing.T) {
 
 	type TestCase struct {
 		Name               string
-		bodyArgs           AccountRequest
+		bodyArgs           interface{}
 		accountMock        account.AccountMock
 		wantHttpStatusCode int
 		wantHeader         string
@@ -37,7 +36,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create account successfull",
+			Name: "Should create account successfull send 200",
 			accountMock: account.AccountMock{
 				OnCreate: func(acc account.Account) (account.Account, error) {
 					return personAccount, nil
@@ -53,7 +52,7 @@ func TestCreateAccount(t *testing.T) {
 				Balance: customer.Balance,
 			},
 			wantHttpStatusCode: 200,
-			wantHeader:         "application/json",
+			wantHeader:         response.JSONContentType,
 			want: AccountResponse{
 				Id:        personAccount.Id,
 				Name:      personAccount.Name,
@@ -66,17 +65,17 @@ func TestCreateAccount(t *testing.T) {
 			Name: "Fail if body is invalid and return 400",
 			accountMock: account.AccountMock{
 				OnCreate: func(acc account.Account) (account.Account, error) {
-					return account.Account{}, fmt.Errorf("invalid body")
+					return personAccount, nil
 				},
 				OnStoreAccount: func(account account.Account) error {
 					return nil
 				},
 			},
-			bodyArgs:           AccountRequest{},
+			bodyArgs:           "invalid body",
 			wantHttpStatusCode: 400,
 			wantHeader:         response.JSONContentType,
 			want: response.Error{
-				Reason: "invalid body",
+				Reason: ErrInvalidPayloadAccount.Error(),
 			},
 		},
 	}
