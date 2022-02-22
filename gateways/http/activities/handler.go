@@ -8,10 +8,10 @@ import (
 )
 
 type Handler struct {
-	actUse activities.ActivityUsecase
+	actUse activities.Usecase
 }
 
-func NewHandler(router *mux.Router, actUse activities.ActivityUsecase) *Handler {
+func NewHandler(router *mux.Router, actUse activities.Usecase) *Handler {
 	h := &Handler{actUse: actUse}
 
 	router.HandleFunc("/activity", h.ListActivity).Methods(http.MethodGet)

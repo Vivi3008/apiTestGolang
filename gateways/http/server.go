@@ -19,10 +19,10 @@ import (
 )
 
 func NewServer(
-	accountUc account.AccountUsecase,
-	usecaseTr transfers.TranfersUsecase,
-	usecaseBl bill.BillUsecase,
-	actUse activities.ActivityUsecase,
+	accountUc account.Usecase,
+	usecaseTr transfers.Usecase,
+	usecaseBl bill.Usecase,
+	actUse activities.Usecase,
 ) http.Handler {
 	router := mux.NewRouter()
 	routerAuth := router.NewRoute().Subrouter()

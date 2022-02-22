@@ -17,8 +17,9 @@ type TransferRequest struct {
 }
 
 var (
-	ErrGetTokenId = errors.New("error to get id from token")
-	ErrIdDestiny  = errors.New("account destiny id can't be the same account origin id")
+	ErrGetTokenId             = errors.New("error to get id from token")
+	ErrIdDestiny              = errors.New("account destiny id can't be the same account origin id")
+	ErrInvalidTransferPayload = errors.New("invalid transfer payload")
 )
 
 func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +35,7 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, ErrInvalidTransferPayload, http.StatusBadRequest)
 		return
 	}
 
@@ -47,7 +48,7 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	transfer, err := h.transfUse.CreateTransfer(r.Context(), transaction)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 

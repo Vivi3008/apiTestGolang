@@ -9,18 +9,18 @@ import (
 )
 
 type Handler struct {
-	accUse account.AccountUsecase
-	blUse  bill.BillUsecase
+	accUse account.Usecase
+	blUse  bill.Usecase
 }
 
-func NewHandler(router *mux.Router, blUsecase bill.BillUsecase, acUsecase account.AccountUsecase) *Handler {
+func NewHandler(router *mux.Router, blUsecase bill.Usecase, acUsecase account.Usecase) *Handler {
 	h := &Handler{
 		accUse: acUsecase,
 		blUse:  blUsecase,
 	}
 
-	router.HandleFunc("/bills", h.CreateBill).Methods((http.MethodPost))
-	router.HandleFunc("/bills", h.ListBills).Methods((http.MethodGet))
+	router.HandleFunc("/bills", h.CreateBill).Methods(http.MethodPost)
+	router.HandleFunc("/bills", h.ListBills).Methods(http.MethodGet)
 
 	return h
 }

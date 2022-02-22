@@ -17,7 +17,7 @@ var (
 	ErrListBills = errors.New("error to list bills")
 )
 
-func TestBills(t *testing.T) {
+func TestListBills(t *testing.T) {
 	t.Parallel()
 
 	person := account.Account{
@@ -113,7 +113,7 @@ func TestBills(t *testing.T) {
 			ac := accUse.NewAccountUsecase(tt.accRepo)
 			uc := NewBillUseCase(tt.repository, ac)
 
-			got, err := uc.ListAllBills(context.Background(), tt.args)
+			got, err := uc.ListBills(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {
 				t.Errorf("Expected %s, got %s", tt.err, err)

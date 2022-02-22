@@ -21,13 +21,15 @@ type TokenString struct {
 	Token string `json:"token"`
 }
 
+var ErrInvalidLoginPayload = errors.New("invalid login payload")
+
 func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var body LoginRequest
 
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, ErrInvalidLoginPayload, http.StatusBadRequest)
 		return
 	}
 

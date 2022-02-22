@@ -9,11 +9,11 @@ import (
 )
 
 type Handler struct {
-	transfUse transfers.TranfersUsecase
-	accUse    account.AccountUsecase
+	transfUse transfers.Usecase
+	accUse    account.Usecase
 }
 
-func NewHandler(router *mux.Router, usecase transfers.TranfersUsecase, accUsecase account.AccountUsecase) *Handler {
+func NewHandler(router *mux.Router, usecase transfers.Usecase, accUsecase account.Usecase) *Handler {
 	h := &Handler{
 		transfUse: usecase,
 		accUse:    accUsecase,
