@@ -1,6 +1,6 @@
 # Api HTTP Rest de transferencias entre contas de um banco digital
 
-[![Actions Status](https://github.com/Vivi3008/apiTestGolang/workflows/build/badge.svg)](https://github.com/Vivi3008/apiTestGolang/actions)
+![Action Status](https://github.com/Vivi3008/apiTestGolang/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/Vivi3008/apiTestGolang/branch/master/graph/badge.svg)](https://codecov.io/gh/Vivi3008/apiTestGolang)
 
 ## Rotas
