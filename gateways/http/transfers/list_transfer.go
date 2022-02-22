@@ -28,7 +28,7 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Failed to list transfer: %s\n", err.Error())
-		response.SendError(w, err, http.StatusBadRequest)
+		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
