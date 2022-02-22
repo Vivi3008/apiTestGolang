@@ -39,5 +39,3 @@ jobs:
 
     - name: Test
       run: richgo test ./...
-
-  
