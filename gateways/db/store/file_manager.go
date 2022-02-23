@@ -16,7 +16,7 @@ type Entity string
 const accountType Entity = "account"
 
 type Entities struct {
-	Account  map[string]account.Account
+	Account  []account.Account
 	Transfer map[string]transfers.Transfer
 }
 
@@ -44,7 +44,7 @@ func StoreFile(writeData interface{}, source string) error {
 }
 
 func ReadFile(source string, typeEntitie Entity) (Entities, error) {
-	var accountData map[string]account.Account
+	var accountData []account.Account
 	var transferData map[string]transfers.Transfer
 
 	dataJson, err := ioutil.ReadFile(source)

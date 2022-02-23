@@ -2,15 +2,17 @@ package account
 
 import "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 
-var source = "account.json"
+var (
+	source = "account.json"
+)
 
 type AccountStore struct {
-	accStore map[string]account.Account
+	accStore []account.Account
 	src      string
 }
 
 func NewAccountStore() AccountStore {
-	as := make(map[string]account.Account)
+	as := make([]account.Account, 0)
 
 	return AccountStore{
 		accStore: as,
