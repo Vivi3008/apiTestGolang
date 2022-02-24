@@ -72,7 +72,7 @@ var TransfersTest = []transfers.Transfer{
 		AccountDestinationId: AccountsTest[0].Id,
 		Amount:               100000,
 		CreatedAt: time.Date(2022, time.February,
-			10, 21, 34, 01, 0, time.UTC),
+			8, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:                   uuid.NewString(),
@@ -80,7 +80,7 @@ var TransfersTest = []transfers.Transfer{
 		AccountDestinationId: AccountsTest[2].Id,
 		Amount:               200000,
 		CreatedAt: time.Date(2022, time.February,
-			10, 21, 34, 01, 0, time.UTC),
+			9, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:                   uuid.NewString(),
@@ -88,6 +88,6 @@ var TransfersTest = []transfers.Transfer{
 		AccountDestinationId: AccountsTest[1].Id,
 		Amount:               300000,
 		CreatedAt: time.Date(2022, time.February,
-			9, 21, 34, 01, 0, time.UTC),
+			10, 21, 34, 01, 0, time.UTC),
 	},
 }

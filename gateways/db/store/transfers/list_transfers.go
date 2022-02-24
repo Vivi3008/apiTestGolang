@@ -1,7 +1,9 @@
 package transfers
 
 import (
+	"context"
 	"errors"
+	"sort"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
@@ -12,21 +14,25 @@ var (
 	ErrCpfNotExists = errors.New("cpf does not exist")
 )
 
-func (tr TransferStore) ListTransfer(id string) ([]transfers.Transfer, error) {
-	var list = make([]transfers.Transfer, 0)
-
-	listTransfer, err := store.ReadFile(tr.Src, "transfer")
+func (t TransferStore) ListTransfer(ctx context.Context, id string) ([]transfers.Transfer, error) {
+	data, err := store.ReadFile(t.Src, "transfer")
 	if err != nil {
 		return []transfers.Transfer{}, err
 	}
 
-	for _, transfer := range listTransfer.Transfer {
-		if id == transfer.AccountOriginId {
-			list = append(list, transfer)
-		} else {
-			return nil, ErrIdNotExists
+	for _, tr := range data.Transfer {
+		if tr.AccountOriginId == id {
+			t.tranStore = append(t.tranStore, tr)
 		}
 	}
 
-	return list, nil
+	t.OrderListTransferByDateDesc()
+
+	return t.tranStore, nil
+}
+
+func (t TransferStore) OrderListTransferByDateDesc() {
+	sort.Slice(t.tranStore, func(i, j int) bool {
+		return t.tranStore[i].CreatedAt.After(t.tranStore[j].CreatedAt)
+	})
 }
