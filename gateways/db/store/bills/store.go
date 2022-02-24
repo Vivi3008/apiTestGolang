@@ -6,7 +6,7 @@ var source = "bills.json"
 
 type BillStore struct {
 	blStore []bills.Bill
-	src     string
+	Src     string
 }
 
 func NewBillStore() BillStore {
@@ -14,6 +14,6 @@ func NewBillStore() BillStore {
 
 	return BillStore{
 		blStore: bl,
-		src:     source,
+		Src:     source,
 	}
 }

@@ -53,7 +53,7 @@ func TestStoreBill(t *testing.T) {
 			})
 
 			str := NewBillStore()
-			str.src = "bills_test.json"
+			str.Src = "bills_test.json"
 
 			err := str.StoreBill(context.Background(), tt.args)
 

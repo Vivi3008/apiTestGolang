@@ -8,7 +8,7 @@ import (
 )
 
 func (b BillStore) ListBills(ctx context.Context, accountOriginId string) ([]bills.Bill, error) {
-	listBills, err := store.ReadFile(b.src, "bill")
+	listBills, err := store.ReadFile(b.Src, "bill")
 	if err != nil {
 		return []bills.Bill{}, err
 	}

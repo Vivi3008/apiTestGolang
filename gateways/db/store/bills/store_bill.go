@@ -19,7 +19,7 @@ func (b BillStore) StoreBill(ctx context.Context, bill bills.Bill) error {
 
 	b.blStore = append(b.blStore, bill)
 
-	err := store.StoreFile(b.blStore, b.src)
+	err := store.StoreFile(b.blStore, b.Src)
 	if err != nil {
 		return err
 	}
