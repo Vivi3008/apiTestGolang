@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -49,7 +50,7 @@ func TestListAccountById(t *testing.T) {
 			str := NewAccountStore()
 			str.src = "account_test.json"
 
-			got, err := str.ListAccountById(tt.args)
+			got, err := str.ListAccountById(context.Background(), tt.args)
 
 			if !errors.Is(tt.err, err) {
 				t.Errorf("Expeceted %s, got %s", tt.err, err)

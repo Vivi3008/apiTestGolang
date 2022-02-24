@@ -1,6 +1,7 @@
 package account
 
 import (
+	"context"
 	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
@@ -9,7 +10,7 @@ import (
 
 var ErrOpenFile = errors.New("error to open file")
 
-func (a AccountStore) ListAllAccounts() ([]account.Account, error) {
+func (a AccountStore) ListAllAccounts(ctx context.Context) ([]account.Account, error) {
 	var list = make([]account.Account, 0)
 
 	data, err := store.ReadFile(a.src, "account")
@@ -23,8 +24,8 @@ func (a AccountStore) ListAllAccounts() ([]account.Account, error) {
 	return list, nil
 }
 
-func (a AccountStore) ListAccountById(accountId string) (account.Account, error) {
-	listAll, _ := a.ListAllAccounts()
+func (a AccountStore) ListAccountById(ctx context.Context, accountId string) (account.Account, error) {
+	listAll, _ := a.ListAllAccounts(ctx)
 
 	var listOne account.Account
 
@@ -41,8 +42,8 @@ func (a AccountStore) ListAccountById(accountId string) (account.Account, error)
 	}
 }
 
-func (a AccountStore) ListAccountByCpf(cpf string) (account.Account, error) {
-	listAll, _ := a.ListAllAccounts()
+func (a AccountStore) ListAccountByCpf(ctx context.Context, cpf string) (account.Account, error) {
+	listAll, _ := a.ListAllAccounts(ctx)
 
 	var listOne account.Account
 

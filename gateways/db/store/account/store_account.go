@@ -20,7 +20,7 @@ func (a AccountStore) StoreAccount(ctx context.Context, account account.Account)
 		return ErrEmptyID
 	}
 
-	_, err := a.ListAccountByCpf(account.Cpf)
+	_, err := a.ListAccountByCpf(ctx, account.Cpf)
 
 	switch err {
 	case ErrCpfNotExists:
