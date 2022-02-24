@@ -8,16 +8,19 @@ import (
 	"os"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
-	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 )
 
 type Entity string
 
-const accountType Entity = "account"
+const (
+	accountType Entity = "account"
+	billType    Entity = "bill"
+)
 
 type Entities struct {
-	Account  []account.Account
-	Transfer map[string]transfers.Transfer
+	Account []account.Account
+	Bill    []bills.Bill
 }
 
 var ErrSaveInFile = errors.New("error to save in file")
@@ -45,7 +48,7 @@ func StoreFile(writeData interface{}, source string) error {
 
 func ReadFile(source string, typeEntitie Entity) (Entities, error) {
 	var accountData []account.Account
-	var transferData map[string]transfers.Transfer
+	var billData []bills.Bill
 
 	dataJson, err := ioutil.ReadFile(source)
 
@@ -53,11 +56,14 @@ func ReadFile(source string, typeEntitie Entity) (Entities, error) {
 		return Entities{}, err
 	}
 
-	if typeEntitie == accountType {
+	switch typeEntitie {
+	case accountType:
 		json.Unmarshal(dataJson, &accountData)
 		return Entities{Account: accountData}, nil
-	} else {
-		json.Unmarshal(dataJson, &transferData)
-		return Entities{Transfer: transferData}, nil
+	case billType:
+		json.Unmarshal(dataJson, &billData)
+		return Entities{Bill: billData}, nil
+	default:
+		return Entities{}, nil
 	}
 }
