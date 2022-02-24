@@ -3,7 +3,6 @@ package store
 import (
 	"errors"
 
-	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
@@ -24,15 +23,4 @@ func (tr TransferStore) ListTransfer(accountOriginId string) ([]transfers.Transf
 	}
 
 	return transfers, nil
-}
-
-func (b BillStore) ListBills(accountOriginId string) ([]bills.Bill, error) {
-	var list []bills.Bill
-
-	for _, bill := range b.blStore {
-		if accountOriginId == bill.AccountId {
-			list = append(list, bill)
-		}
-	}
-	return list, nil
 }
