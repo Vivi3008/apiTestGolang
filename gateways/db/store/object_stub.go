@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 	"github.com/google/uuid"
 )
 
@@ -31,5 +33,61 @@ var AccountsTest = []account.Account{
 		Secret:    "fadsfdsaf",
 		Balance:   360000,
 		CreatedAt: time.Now(),
+	},
+}
+
+var accountId = uuid.NewString()
+
+var BillsTest = []bills.Bill{
+	{
+		Id:            uuid.New().String(),
+		AccountId:     accountId,
+		Description:   "Academia",
+		Value:         5990,
+		DueDate:       time.Now().AddDate(0, 0, 2),
+		ScheduledDate: time.Now(),
+	},
+	{
+		Id:            uuid.New().String(),
+		AccountId:     accountId,
+		Description:   "Internet",
+		Value:         15000,
+		DueDate:       time.Now().AddDate(0, 0, 2),
+		ScheduledDate: time.Now(),
+	},
+	{
+		Id:            uuid.New().String(),
+		AccountId:     accountId,
+		Description:   "IPTU",
+		Value:         130000,
+		DueDate:       time.Now().AddDate(0, 0, 2),
+		ScheduledDate: time.Now(),
+	},
+}
+
+var TransfersTest = []transfers.Transfer{
+	{
+		Id:                   uuid.NewString(),
+		AccountOriginId:      AccountsTest[1].Id,
+		AccountDestinationId: AccountsTest[0].Id,
+		Amount:               100000,
+		CreatedAt: time.Date(2022, time.February,
+			10, 21, 34, 01, 0, time.UTC),
+	},
+	{
+		Id:                   uuid.NewString(),
+		AccountOriginId:      AccountsTest[0].Id,
+		AccountDestinationId: AccountsTest[2].Id,
+		Amount:               200000,
+		CreatedAt: time.Date(2022, time.February,
+			10, 21, 34, 01, 0, time.UTC),
+	},
+	{
+		Id:                   uuid.NewString(),
+		AccountOriginId:      AccountsTest[0].Id,
+		AccountDestinationId: AccountsTest[1].Id,
+		Amount:               300000,
+		CreatedAt: time.Date(2022, time.February,
+			9, 21, 34, 01, 0, time.UTC),
 	},
 }
