@@ -40,6 +40,20 @@ func TestStoreAccount(t *testing.T) {
 			args: AccountsTest[0],
 			err:  ErrCpfExists,
 		},
+		{
+			Name: "Fail if account id is empty",
+			runBefore: func() error {
+				return CreateAccountsInFile()
+			},
+			args: account.Account{
+				Name:      "Teste sem id",
+				Cpf:       "13233255666",
+				Secret:    "123456",
+				Balance:   400000,
+				CreatedAt: time.Now(),
+			},
+			err: ErrEmptyID,
+		},
 	}
 
 	for _, tc := range testCases {

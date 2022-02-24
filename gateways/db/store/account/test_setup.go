@@ -40,13 +40,7 @@ var AccountsTest = []account.Account{
 var sourceTest = "account_test.json"
 
 func CreateAccountsInFile() error {
-	var err error
-
-	var accounts = make([]account.Account, 0)
-
-	accounts = append(accounts, AccountsTest...)
-
-	err = store.StoreFile(accounts, sourceTest)
+	err := store.StoreFile(AccountsTest, sourceTest)
 
 	if err != nil {
 		return err
