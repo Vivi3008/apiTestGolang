@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
@@ -37,7 +38,7 @@ func TestStoreAccount(t *testing.T) {
 			runBefore: func() error {
 				return CreateAccountsInFile()
 			},
-			args: AccountsTest[0],
+			args: store.AccountsTest[0],
 			err:  ErrCpfExists,
 		},
 		{

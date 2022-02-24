@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
@@ -21,8 +22,8 @@ func TestListAccountById(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should list an account by id",
-			args: AccountsTest[0].Id,
-			want: AccountsTest[0],
+			args: store.AccountsTest[0].Id,
+			want: store.AccountsTest[0],
 		},
 		{
 			Name: "Fail if id doesnt exist",

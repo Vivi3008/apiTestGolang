@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
 
 func TestListAccountByCpf(t *testing.T) {
@@ -24,8 +25,8 @@ func TestListAccountByCpf(t *testing.T) {
 			runBefore: func() error {
 				return CreateAccountsInFile()
 			},
-			args: AccountsTest[0].Cpf,
-			want: AccountsTest[0],
+			args: store.AccountsTest[0].Cpf,
+			want: store.AccountsTest[0],
 		},
 		{
 			Name: "Fail if cpf doesnt exist",

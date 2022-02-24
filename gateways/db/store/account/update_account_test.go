@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
@@ -28,17 +29,17 @@ func TestUpdateAccount(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should update account successfull",
-			args: args{balance: 500000, id: AccountsTest[0].Id},
+			args: args{balance: 500000, id: store.AccountsTest[0].Id},
 			runBefore: func() error {
 				return CreateAccountsInFile()
 			},
 			want: account.Account{
-				Id:        AccountsTest[0].Id,
-				Name:      AccountsTest[0].Name,
-				Cpf:       AccountsTest[0].Cpf,
-				Secret:    AccountsTest[0].Secret,
+				Id:        store.AccountsTest[0].Id,
+				Name:      store.AccountsTest[0].Name,
+				Cpf:       store.AccountsTest[0].Cpf,
+				Secret:    store.AccountsTest[0].Secret,
 				Balance:   500000,
-				CreatedAt: AccountsTest[0].CreatedAt,
+				CreatedAt: store.AccountsTest[0].CreatedAt,
 			},
 		},
 		{
