@@ -3,7 +3,7 @@ package account
 import "github.com/Vivi3008/apiTestGolang/domain/entities/account"
 
 var (
-	source = "account.json"
+	source = "./storage/account.json"
 )
 
 type AccountStore struct {

@@ -16,7 +16,7 @@ func (a AccountStore) ListAllAccounts(ctx context.Context) ([]account.Account, e
 	data, err := store.ReadFile(a.Src, "account")
 
 	if err != nil {
-		return []account.Account{}, ErrOpenFile
+		return []account.Account{}, err
 	}
 
 	list = append(list, data.Account...)
