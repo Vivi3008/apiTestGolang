@@ -4,7 +4,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
 )
 
-var source = "transfers.json"
+var source = "./storage/bills.json"
 
 type TransferStore struct {
 	tranStore []transfers.Transfer

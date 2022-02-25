@@ -2,7 +2,7 @@ package bills
 
 import "github.com/Vivi3008/apiTestGolang/domain/entities/bills"
 
-var source = "bills.json"
+var source = "./storage/bills.json"
 
 type BillStore struct {
 	blStore []bills.Bill

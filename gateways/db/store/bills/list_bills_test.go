@@ -31,7 +31,7 @@ func TestListBills(t *testing.T) {
 			},
 			sourceTest: SourceTest,
 			args:       store.AccountsTest[0].Id,
-			want:       []bills.Bill{store.BillsTest[2], store.BillsTest[1]},
+			want:       []bills.Bill{store.BillsTest[1], store.BillsTest[2]},
 		},
 		{
 			Name: "List empty bills if account id doesnt have bill",
