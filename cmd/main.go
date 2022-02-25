@@ -12,11 +12,17 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
-	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
-	activities_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/activity"
-	bills_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
-	transfers_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/transfers"
 
+	acStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/account"
+	atStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/activity"
+	blStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/bills"
+	trStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/transfers"
+
+	/* 	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
+	   	activities_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/activity"
+	   	bills_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
+	   	transfers_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/transfers"
+	*/
 	api "github.com/Vivi3008/apiTestGolang/gateways/http"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -42,10 +48,14 @@ func main() {
 	}
 	defer db.Close()
 
-	accountStore := account_postgres.NewRepository(db)
-	transStore := transfers_postgres.NewRepository(db)
-	billStore := bills_postgres.NewRepository(db)
-	activitiesDb := activities_postgres.NewRepository(db)
+	/* 	accountStore := account_postgres.NewRepository(db)
+	   	transStore := transfers_postgres.NewRepository(db)
+	   	billStore := bills_postgres.NewRepository(db)
+	   	activitiesDb := activities_postgres.NewRepository(db) */
+	accountStore := acStore.NewAccountStore()
+	transStore := trStore.NewTransferStore()
+	billStore := blStore.NewBillStore()
+	activitiesDb := atStore.NewAccountActivity()
 
 	accountUsecase := account.NewAccountUsecase(accountStore)
 	transferUsecase := transfers.NewTransferUsecase(transStore, accountUsecase)
