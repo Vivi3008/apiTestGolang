@@ -36,7 +36,7 @@ var AccountsTest = []account.Account{
 	},
 }
 
-var accountId = uuid.NewString()
+var accountId = "0e4a7fdd-59bd-4f99-817b-225c732b11f9"
 
 var BillsTest = []bills.Bill{
 	{
@@ -51,7 +51,7 @@ var BillsTest = []bills.Bill{
 	},
 	{
 		Id:            uuid.New().String(),
-		AccountId:     accountId,
+		AccountId:     AccountsTest[0].Id,
 		Description:   "Internet",
 		Value:         15000,
 		DueDate:       time.Now().AddDate(0, 0, 2),
@@ -61,7 +61,7 @@ var BillsTest = []bills.Bill{
 	},
 	{
 		Id:            uuid.New().String(),
-		AccountId:     accountId,
+		AccountId:     AccountsTest[0].Id,
 		Description:   "IPTU",
 		Value:         130000,
 		DueDate:       time.Now().AddDate(0, 0, 2),
