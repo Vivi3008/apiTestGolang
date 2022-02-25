@@ -2,13 +2,10 @@ package account
 
 import (
 	"context"
-	"errors"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
-
-var ErrOpenFile = errors.New("error to open file")
 
 func (a AccountStore) ListAllAccounts(ctx context.Context) ([]account.Account, error) {
 	var list = make([]account.Account, 0)
