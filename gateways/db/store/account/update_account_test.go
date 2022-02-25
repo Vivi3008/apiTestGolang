@@ -21,7 +21,7 @@ func TestUpdateAccount(t *testing.T) {
 	type TestCase struct {
 		Name       string
 		args       args
-		runBefore  func(string) error
+		runBefore  func(string, interface{}) error
 		sourceTest string
 		want       account.Account
 		err        error
@@ -31,8 +31,8 @@ func TestUpdateAccount(t *testing.T) {
 		{
 			Name: "Should update account successfull",
 			args: args{balance: 500000, id: store.AccountsTest[0].Id},
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			want: account.Account{
@@ -47,8 +47,8 @@ func TestUpdateAccount(t *testing.T) {
 		{
 			Name: "Fail if id doens't exist",
 			args: args{balance: 500000, id: uuid.NewString()},
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			want:       account.Account{},
@@ -67,7 +67,7 @@ func TestUpdateAccount(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				err := tt.runBefore(tt.sourceTest)
+				err := tt.runBefore(tt.sourceTest, store.AccountsTest)
 				if err != nil {
 					t.Errorf("error run before %s", err)
 				}

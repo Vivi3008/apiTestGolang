@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func CreateDataFile(src string) error {
-	err := StoreFile(AccountsTest, src)
+func CreateDataFile(src string, data interface{}) error {
+	err := StoreFile(data, src)
 	if err != nil {
 		return err
 	}

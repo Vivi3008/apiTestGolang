@@ -16,7 +16,7 @@ func TestStoreAccount(t *testing.T) {
 
 	type TestCase struct {
 		Name       string
-		runBefore  func(string) error
+		runBefore  func(string, interface{}) error
 		sourceTest string
 		args       account.Account
 		err        error
@@ -37,8 +37,8 @@ func TestStoreAccount(t *testing.T) {
 		},
 		{
 			Name: "Fail if cpf exists",
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			args:       store.AccountsTest[0],
@@ -46,8 +46,8 @@ func TestStoreAccount(t *testing.T) {
 		},
 		{
 			Name: "Fail if account id is empty",
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			args: account.Account{
@@ -72,7 +72,7 @@ func TestStoreAccount(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.sourceTest)
+				tt.runBefore(tt.sourceTest, store.AccountsTest)
 			}
 
 			str := NewAccountStore()

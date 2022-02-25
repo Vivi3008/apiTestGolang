@@ -17,7 +17,7 @@ func TestListAccountByCpf(t *testing.T) {
 		Name       string
 		args       string
 		sourceTest string
-		runBefore  func(src string) error
+		runBefore  func(string, interface{}) error
 		want       account.Account
 		err        error
 	}
@@ -25,8 +25,8 @@ func TestListAccountByCpf(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should list account by cpf successfull",
-			runBefore: func(src string) error {
-				return store.CreateDataFile(src)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			args:       store.AccountsTest[0].Cpf,
@@ -34,8 +34,8 @@ func TestListAccountByCpf(t *testing.T) {
 		},
 		{
 			Name: "Fail if cpf doesnt exist",
-			runBefore: func(src string) error {
-				return store.CreateDataFile(src)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			args:       "00313945153",
@@ -55,7 +55,7 @@ func TestListAccountByCpf(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				err := tt.runBefore(tt.sourceTest)
+				err := tt.runBefore(tt.sourceTest, store.AccountsTest)
 				if err != nil {
 					t.Errorf("error run before %s", err)
 				}

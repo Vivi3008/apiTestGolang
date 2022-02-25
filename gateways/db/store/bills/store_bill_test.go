@@ -7,14 +7,16 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
 func TestStoreBill(t *testing.T) {
 	type TestCase struct {
-		Name string
-		args bills.Bill
-		err  error
+		Name       string
+		sourceTest string
+		args       bills.Bill
+		err        error
 	}
 
 	testCases := []TestCase{
@@ -28,6 +30,7 @@ func TestStoreBill(t *testing.T) {
 				ScheduledDate: time.Now(),
 				CreatedAt:     time.Now(),
 			},
+			sourceTest: SourceTest,
 		},
 		{
 			Name: "Fail if id bill is empty",
@@ -38,7 +41,8 @@ func TestStoreBill(t *testing.T) {
 				ScheduledDate: time.Now(),
 				CreatedAt:     time.Now(),
 			},
-			err: ErrEmptyID,
+			sourceTest: SourceTest,
+			err:        ErrEmptyID,
 		},
 	}
 
@@ -46,7 +50,7 @@ func TestStoreBill(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataBillTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("err delelte bill test %s", err)
 				}

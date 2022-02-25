@@ -7,34 +7,40 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
+var SourceTest = "bills_test.json"
+
 func TestListBills(t *testing.T) {
 	type TestCase struct {
-		Name      string
-		args      string
-		runBefore func() error
-		want      []bills.Bill
-		err       error
+		Name       string
+		args       string
+		runBefore  func(string, interface{}) error
+		sourceTest string
+		want       []bills.Bill
+		err        error
 	}
 
 	testCases := []TestCase{
 		{
 			Name: "Should list a bill successfull",
-			runBefore: func() error {
-				return CreateBillsTest()
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
-			args: BillsTest[0].AccountId,
-			want: BillsTest,
+			sourceTest: SourceTest,
+			args:       store.BillsTest[0].AccountId,
+			want:       store.BillsTest,
 		},
 		{
 			Name: "List empty bills if account id doesnt have bill",
-			runBefore: func() error {
-				return CreateBillsTest()
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
-			args: uuid.NewString(),
-			want: []bills.Bill{},
+			sourceTest: SourceTest,
+			args:       uuid.NewString(),
+			want:       []bills.Bill{},
 		},
 	}
 
@@ -42,18 +48,18 @@ func TestListBills(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataBillTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
-					t.Errorf("err delelte bill test %s", err)
+					t.Errorf("err delete bill test %s", err)
 				}
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore()
+				tt.runBefore(tt.sourceTest, store.BillsTest)
 			}
 
 			str := NewBillStore()
-			str.Src = "bills_test.json"
+			str.Src = tt.sourceTest
 
 			got, err := str.ListBills(context.Background(), tt.args)
 

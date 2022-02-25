@@ -13,7 +13,7 @@ import (
 func TestListAccount(t *testing.T) {
 	type TestCase struct {
 		Name      string
-		runBefore func(string) error
+		runBefore func(string, interface{}) error
 		want      []account.Account
 		source    string
 		err       error
@@ -22,8 +22,8 @@ func TestListAccount(t *testing.T) {
 	testCases := []TestCase{
 		{
 			Name: "Should list all accounts in file",
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			want: []account.Account{
 				{
@@ -60,7 +60,7 @@ func TestListAccount(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.source)
+				tt.runBefore(tt.source, store.AccountsTest)
 			}
 
 			str := NewAccountStore()

@@ -15,7 +15,7 @@ func TestListAccountById(t *testing.T) {
 	type TestCase struct {
 		Name       string
 		args       string
-		runBefore  func(string) error
+		runBefore  func(string, interface{}) error
 		sourceTest string
 		want       account.Account
 		err        error
@@ -25,8 +25,8 @@ func TestListAccountById(t *testing.T) {
 		{
 			Name: "Should list an account by id",
 			args: store.AccountsTest[0].Id,
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			want:       store.AccountsTest[0],
@@ -34,8 +34,8 @@ func TestListAccountById(t *testing.T) {
 		{
 			Name: "Fail if id doesnt exist",
 			args: uuid.NewString(),
-			runBefore: func(s string) error {
-				return store.CreateDataFile(s)
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
 			sourceTest: SourceTest,
 			want:       account.Account{},
@@ -54,7 +54,7 @@ func TestListAccountById(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.sourceTest)
+				tt.runBefore(tt.sourceTest, store.AccountsTest)
 			}
 
 			str := NewAccountStore()
