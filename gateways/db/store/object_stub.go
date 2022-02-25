@@ -46,6 +46,8 @@ var BillsTest = []bills.Bill{
 		Value:         5990,
 		DueDate:       time.Now().AddDate(0, 0, 2),
 		ScheduledDate: time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			8, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:            uuid.New().String(),
@@ -54,6 +56,8 @@ var BillsTest = []bills.Bill{
 		Value:         15000,
 		DueDate:       time.Now().AddDate(0, 0, 2),
 		ScheduledDate: time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			9, 21, 34, 01, 0, time.UTC),
 	},
 	{
 		Id:            uuid.New().String(),
@@ -62,6 +66,8 @@ var BillsTest = []bills.Bill{
 		Value:         130000,
 		DueDate:       time.Now().AddDate(0, 0, 2),
 		ScheduledDate: time.Now(),
+		CreatedAt: time.Date(2022, time.February,
+			10, 21, 34, 01, 0, time.UTC),
 	},
 }
 
