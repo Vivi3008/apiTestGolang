@@ -25,7 +25,7 @@ func (a AccountStore) StoreAccount(ctx context.Context, account account.Account)
 	switch err {
 	case ErrCpfNotExists:
 		a.accStore = append(a.accStore, account)
-		err = store.StoreFile(a.accStore, a.src)
+		err = store.StoreFile(a.accStore, a.Src)
 		return err
 	default:
 		return ErrCpfExists

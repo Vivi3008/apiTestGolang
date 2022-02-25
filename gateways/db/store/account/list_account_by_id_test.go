@@ -58,7 +58,7 @@ func TestListAccountById(t *testing.T) {
 			}
 
 			str := NewAccountStore()
-			str.src = tt.sourceTest
+			str.Src = tt.sourceTest
 
 			got, err := str.ListAccountById(context.Background(), tt.args)
 

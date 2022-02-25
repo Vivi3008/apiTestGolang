@@ -8,7 +8,7 @@ var (
 
 type AccountStore struct {
 	accStore []account.Account
-	src      string
+	Src      string
 }
 
 func NewAccountStore() AccountStore {
@@ -16,6 +16,6 @@ func NewAccountStore() AccountStore {
 
 	return AccountStore{
 		accStore: as,
-		src:      source,
+		Src:      source,
 	}
 }

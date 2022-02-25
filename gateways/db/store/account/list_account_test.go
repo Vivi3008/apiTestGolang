@@ -64,7 +64,7 @@ func TestListAccount(t *testing.T) {
 			}
 
 			str := NewAccountStore()
-			str.src = tt.source
+			str.Src = tt.source
 
 			got, err := str.ListAllAccounts(context.Background())
 

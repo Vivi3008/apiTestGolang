@@ -77,7 +77,7 @@ func TestStoreAccount(t *testing.T) {
 
 			str := NewAccountStore()
 
-			str.src = tt.sourceTest
+			str.Src = tt.sourceTest
 			err := str.StoreAccount(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {

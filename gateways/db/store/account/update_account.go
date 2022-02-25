@@ -28,7 +28,7 @@ func (a AccountStore) UpdateAccount(ctx context.Context, balance int, id string)
 		updatedAccounts = append(updatedAccounts, ac)
 	}
 
-	err = store.StoreFile(updatedAccounts, a.src)
+	err = store.StoreFile(updatedAccounts, a.Src)
 	if err != nil {
 		return account.Account{}, err
 	}

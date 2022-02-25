@@ -13,7 +13,7 @@ var ErrOpenFile = errors.New("error to open file")
 func (a AccountStore) ListAllAccounts(ctx context.Context) ([]account.Account, error) {
 	var list = make([]account.Account, 0)
 
-	data, err := store.ReadFile(a.src, "account")
+	data, err := store.ReadFile(a.Src, "account")
 
 	if err != nil {
 		return []account.Account{}, ErrOpenFile

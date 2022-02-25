@@ -74,7 +74,7 @@ func TestUpdateAccount(t *testing.T) {
 			}
 
 			str := NewAccountStore()
-			str.src = tt.sourceTest
+			str.Src = tt.sourceTest
 
 			got, err := str.UpdateAccount(context.Background(), tt.args.balance, tt.args.id)
 
