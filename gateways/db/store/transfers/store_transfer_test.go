@@ -7,14 +7,16 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/transfers"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 	"github.com/google/uuid"
 )
 
 func TestStoreTransfer(t *testing.T) {
 	type TestCase struct {
-		name string
-		args transfers.Transfer
-		err  error
+		name       string
+		args       transfers.Transfer
+		sourceTest string
+		err        error
 	}
 
 	testCases := []TestCase{
@@ -27,6 +29,7 @@ func TestStoreTransfer(t *testing.T) {
 				Amount:               150000,
 				CreatedAt:            time.Now(),
 			},
+			sourceTest: SourceTest,
 		},
 		{
 			name: "Fail if empty transfer id",
@@ -36,7 +39,8 @@ func TestStoreTransfer(t *testing.T) {
 				Amount:               150000,
 				CreatedAt:            time.Now(),
 			},
-			err: ErrEmptyID,
+			sourceTest: SourceTest,
+			err:        ErrEmptyID,
 		},
 	}
 
@@ -44,14 +48,14 @@ func TestStoreTransfer(t *testing.T) {
 		tt := tc
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTransfersTest()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
 			str := NewTransferStore()
-			str.Src = "transfers_test.json"
+			str.Src = tt.sourceTest
 
 			err := str.SaveTransfer(context.Background(), tt.args)
 

@@ -10,39 +10,45 @@ import (
 	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
 
+var SourceTest = "transfers_test.json"
+
 func TestListTransfers(t *testing.T) {
 	type TestCase struct {
-		name      string
-		args      string
-		runBefore func() error
-		want      []transfers.Transfer
-		err       error
+		name       string
+		args       string
+		runBefore  func(string, interface{}) error
+		sourceTest string
+		want       []transfers.Transfer
+		err        error
 	}
 
 	testCases := []TestCase{
 		{
 			name: "Should list transfers order by date desc successfull",
 			args: store.AccountsTest[0].Id,
-			runBefore: func() error {
-				return CreateTransfersFileTest()
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
-			want: []transfers.Transfer{store.TransfersTest[2], store.TransfersTest[1]},
+			sourceTest: SourceTest,
+			want:       []transfers.Transfer{store.TransfersTest[2], store.TransfersTest[1]},
 		},
 		{
 			name: "List empty if id doens't have transfer",
 			args: store.AccountsTest[2].Id,
-			runBefore: func() error {
-				return CreateTransfersFileTest()
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
-			want: []transfers.Transfer{},
+			sourceTest: SourceTest,
+			want:       []transfers.Transfer{},
 		},
 		{
 			name: "List specific transfer",
 			args: store.AccountsTest[1].Id,
-			runBefore: func() error {
-				return CreateTransfersFileTest()
+			runBefore: func(s string, i interface{}) error {
+				return store.CreateDataFile(s, i)
 			},
-			want: []transfers.Transfer{store.TransfersTest[0]},
+			sourceTest: SourceTest,
+			want:       []transfers.Transfer{store.TransfersTest[0]},
 		},
 	}
 
@@ -50,18 +56,18 @@ func TestListTransfers(t *testing.T) {
 		tt := tc
 		t.Run(tt.name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTransfersTest()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore()
+				tt.runBefore(tt.sourceTest, store.TransfersTest)
 			}
 
 			str := NewTransferStore()
-			str.Src = "transfers_test.json"
+			str.Src = tt.sourceTest
 
 			got, err := str.ListTransfer(context.Background(), tt.args)
 
