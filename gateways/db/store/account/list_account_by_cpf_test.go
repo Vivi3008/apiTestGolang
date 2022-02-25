@@ -10,32 +10,37 @@ import (
 	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
 
+var SourceTest = "account_test.json"
+
 func TestListAccountByCpf(t *testing.T) {
 	type TestCase struct {
-		Name      string
-		args      string
-		runBefore func() error
-		want      account.Account
-		err       error
+		Name       string
+		args       string
+		sourceTest string
+		runBefore  func(src string) error
+		want       account.Account
+		err        error
 	}
 
 	testCases := []TestCase{
 		{
 			Name: "Should list account by cpf successfull",
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(src string) error {
+				return store.CreateDataFile(src)
 			},
-			args: store.AccountsTest[0].Cpf,
-			want: store.AccountsTest[0],
+			sourceTest: SourceTest,
+			args:       store.AccountsTest[0].Cpf,
+			want:       store.AccountsTest[0],
 		},
 		{
 			Name: "Fail if cpf doesnt exist",
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(src string) error {
+				return store.CreateDataFile(src)
 			},
-			args: "00313945153",
-			want: account.Account{},
-			err:  ErrCpfNotExists,
+			sourceTest: SourceTest,
+			args:       "00313945153",
+			want:       account.Account{},
+			err:        ErrCpfNotExists,
 		},
 	}
 
@@ -43,21 +48,21 @@ func TestListAccountByCpf(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
 			if tt.runBefore != nil {
-				err := tt.runBefore()
+				err := tt.runBefore(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error run before %s", err)
 				}
 			}
 
 			str := NewAccountStore()
-			str.src = "account_test.json"
+			str.src = tt.sourceTest
 
 			got, err := str.ListAccountByCpf(context.Background(), tt.args)
 

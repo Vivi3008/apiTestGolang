@@ -7,21 +7,24 @@ import (
 	"testing"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
 
 func TestListAccount(t *testing.T) {
 	type TestCase struct {
-		Name   string
-		want   []account.Account
-		source string
-		err    error
+		Name      string
+		runBefore func(string) error
+		want      []account.Account
+		source    string
+		err       error
 	}
-
-	var jsonWrong = "wrong.json"
 
 	testCases := []TestCase{
 		{
 			Name: "Should list all accounts in file",
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
+			},
 			want: []account.Account{
 				{
 					Name:    "Teste 1",
@@ -42,13 +45,7 @@ func TestListAccount(t *testing.T) {
 					Balance: 360000,
 				},
 			},
-			source: "account_test.json",
-		},
-		{
-			Name:   "Fail if account file source is wrong",
-			want:   []account.Account{},
-			source: jsonWrong,
-			err:    ErrOpenFile,
+			source: SourceTest,
 		},
 	}
 
@@ -56,15 +53,14 @@ func TestListAccount(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTests()
+				err := store.DeleteDataFile(tt.source)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
-			err := CreateAccountsInFile()
-			if err != nil {
-				t.Errorf("error in create accounts file test: %s", err)
+			if tt.runBefore != nil {
+				tt.runBefore(tt.source)
 			}
 
 			str := NewAccountStore()

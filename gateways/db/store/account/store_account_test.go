@@ -15,10 +15,11 @@ func TestStoreAccount(t *testing.T) {
 	t.Parallel()
 
 	type TestCase struct {
-		Name      string
-		runBefore func() error
-		args      account.Account
-		err       error
+		Name       string
+		runBefore  func(string) error
+		sourceTest string
+		args       account.Account
+		err        error
 	}
 
 	testCases := []TestCase{
@@ -32,20 +33,23 @@ func TestStoreAccount(t *testing.T) {
 				Balance:   400000,
 				CreatedAt: time.Now(),
 			},
+			sourceTest: SourceTest,
 		},
 		{
 			Name: "Fail if cpf exists",
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
 			},
-			args: store.AccountsTest[0],
-			err:  ErrCpfExists,
+			sourceTest: SourceTest,
+			args:       store.AccountsTest[0],
+			err:        ErrCpfExists,
 		},
 		{
 			Name: "Fail if account id is empty",
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
 			},
+			sourceTest: SourceTest,
 			args: account.Account{
 				Name:      "Teste sem id",
 				Cpf:       "13233255666",
@@ -61,19 +65,19 @@ func TestStoreAccount(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore()
+				tt.runBefore(tt.sourceTest)
 			}
 
 			str := NewAccountStore()
 
-			str.src = "account_test.json"
+			str.src = tt.sourceTest
 			err := str.StoreAccount(context.Background(), tt.args)
 
 			if !errors.Is(err, tt.err) {

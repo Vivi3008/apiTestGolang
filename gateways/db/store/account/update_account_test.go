@@ -19,20 +19,22 @@ func TestUpdateAccount(t *testing.T) {
 	}
 
 	type TestCase struct {
-		Name      string
-		args      args
-		runBefore func() error
-		want      account.Account
-		err       error
+		Name       string
+		args       args
+		runBefore  func(string) error
+		sourceTest string
+		want       account.Account
+		err        error
 	}
 
 	testCases := []TestCase{
 		{
 			Name: "Should update account successfull",
 			args: args{balance: 500000, id: store.AccountsTest[0].Id},
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
 			},
+			sourceTest: SourceTest,
 			want: account.Account{
 				Id:        store.AccountsTest[0].Id,
 				Name:      store.AccountsTest[0].Name,
@@ -45,11 +47,12 @@ func TestUpdateAccount(t *testing.T) {
 		{
 			Name: "Fail if id doens't exist",
 			args: args{balance: 500000, id: uuid.NewString()},
-			runBefore: func() error {
-				return CreateAccountsInFile()
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
 			},
-			want: account.Account{},
-			err:  ErrIdNotExists,
+			sourceTest: SourceTest,
+			want:       account.Account{},
+			err:        ErrIdNotExists,
 		},
 	}
 
@@ -57,21 +60,21 @@ func TestUpdateAccount(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
 			if tt.runBefore != nil {
-				err := tt.runBefore()
+				err := tt.runBefore(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error run before %s", err)
 				}
 			}
 
 			str := NewAccountStore()
-			str.src = "account_test.json"
+			str.src = tt.sourceTest
 
 			got, err := str.UpdateAccount(context.Background(), tt.args.balance, tt.args.id)
 

@@ -13,23 +13,33 @@ import (
 
 func TestListAccountById(t *testing.T) {
 	type TestCase struct {
-		Name string
-		args string
-		want account.Account
-		err  error
+		Name       string
+		args       string
+		runBefore  func(string) error
+		sourceTest string
+		want       account.Account
+		err        error
 	}
 
 	testCases := []TestCase{
 		{
 			Name: "Should list an account by id",
 			args: store.AccountsTest[0].Id,
-			want: store.AccountsTest[0],
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
+			},
+			sourceTest: SourceTest,
+			want:       store.AccountsTest[0],
 		},
 		{
 			Name: "Fail if id doesnt exist",
 			args: uuid.NewString(),
-			want: account.Account{},
-			err:  ErrIdNotExists,
+			runBefore: func(s string) error {
+				return store.CreateDataFile(s)
+			},
+			sourceTest: SourceTest,
+			want:       account.Account{},
+			err:        ErrIdNotExists,
 		},
 	}
 
@@ -37,19 +47,18 @@ func TestListAccountById(t *testing.T) {
 		tt := tc
 		t.Run(tt.Name, func(t *testing.T) {
 			t.Cleanup(func() {
-				err := DeleteDataTests()
+				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
 					t.Errorf("error in delete data tests %s", err)
 				}
 			})
 
-			err := CreateAccountsInFile()
-			if err != nil {
-				t.Errorf("Error in create accounts test file %s", err)
+			if tt.runBefore != nil {
+				tt.runBefore(tt.sourceTest)
 			}
 
 			str := NewAccountStore()
-			str.src = "account_test.json"
+			str.src = tt.sourceTest
 
 			got, err := str.ListAccountById(context.Background(), tt.args)
 
