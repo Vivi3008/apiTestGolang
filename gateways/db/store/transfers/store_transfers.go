@@ -17,9 +17,14 @@ func (tr TransferStore) SaveTransfer(ctx context.Context, transfer transfers.Tra
 		return ErrEmptyID
 	}
 
-	tr.tranStore = append(tr.tranStore, transfer)
+	listTransfer, err := store.ReadFile(tr.Src, "transfer")
+	if err != nil {
+		return err
+	}
 
-	err := store.StoreFile(tr.tranStore, tr.Src)
+	listTransfer.Transfer = append(listTransfer.Transfer, transfer)
+
+	err = store.StoreFile(listTransfer.Transfer, tr.Src)
 	if err != nil {
 		return err
 	}

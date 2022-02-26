@@ -17,9 +17,14 @@ func (b BillStore) StoreBill(ctx context.Context, bill bills.Bill) error {
 		return ErrEmptyID
 	}
 
-	b.blStore = append(b.blStore, bill)
+	listBills, err := store.ReadFile(b.Src, "bill")
+	if err != nil {
+		return err
+	}
 
-	err := store.StoreFile(b.blStore, b.Src)
+	listBills.Bill = append(listBills.Bill, bill)
+
+	err = store.StoreFile(listBills.Bill, b.Src)
 	if err != nil {
 		return err
 	}

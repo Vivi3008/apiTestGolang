@@ -20,12 +20,17 @@ func (a AccountStore) StoreAccount(ctx context.Context, account account.Account)
 		return ErrEmptyID
 	}
 
-	_, err := a.ListAccountByCpf(ctx, account.Cpf)
+	listAccounts, err := a.ListAllAccounts(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = a.ListAccountByCpf(ctx, account.Cpf)
 
 	switch err {
 	case ErrCpfNotExists:
-		a.accStore = append(a.accStore, account)
-		err = store.StoreFile(a.accStore, a.Src)
+		listAccounts = append(listAccounts, account)
+		err = store.StoreFile(listAccounts, a.Src)
 		return err
 	default:
 		return ErrCpfExists
