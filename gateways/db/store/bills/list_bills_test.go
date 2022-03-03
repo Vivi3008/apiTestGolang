@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var SourceTest = "bills_test.json"
+var SourceTest = "../testdata/bills_test.json"
 
 func TestListBills(t *testing.T) {
 	type TestCase struct {

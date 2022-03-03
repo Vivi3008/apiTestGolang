@@ -10,7 +10,7 @@ import (
 	"github.com/Vivi3008/apiTestGolang/gateways/db/store"
 )
 
-var SourceTest = "transfers_test.json"
+var SourceTest = "../testdata/transfers_test.json"
 
 func TestListTransfers(t *testing.T) {
 	type TestCase struct {
