@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func AuthJwt(tokenStr string) (string, error) {

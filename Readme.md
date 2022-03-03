@@ -313,6 +313,8 @@ Se nao tiver o docker instalado, baixe as dependencias com `go mod tidy` entre n
 
 Para rodar os testes entre em cada módulo e rode o comando `go test -v`
 
+- Utilizar o storage local: adicionar a variável de ambiente LOCAL_STORAGE=true
+
 ### Dependências utilizadas
 
 Para criaçao e manipulação de tokens:

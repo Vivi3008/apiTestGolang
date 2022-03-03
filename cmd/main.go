@@ -12,6 +12,12 @@ import (
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/bill"
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/transfers"
 	"github.com/Vivi3008/apiTestGolang/gateways/db/postgres"
+
+	acStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/account"
+	atStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/activity"
+	blStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/bills"
+	trStore "github.com/Vivi3008/apiTestGolang/gateways/db/store/transfers"
+
 	account_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/account"
 	activities_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/activity"
 	bills_postgres "github.com/Vivi3008/apiTestGolang/gateways/db/postgres/entries/bills"
@@ -21,7 +27,6 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -42,15 +47,34 @@ func main() {
 	}
 	defer db.Close()
 
-	accountStore := account_postgres.NewRepository(db)
-	transStore := transfers_postgres.NewRepository(db)
-	billStore := bills_postgres.NewRepository(db)
-	activitiesDb := activities_postgres.NewRepository(db)
+	var accountUsecase account.AccountUsecase
+	var transferUsecase transfers.TranfersUsecase
+	var billsUsecase bill.BillUsecase
+	var activityUsecase activities.ActivityUsecase
 
-	accountUsecase := account.NewAccountUsecase(accountStore)
-	transferUsecase := transfers.NewTransferUsecase(transStore, accountUsecase)
-	billsUsecase := bill.NewBillUseCase(billStore, accountUsecase)
-	activityUsecase := activities.NewAccountActivityUsecase(activitiesDb)
+	_, ok := os.LookupEnv("LOCAL_STORAGE")
+
+	if ok {
+		accountStore := acStore.NewAccountStore()
+		transStore := trStore.NewTransferStore()
+		billStore := blStore.NewBillStore()
+		activitiesStore := atStore.NewAccountActivity()
+
+		accountUsecase = account.NewAccountUsecase(accountStore)
+		transferUsecase = transfers.NewTransferUsecase(transStore, accountUsecase)
+		billsUsecase = bill.NewBillUseCase(billStore, accountUsecase)
+		activityUsecase = activities.NewAccountActivityUsecase(activitiesStore)
+	} else {
+		accountStore := account_postgres.NewRepository(db)
+		transStore := transfers_postgres.NewRepository(db)
+		billStore := bills_postgres.NewRepository(db)
+		activitiesStore := activities_postgres.NewRepository(db)
+
+		accountUsecase = account.NewAccountUsecase(accountStore)
+		transferUsecase = transfers.NewTransferUsecase(transStore, accountUsecase)
+		billsUsecase = bill.NewBillUseCase(billStore, accountUsecase)
+		activityUsecase = activities.NewAccountActivityUsecase(activitiesStore)
+	}
 
 	server := api.NewServer(accountUsecase, transferUsecase, billsUsecase, activityUsecase)
 
