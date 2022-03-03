@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 )
 
-var sourceTestBill = "../bills/bills_test.json"
-var sourceTestTransfer = "../transfers/transfers_test.json"
-var sourceTestAccount = "../account/account_test.json"
+var sourceTestBill = "../testdata/bills_test.json"
+var sourceTestTransfer = "../testdata/transfers_test.json"
+var sourceTestAccount = "../testdata/account_test.json"
 
 func TestListActivities(t *testing.T) {
 	type TestCase struct {
