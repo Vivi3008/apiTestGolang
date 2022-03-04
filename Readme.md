@@ -311,7 +311,7 @@ Para rodar o container na porta 3000:
 
 Se nao tiver o docker instalado, baixe as dependencias com `go mod tidy` entre na pasta cmd `cd cmd` e rode a aplicação com `go run main.go`
 
-Para rodar os testes entre em cada módulo e rode o comando `go test -v`
+Para rodar os testes rode o comando `go test -v ./...`
 
 - Utilizar o storage local: adicionar a variável de ambiente LOCAL_STORAGE=true
 
