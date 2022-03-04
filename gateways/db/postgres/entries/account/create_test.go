@@ -31,7 +31,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create account successfull",
+			Name: "Should create account successful",
 			args: acc,
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateAccountTest(pgx)

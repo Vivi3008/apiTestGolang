@@ -26,7 +26,7 @@ func TestSaveTransfer(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create a transfer successfull",
+			Name: "Should create a transfer successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return accountdb.CreateAccountTest(pgx)
 			},

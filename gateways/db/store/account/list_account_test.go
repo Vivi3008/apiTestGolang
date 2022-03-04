@@ -60,7 +60,10 @@ func TestListAccount(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.source, store.AccountsTest)
+				err := tt.runBefore(tt.source, store.AccountsTest)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			str := NewAccountStore()

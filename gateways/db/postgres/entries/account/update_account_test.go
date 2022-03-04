@@ -30,7 +30,7 @@ func TestUpdateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should update account successfull",
+			Name: "Should update account successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateAccountTest(pgx)
 			},

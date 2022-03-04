@@ -44,8 +44,10 @@ func GetTestPool() (*pgxpool.Pool, func()) {
 
 	log.Println("Connecting to database on url: ", databaseUrl)
 
-	resource.Expire(60) // Tell docker to hard kill the container in 60 seconds
-
+	err = resource.Expire(60) // Tell docker to hard kill the container in 60 seconds
+	if err != nil {
+		log.Fatalf("Could not kill container: %s", err)
+	}
 	dockerPool.MaxWait = 10 * time.Second
 	// connects to db in container, with exponential backoff-retry,
 	// because the application in the container might not be ready to accept connections yet
@@ -72,7 +74,10 @@ func GetTestPool() (*pgxpool.Pool, func()) {
 	// tearDown should be called to destroy container at the end of the test
 	tearDown := func() {
 		db.Close()
-		dockerPool.Purge(resource)
+		err := dockerPool.Purge(resource)
+		if err != nil {
+			log.Fatalf("Could not remove container: %s", err)
+		}
 	}
 
 	return db, tearDown

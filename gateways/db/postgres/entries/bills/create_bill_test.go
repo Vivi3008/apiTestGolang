@@ -34,7 +34,7 @@ func TestCreateBills(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create a bills successfull",
+			Name: "Should create a bills successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return accountdb.CreateAccountTest(pgx)
 			},

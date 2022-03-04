@@ -29,7 +29,7 @@ func TestUpdateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should update account successfull",
+			Name: "Should update account successful",
 			args: args{balance: 500000, id: store.AccountsTest[0].Id},
 			runBefore: func(s string, i interface{}) error {
 				return store.CreateDataFile(s, i)

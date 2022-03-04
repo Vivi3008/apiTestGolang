@@ -65,7 +65,7 @@ func TestListTransfers(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should sent list transfers successfull and status code 200",
+			Name: "Should sent list transfers successful and status code 200",
 			accountMock: account.UsecaseMock{
 				OnListById: func(accountId string) (accEntitie.Account, error) {
 					return personAccount, nil

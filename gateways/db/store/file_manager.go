@@ -2,8 +2,6 @@ package store
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -26,13 +24,11 @@ type Entities struct {
 	Transfer []transfers.Transfer
 }
 
-var ErrSaveInFile = errors.New("error to save in file")
-
 func StoreFile(writeData interface{}, source string) error {
 	data, err := json.Marshal(writeData)
 
 	if err != nil {
-		return fmt.Errorf(ErrSaveInFile.Error(), err)
+		return err
 	}
 
 	err = os.Chmod(source, 0777)
@@ -64,17 +60,28 @@ func ReadFile(source string, typeEntitie Entity) (Entities, error) {
 		return Entities{}, err
 	}
 
+	if !json.Valid(dataJson) {
+		return Entities{}, nil
+	}
+
 	switch typeEntitie {
 	case accountType:
-		json.Unmarshal(dataJson, &accountData)
-		return Entities{Account: accountData}, nil
+		err := json.Unmarshal(dataJson, &accountData)
+		return sendError(err, Entities{Account: accountData})
 	case billType:
-		json.Unmarshal(dataJson, &billData)
-		return Entities{Bill: billData}, nil
+		err := json.Unmarshal(dataJson, &billData)
+		return sendError(err, Entities{Bill: billData})
 	case transferType:
-		json.Unmarshal(dataJson, &transferData)
-		return Entities{Transfer: transferData}, nil
+		err := json.Unmarshal(dataJson, &transferData)
+		return sendError(err, Entities{Transfer: transferData})
 	default:
 		return Entities{}, nil
 	}
+}
+
+func sendError(err error, entity Entities) (Entities, error) {
+	if err != nil {
+		return Entities{}, err
+	}
+	return entity, nil
 }

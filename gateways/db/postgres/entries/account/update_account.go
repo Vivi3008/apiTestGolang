@@ -30,7 +30,6 @@ func (r Repository) UpdateAccount(ctx context.Context, balance int, id string) (
 			if pgError.SQLState() == "23514" {
 				return entities.Account{}, ErrBalanceInvalid
 			}
-
 		}
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entities.Account{}, ErrIdNotExists

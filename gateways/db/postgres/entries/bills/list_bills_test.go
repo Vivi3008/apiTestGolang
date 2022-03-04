@@ -27,7 +27,7 @@ func TestListBills(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list bills successfull",
+			Name: "Should list bills successful",
 			args: accountdb.AccountsTest[0].Id,
 			runBeforeAcc: func(pgx *pgxpool.Pool) error {
 				return accountdb.CreateAccountTest(pgx)

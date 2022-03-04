@@ -67,7 +67,7 @@ func TestListAccountActivities(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list activities successfull",
+			Name: "Should list activities successful",
 			repo: AcitivitiesMock{
 				OnListActivities: func(accountId string) ([]AccountActivity, error) {
 					return wantActitivies, nil

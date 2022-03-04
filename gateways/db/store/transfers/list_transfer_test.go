@@ -24,7 +24,7 @@ func TestListTransfers(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should list transfers order by date desc successfull",
+			name: "Should list transfers order by date desc successful",
 			args: store.AccountsTest[0].Id,
 			runBefore: func(s string, i interface{}) error {
 				return store.CreateDataFile(s, i)
@@ -63,7 +63,10 @@ func TestListTransfers(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.sourceTest, store.TransfersTest)
+				err := tt.runBefore(tt.sourceTest, store.TransfersTest)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			str := NewTransferStore()

@@ -29,7 +29,7 @@ func TestSaveBill(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should save bill successfull",
+			name: "Should save bill successful",
 			repository: bills.BillMock{
 				OnStore: func(b bills.Bill) error {
 					return nil

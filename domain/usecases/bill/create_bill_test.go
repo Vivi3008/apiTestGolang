@@ -43,7 +43,7 @@ func TestCreateBill(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name:       "Should create a payment successfull",
+			name:       "Should create a payment successful",
 			repository: bills.BillMock{},
 			accRepo: account.AccountMock{
 				OnListById: func(accountId string) (account.Account, error) {

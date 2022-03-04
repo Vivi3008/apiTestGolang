@@ -70,7 +70,7 @@ func TestTransfers(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should list a transfer successfull",
+			name: "Should list a transfer successful",
 			repository: transfers.TransferMock{
 				OnListAll: func(id string) ([]transfers.Transfer, error) {
 					return []transfers.Transfer{trans}, nil

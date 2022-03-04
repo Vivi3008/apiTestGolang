@@ -24,7 +24,7 @@ func TestListAccountByCpf(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list account by cpf successfull",
+			Name: "Should list account by cpf successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateAccountTest(pgx)
 			},

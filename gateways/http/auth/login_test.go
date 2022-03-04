@@ -39,7 +39,7 @@ func TestLogin(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should log in successfull return 200",
+			Name: "Should log in successful return 200",
 			accountMock: usecase.UsecaseMock{
 				OnLogin: func(u account.Login) (string, error) {
 					return id, nil

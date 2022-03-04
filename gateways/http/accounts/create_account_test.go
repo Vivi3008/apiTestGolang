@@ -39,7 +39,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create account successfull send 200",
+			Name: "Should create account successful send 200",
 			accountMock: account.UsecaseMock{
 				OnCreate: func(acc entitie_acc.Account) (entitie_acc.Account, error) {
 					return personAccount, nil

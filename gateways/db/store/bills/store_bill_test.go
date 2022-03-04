@@ -52,7 +52,7 @@ func TestStoreBill(t *testing.T) {
 			t.Cleanup(func() {
 				err := store.DeleteDataFile(tt.sourceTest)
 				if err != nil {
-					t.Errorf("err delelte bill test %s", err)
+					t.Errorf("err delete bill test %s", err)
 				}
 			})
 
