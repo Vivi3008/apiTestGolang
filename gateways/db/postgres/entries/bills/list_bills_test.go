@@ -79,11 +79,17 @@ func TestListBills(t *testing.T) {
 			t.Cleanup(tearDown)
 
 			if tt.runBeforeAcc != nil {
-				tt.runBeforeAcc(testDb)
+				err := tt.runBeforeAcc(testDb)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			if tt.runBeforeBl != nil {
-				tt.runBeforeBl(testDb)
+				err := tt.runBeforeBl(testDb)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListBills(context.Background(), tt.args)

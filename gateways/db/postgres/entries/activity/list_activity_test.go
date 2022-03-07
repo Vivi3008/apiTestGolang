@@ -115,7 +115,10 @@ func TestListActitivies(t *testing.T) {
 			t.Cleanup(tearDown)
 
 			if tt.runBefore != nil {
-				tt.runBefore(testDb)
+				err := tt.runBefore(testDb)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListActivity(context.Background(), tt.args)
