@@ -124,15 +124,24 @@ func TestListActivities(t *testing.T) {
 			})
 
 			if tt.runBeforeBill != nil {
-				tt.runBeforeBill(tt.sourceBill, store.BillsTest)
+				err := tt.runBeforeBill(tt.sourceBill, store.BillsTest)
+				if err != nil {
+					t.Errorf("err to run before %s", err)
+				}
 			}
 
 			if tt.runBeforeTransfer != nil {
-				tt.runBeforeTransfer(tt.sourceTransfer, store.TransfersTest)
+				err := tt.runBeforeTransfer(tt.sourceTransfer, store.TransfersTest)
+				if err != nil {
+					t.Errorf("err to run before %s", err)
+				}
 			}
 
 			if tt.runBeforeAccount != nil {
-				tt.runBeforeAccount(tt.sourceAccount, store.AccountsTest)
+				err := tt.runBeforeAccount(tt.sourceAccount, store.AccountsTest)
+				if err != nil {
+					t.Errorf("err to run before %s", err)
+				}
 			}
 
 			str := NewAccountActivity()

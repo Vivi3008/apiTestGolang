@@ -26,7 +26,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			name: "Should create an account succesfully",
+			name: "Should create an account successfully",
 			args: Account{
 				Name:   person.Name,
 				Cpf:    person.Cpf,

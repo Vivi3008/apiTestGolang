@@ -2,6 +2,7 @@ package response
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -19,11 +20,17 @@ func SendError(w http.ResponseWriter, err error, statusCode int) {
 	response := Error{Reason: err.Error()}
 	w.Header().Set(ContentType, JSONContentType)
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(response)
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Fatalf("Error to encode response %s", err)
+	}
 }
 
 func Send(w http.ResponseWriter, res interface{}, statusCode int) {
 	w.Header().Set(ContentType, JSONContentType)
 	w.WriteHeader(statusCode)
-	json.NewEncoder(w).Encode(res)
+	err := json.NewEncoder(w).Encode(res)
+	if err != nil {
+		log.Fatalf("Error to encode response %s", err)
+	}
 }

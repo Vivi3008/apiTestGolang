@@ -26,7 +26,7 @@ func TestSaveTransfer(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create a transfer successfull",
+			Name: "Should create a transfer successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return accountdb.CreateAccountTest(pgx)
 			},
@@ -106,7 +106,10 @@ func TestSaveTransfer(t *testing.T) {
 			t.Cleanup(tearDown)
 
 			if tt.runBefore != nil {
-				tt.runBefore(testDb)
+				err := tt.runBefore(testDb)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			err := repo.SaveTransfer(context.Background(), tt.args)

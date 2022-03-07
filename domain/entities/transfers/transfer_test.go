@@ -25,7 +25,7 @@ func TestCreateTransfer(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			name: "Should create a new transfer successfuly",
+			name: "Should create a new transfer successfully",
 			args: transaction,
 			want: Transfer{
 				AccountOriginId:      transaction.AccountOriginId,

@@ -21,10 +21,9 @@ type Bill struct {
 type Status string
 
 const (
-	Pago      Status = "Pago"
-	Agendado  Status = "Agendado"
-	Negado    Status = "Negado"
-	layoutIso        = "2006-01-02"
+	Pago     Status = "Pago"
+	Agendado Status = "Agendado"
+	Negado   Status = "Negado"
 )
 
 var (

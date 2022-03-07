@@ -35,7 +35,7 @@ func TestListAccountByCpf(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list account by cpf sucessfull",
+			Name: "Should list account by cpf successful",
 			repository: account.AccountMock{
 				OnListByCpf: func(cpf string) (account.Account, error) {
 					return person, nil

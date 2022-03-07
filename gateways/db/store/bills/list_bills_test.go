@@ -25,7 +25,7 @@ func TestListBills(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list a bill successfull",
+			Name: "Should list a bill successful",
 			runBefore: func(s string, i interface{}) error {
 				return store.CreateDataFile(s, i)
 			},
@@ -55,7 +55,10 @@ func TestListBills(t *testing.T) {
 			})
 
 			if tt.runBefore != nil {
-				tt.runBefore(tt.sourceTest, store.BillsTest)
+				err := tt.runBefore(tt.sourceTest, store.BillsTest)
+				if err != nil {
+					t.Errorf("err to run before %s", err)
+				}
 			}
 
 			str := NewBillStore()

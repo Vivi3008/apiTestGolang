@@ -42,7 +42,7 @@ func TestListAllAccounts(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should return list of accounts succesfully",
+			name: "Should return list of accounts successfully",
 			repository: account.AccountMock{
 				OnListAll: func() ([]account.Account, error) {
 					return arrayAccounts, nil

@@ -33,7 +33,7 @@ func TestLogin(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Should log in successfull",
+			name: "Should log in successful",
 			repository: account.AccountMock{
 				OnListByCpf: func(cpf string) (account.Account, error) {
 					return person, nil

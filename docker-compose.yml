@@ -5,7 +5,6 @@ services:
   apiBank-db:
     container_name: apiBank-db
     image: postgres:13.2-alpine
-    restart: always
     environment:
       POSTGRES_DB: apiBank-db
       POSTGRES_USER: postgres

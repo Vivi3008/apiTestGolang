@@ -23,7 +23,7 @@ func TestListAllAccounts(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list all accounts successfull",
+			Name: "Should list all accounts successful",
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateAccountTest(pgx)
 			},

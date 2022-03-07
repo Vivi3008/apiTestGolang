@@ -31,7 +31,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should create account successfull",
+			Name: "Should create account successful",
 			args: acc,
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateAccountTest(pgx)
@@ -87,7 +87,10 @@ func TestCreateAccount(t *testing.T) {
 			t.Cleanup(tearDown)
 
 			if tt.runBefore != nil {
-				tt.runBefore(testPool)
+				err := tt.runBefore(testPool)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			err := repository.StoreAccount(context.Background(), tt.args)

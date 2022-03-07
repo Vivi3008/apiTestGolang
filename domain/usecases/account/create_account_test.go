@@ -29,7 +29,7 @@ func TestCreateAccount(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			name: "Should create an account successfull",
+			name: "Should create an account successful",
 			repository: account.AccountMock{
 				OnStoreAccount: func(account account.Account) error {
 					return nil

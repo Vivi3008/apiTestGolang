@@ -80,7 +80,7 @@ func TestListActitivies(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			Name: "Should list activities successfull in order by created_at",
+			Name: "Should list activities successful in order by created_at",
 			args: accountdb.AccountsTest[0].Id,
 			runBefore: func(pgx *pgxpool.Pool) error {
 				return CreateDbTest(pgx)
@@ -115,7 +115,10 @@ func TestListActitivies(t *testing.T) {
 			t.Cleanup(tearDown)
 
 			if tt.runBefore != nil {
-				tt.runBefore(testDb)
+				err := tt.runBefore(testDb)
+				if err != nil {
+					t.Errorf("error in run before %s", err)
+				}
 			}
 
 			got, err := repo.ListActivity(context.Background(), tt.args)
