@@ -2,10 +2,10 @@ package accounts
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
+	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 	"github.com/gorilla/mux"
 )
 
@@ -28,10 +28,15 @@ type AccountIdRequest struct {
 var ErrInvalidParam = errors.New("invalid id params")
 
 func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.account.ListAll"
+
+	log := lg.NewLog(r.Context(), operation)
+	log.Info("Starting to get all accounts")
+
 	list, err := h.acc.ListAllAccounts(r.Context())
 
 	if err != nil {
-		log.Printf("Failed to list accounts: %s\n", err.Error())
+		log.Error("Error to list all accounts", err)
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -47,18 +52,22 @@ func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, accounts, http.StatusOK)
-	log.Printf("Sent all accounts. Total: %d", len(accounts))
+	log.Info("Sent all accounts. Total: ", len(accounts))
 }
 
 func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.account.GetBalance"
 	vars := mux.Vars(r)
 
-	personId := vars["account_id"]
+	accountId := vars["account_id"]
 
-	account, err := h.acc.ListAccountById(r.Context(), personId)
+	log := lg.NewLog(r.Context(), operation)
+	log.Info("Starting to get balance for account id: ", accountId)
+
+	account, err := h.acc.ListAccountById(r.Context(), accountId)
 
 	if err != nil {
-		log.Printf("Failed to list account: %s", err.Error())
+		log.Error("Failed to list account: ", err)
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -67,5 +76,6 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 		Balance: account.Balance,
 	}
 
+	log.Info("Get balance sucessfull for account id: ", accountId)
 	response.Send(w, balance, http.StatusOK)
 }

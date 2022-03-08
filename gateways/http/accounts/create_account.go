@@ -3,11 +3,11 @@ package accounts
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
+	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 )
 
 type AccountRequest struct {
@@ -28,6 +28,7 @@ type AccountResponse struct {
 var ErrInvalidPayloadAccount = errors.New("invalid account payload")
 
 func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.account.CreateAccount"
 	var body AccountRequest
 
 	err := json.NewDecoder(r.Body).Decode(&body)
@@ -43,6 +44,9 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Secret:  body.Secret,
 		Balance: body.Balance,
 	}
+
+	log := lg.NewLog(r.Context(), operation)
+	log.Info("Starting to create an account")
 
 	account, err := h.acc.CreateAccount(r.Context(), person)
 
@@ -60,5 +64,5 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, accountResponse, http.StatusOK)
-	log.Printf("sent successful response for account %s\n", account.Id)
+	log.Info("Create account successful with id: ", account.Id)
 }
