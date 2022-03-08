@@ -1,11 +1,12 @@
 package transfers
 
 import (
-	"log"
 	"net/http"
 
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
+	"github.com/sirupsen/logrus"
 )
 
 type TransferResponse struct {
@@ -17,25 +18,31 @@ type TransferResponse struct {
 }
 
 func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.transfers.ListTransfer"
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
+	log := lg.FromContext(r.Context(), operation)
+
 	if !ok || accountId == "" {
+		log.Error("Error to get token from id")
 		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
+	log.Info("Starting to list account")
 	account, err := h.accUse.ListAccountById(r.Context(), accountId)
 
 	if err != nil {
-		log.Printf("Failed to list transfer: %s\n", err.Error())
+		log.WithError(err).Error("Error to list account")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
 
+	log.Info("Starting to list transfer")
 	list, err := h.transfUse.ListTransfer(r.Context(), account.Id)
 
 	if err != nil {
-		log.Printf("Failed to list transfer: %s\n", err.Error())
+		log.WithError(err).Info("Error to list transfer")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -51,6 +58,8 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, transfers, http.StatusOK)
-	log.Printf("Sent all transfers from Id %s", accountId)
-	log.Printf("Sent all transfers. Total: %d", len(transfers))
+	log.WithFields(logrus.Fields{
+		"accountId": accountId,
+		"total":     len(transfers),
+	}).Info("List transfers successfully")
 }

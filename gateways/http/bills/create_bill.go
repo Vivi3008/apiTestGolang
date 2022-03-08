@@ -3,11 +3,11 @@ package bills
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/bills"
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
@@ -29,9 +29,13 @@ var (
 )
 
 func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.bills.CreateBill"
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
+	log := lg.FromContext(r.Context(), operation)
+
 	if !ok || accountId == "" {
+		log.Error("Error to get account id from token")
 		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
@@ -41,6 +45,7 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
+		log.WithError(err).Error("Error in request body")
 		response.SendError(w, ErrInvalidBillPayload, http.StatusBadRequest)
 		return
 	}
@@ -52,18 +57,22 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 		DueDate:     body.DueDate,
 	}
 
+	log.Info("Starting create a bill")
 	billOk, err := h.blUse.CreateBill(r.Context(), bill)
 
 	if err != nil {
+		log.WithError(err).Error("Error to create bill")
 		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
 
 	billOk.StatusBill = bills.Pago
 
+	log.Info("Saving bill created")
 	err = h.blUse.SaveBill(r.Context(), billOk)
 
 	if err != nil {
+		log.WithError(err).Error("Error to save bill")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -80,5 +89,5 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, billResponse, http.StatusOK)
-	log.Printf("sent successful response for bill %s\n", billOk.Id)
+	log.WithField("billId", billOk.Id).Info("Create bill successfull")
 }

@@ -1,24 +1,31 @@
 package bills
 
 import (
-	"log"
 	"net/http"
 
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
+	"github.com/sirupsen/logrus"
 )
 
 func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.bills.ListBills"
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
+	log := lg.FromContext(r.Context(), operation)
+
 	if !ok || accountId == "" {
+		log.Error("Error to get id from token")
 		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
+	log.Info("Starting list bills")
 	list, err := h.blUse.ListBills(r.Context(), accountId)
 
 	if err != nil {
+		log.WithError(err).Error("Error to list bills")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -37,6 +44,8 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, payments, http.StatusOK)
-	log.Printf("Sent all bills from Id %s", accountId)
-	log.Printf("Sent all bills. Total: %d", len(payments))
+	log.WithFields(logrus.Fields{
+		"accountId": accountId,
+		"total":     len(payments),
+	}).Info("Bills listed succesfully")
 }
