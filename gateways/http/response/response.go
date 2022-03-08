@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Error struct {
@@ -13,7 +14,7 @@ type Error struct {
 const (
 	ContentType     = "Content-Type"
 	JSONContentType = "application/json"
-	DateLayout      = "2006-01-02T15:04:05Z"
+	DateLayout      = time.RFC3339
 )
 
 func SendError(w http.ResponseWriter, err error, statusCode int) {
