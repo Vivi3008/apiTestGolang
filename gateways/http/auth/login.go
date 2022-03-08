@@ -7,8 +7,8 @@ import (
 
 	"github.com/Vivi3008/apiTestGolang/commom"
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
-	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 )
 
 var ErrCpfNotExists = errors.New("cpf doesn't exists")

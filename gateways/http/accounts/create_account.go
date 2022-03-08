@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/Vivi3008/apiTestGolang/domain/entities/account"
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
-	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 )
 
 type AccountRequest struct {

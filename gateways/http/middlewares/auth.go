@@ -15,18 +15,18 @@ var (
 
 type AuthContextKey string
 
-const HeaderKey = "Authorization"
+const HeaderAuthorization = "Authorization"
 
 var ContextAccountID = AuthContextKey("account_id")
 
 func Auth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header[HeaderKey] == nil {
+		if r.Header[HeaderAuthorization] == nil {
 			response.SendError(w, ErrAuth, http.StatusUnauthorized)
 			return
 		}
 
-		authHeader := r.Header.Get(HeaderKey)
+		authHeader := r.Header.Get(HeaderAuthorization)
 
 		//pegar o id do token
 		accountId, err := commom.AuthJwt(authHeader)

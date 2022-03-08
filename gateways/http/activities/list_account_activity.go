@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
-	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 )
 
 var ErrGetTokenId = errors.New("error to get id from token")

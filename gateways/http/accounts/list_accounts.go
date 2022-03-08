@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
-	lg "github.com/Vivi3008/apiTestGolang/infraestructure/logging"
 	"github.com/gorilla/mux"
 )
 

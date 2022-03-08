@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 	"github.com/sirupsen/logrus"
 )
 
@@ -19,6 +18,6 @@ func FromContext(ctx context.Context, operation string) *logrus.Entry {
 
 	return logrus.NewEntry(logrus.New()).WithContext(ctx).WithFields(logrus.Fields{
 		"operation": operation,
-		"time":      time.Now().UTC().Format(response.DateLayout),
+		"time":      time.Now().UTC().Format(time.RFC3339),
 	})
 }
