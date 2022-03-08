@@ -30,13 +30,13 @@ var ErrInvalidParam = errors.New("invalid id params")
 func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 	const operation = "handler.account.ListAll"
 
-	log := lg.NewLog(r.Context(), operation)
-	log.Info("Starting to get all accounts")
+	log := lg.FromContext(r.Context(), operation)
 
+	log.Info("Starting to get all accounts")
 	list, err := h.acc.ListAllAccounts(r.Context())
 
 	if err != nil {
-		log.Error("Error to list all accounts", err)
+		log.WithError(err).Error("Error to list all accounts")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -51,8 +51,8 @@ func (h Handler) ListAll(w http.ResponseWriter, r *http.Request) {
 		accounts[i].CreatedAt = account.CreatedAt.Format(response.DateLayout)
 	}
 
-	response.Send(w, accounts, http.StatusOK)
 	log.Info("Sent all accounts. Total: ", len(accounts))
+	response.Send(w, accounts, http.StatusOK)
 }
 
 func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
@@ -61,13 +61,13 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 
 	accountId := vars["account_id"]
 
-	log := lg.NewLog(r.Context(), operation)
-	log.Info("Starting to get balance for account id: ", accountId)
+	log := lg.FromContext(r.Context(), operation)
+	log.WithField("accountId", accountId).Info("Starting to get balance")
 
 	account, err := h.acc.ListAccountById(r.Context(), accountId)
 
 	if err != nil {
-		log.Error("Failed to list account: ", err)
+		log.WithError(err).Error("Failed to list account")
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -76,6 +76,6 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 		Balance: account.Balance,
 	}
 
-	log.Info("Get balance sucessfull for account id: ", accountId)
+	log.WithField("accountId", accountId).Info("Get balance sucessfull")
 	response.Send(w, balance, http.StatusOK)
 }

@@ -45,12 +45,13 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Balance: body.Balance,
 	}
 
-	log := lg.NewLog(r.Context(), operation)
+	log := lg.FromContext(r.Context(), operation)
 	log.Info("Starting to create an account")
 
 	account, err := h.acc.CreateAccount(r.Context(), person)
 
 	if err != nil {
+		log.WithError(err).Error("Error to create account")
 		response.SendError(w, err, http.StatusBadRequest)
 		return
 	}
@@ -64,5 +65,5 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, accountResponse, http.StatusOK)
-	log.Info("Create account successful with id: ", account.Id)
+	log.WithField("acccountId", account.Id).Info("Create account successful")
 }

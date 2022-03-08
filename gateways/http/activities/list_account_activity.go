@@ -24,7 +24,7 @@ func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
 	const operation = "handler.activity.ListActivity"
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
-	log := lg.NewLog(r.Context(), operation)
+	log := lg.FromContext(r.Context(), operation)
 
 	if !ok || accountId == "" {
 		log.Error("Error to get token id for account")
@@ -49,6 +49,6 @@ func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, listResponse, http.StatusOK)
-	log.Info("Sent all activities from account id: ", accountId)
-	log.Info("List total activities: ", len(listResponse))
+	log.WithField("accountId", accountId).Info("Sent all activities from account")
+	log.WithField("Total", len(listResponse)).Info("List total activities")
 }

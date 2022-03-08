@@ -28,11 +28,12 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	const operation = "handler.auth.Login"
 	var body LoginRequest
 
-	log := lg.NewLog(r.Context(), operation)
+	log := lg.FromContext(r.Context(), operation)
+
 	err := json.NewDecoder(r.Body).Decode(&body)
 
 	if err != nil {
-		log.Error("Error to login: ", err)
+		log.WithError(err).Error("Error to login")
 		response.SendError(w, ErrInvalidLoginPayload, http.StatusBadRequest)
 		return
 	}
@@ -45,7 +46,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	accountId, err := h.accUse.NewLogin(r.Context(), login)
 
 	if err != nil {
-		log.Error("Error to login: ", err)
+		log.WithError(err).Error("Error to login")
 		response.SendError(w, err, http.StatusUnauthorized)
 		return
 	}
@@ -53,7 +54,7 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	tokenString, err := commom.CreateToken(accountId)
 
 	if err != nil {
-		log.Error("Error to create token: ", err)
+		log.WithError(err).Error("Error to create token")
 		response.SendError(w, err, http.StatusUnauthorized)
 		return
 	}
@@ -61,6 +62,6 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	resToken := TokenString{
 		Token: tokenString,
 	}
-	log.Info("Login sucessfull for account: ", accountId)
+	log.WithField("accountId", accountId).Info("Login successfull")
 	response.Send(w, resToken, http.StatusOK)
 }
