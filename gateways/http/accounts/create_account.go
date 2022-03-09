@@ -46,7 +46,7 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log := lg.FromContext(r.Context(), operation)
-	log.Info("Starting to create an account")
+	log.WithField("account_cpf", person.Cpf).Info("Starting to create an account")
 
 	account, err := h.acc.CreateAccount(r.Context(), person)
 
