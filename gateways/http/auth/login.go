@@ -62,6 +62,6 @@ func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
 	resToken := TokenString{
 		Token: tokenString,
 	}
-	log.WithField("accountId", accountId).Info("Login successfull")
+	log.WithField("account_id", accountId).Info("Login successfull")
 	response.Send(w, resToken, http.StatusOK)
 }

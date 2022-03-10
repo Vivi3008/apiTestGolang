@@ -65,5 +65,5 @@ func (h Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, accountResponse, http.StatusOK)
-	log.WithField("acccountId", account.Id).Info("Create account successful")
+	log.WithField("acccount_id", account.Id).Info("Create account successful")
 }

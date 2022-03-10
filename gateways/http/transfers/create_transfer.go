@@ -77,5 +77,5 @@ func (h Handler) CreateTransfer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, transferResponse, http.StatusOK)
-	log.WithField("transferId", transferResponse.Id).Info("Transfer created successfully")
+	log.WithField("transfer_id", transferResponse.Id).Info("Transfer created successfully")
 }

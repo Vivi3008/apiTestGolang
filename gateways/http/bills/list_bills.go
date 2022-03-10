@@ -45,7 +45,7 @@ func (h Handler) ListBills(w http.ResponseWriter, r *http.Request) {
 
 	response.Send(w, payments, http.StatusOK)
 	log.WithFields(logrus.Fields{
-		"accountId": accountId,
-		"total":     len(payments),
+		"account_id": accountId,
+		"total":      len(payments),
 	}).Info("Bills listed succesfully")
 }

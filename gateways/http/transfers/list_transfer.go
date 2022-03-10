@@ -59,7 +59,7 @@ func (h Handler) ListTransfer(w http.ResponseWriter, r *http.Request) {
 
 	response.Send(w, transfers, http.StatusOK)
 	log.WithFields(logrus.Fields{
-		"accountId": accountId,
-		"total":     len(transfers),
+		"account_id": accountId,
+		"total":      len(transfers),
 	}).Info("List transfers successfully")
 }

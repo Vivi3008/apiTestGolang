@@ -49,6 +49,6 @@ func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, listResponse, http.StatusOK)
-	log.WithField("accountId", accountId).Info("Sent all activities from account")
+	log.WithField("account_id", accountId).Info("Sent all activities from account")
 	log.WithField("Total", len(listResponse)).Info("List total activities")
 }

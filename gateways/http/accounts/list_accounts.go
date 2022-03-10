@@ -62,7 +62,7 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	accountId := vars["account_id"]
 
 	log := lg.FromContext(r.Context(), operation)
-	log.WithField("accountId", accountId).Info("Starting to get balance")
+	log.WithField("account_id", accountId).Info("Starting to get balance")
 
 	account, err := h.acc.ListAccountById(r.Context(), accountId)
 
@@ -76,6 +76,6 @@ func (h Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 		Balance: account.Balance,
 	}
 
-	log.WithField("accountId", accountId).Info("Get balance sucessfull")
+	log.WithField("account_id", accountId).Info("Get balance sucessfully")
 	response.Send(w, balance, http.StatusOK)
 }

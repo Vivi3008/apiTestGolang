@@ -89,5 +89,5 @@ func (h Handler) CreateBill(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, billResponse, http.StatusOK)
-	log.WithField("billId", billOk.Id).Info("Create bill successfull")
+	log.WithField("bill_id", billOk.Id).Info("Create bill successfull")
 }
