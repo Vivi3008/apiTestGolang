@@ -2,11 +2,11 @@ package activities
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
 	"github.com/Vivi3008/apiTestGolang/domain/usecases/activities"
+	lg "github.com/Vivi3008/apiTestGolang/gateways/http/logging"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/middlewares"
 	"github.com/Vivi3008/apiTestGolang/gateways/http/response"
 )
@@ -21,16 +21,20 @@ type ActivitiesResponse struct {
 }
 
 func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
+	const operation = "handler.activity.ListActivity"
 	accountId, ok := middlewares.GetAccountId(r.Context())
 
+	log := lg.FromContext(r.Context(), operation)
+
 	if !ok || accountId == "" {
+		log.Error("Error to get token id for account")
 		response.SendError(w, ErrGetTokenId, http.StatusUnauthorized)
 		return
 	}
 
 	listActivities, err := h.actUse.ListActivity(r.Context(), accountId)
 	if err != nil {
-		log.Printf("Failed to list activities: %s\n", err.Error())
+		log.Error("Failed to list activities: ", err)
 		response.SendError(w, err, http.StatusInternalServerError)
 		return
 	}
@@ -45,6 +49,6 @@ func (h Handler) ListActivity(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.Send(w, listResponse, http.StatusOK)
-	log.Printf("Sent all activities from Id %s", accountId)
-	log.Printf("Sent all activities. Total: %d", len(listResponse))
+	log.WithField("account_id", accountId).Info("Sent all activities from account")
+	log.WithField("Total", len(listResponse)).Info("List total activities")
 }
