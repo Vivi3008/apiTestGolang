@@ -142,8 +142,6 @@ A rota de login retorna um token valido para ser usado nas rotas `/transfers`
 }
 ```
 
-Obs: o token acima não é válido, so servindo para fins de documentação.
-
 ##### Failure
 
 - Status code: `400`
@@ -296,6 +294,89 @@ Para acessar essa rota o usuario precisa se autenticar definindo o Auth no heade
     "reason": "Auth required"
   }
   ```
+
+### Adicionar um pagamento
+
+- Path: `/bills`
+- Method: `POST`
+- Header: `Authorization: token`
+
+- Body :
+
+```json
+{
+	"description": "Conta aleatoria",
+	"value": 300,
+	"due_date": "2022-01-05T17:35:18Z"
+}
+```
+
+#### Response Suscess
+
+- Status code: `200`
+- Content-Type: `application/json`
+- Body :
+
+```json
+ {
+	"id": "62451496-8b10-46cc-88e6-f924d2b409f0",
+	"account_id": "02938f42-b7b5-44c5-90b2-51501c3c58d9",
+	"description": "Conta aleatoria",
+	"value": 300,
+	"due_date": "2022-01-05T17:35:18Z",
+	"scheduled_date": "2022-03-03T12:07:24.792614951-03:00",
+	"status": "Pago",
+	"created_at": "2022-03-03T12:07:24Z"
+}
+```
+##### Failure
+
+- Status code: `401`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Auth required"
+  }
+  ```
+
+ - Status code: `500`
+- Content-Type: `application/json`
+- Body (example):
+
+  ```json
+  {
+    "reason": "Insufficient Limit"
+  }
+  ```
+
+### Listar pagamentos
+
+- Path: `/bills`
+- Method: `GET`
+- Header: `Authorization: token`
+
+#### Response Suscess
+
+- Status code: `200`
+- Content-Type: `application/json`
+- Body :
+
+```json
+[
+	{
+		"id": "62451496-8b10-46cc-88e6-f924d2b409f0",
+		"account_id": "02938f42-b7b5-44c5-90b2-51501c3c58d9",
+		"description": "Conta aleatoria",
+		"value": 300,
+		"due_date": "2022-01-05T17:35:18Z",
+		"scheduled_date": "2022-03-03T12:07:24.792614951-03:00",
+		"status": "Pago",
+		"created_at": "2022-03-03T12:07:24Z"
+	}
+]
+```
 
 ## Usage
 
